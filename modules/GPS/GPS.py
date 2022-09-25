@@ -1,11 +1,20 @@
 import serial
+import requests
+import json
 import math
 
 class gpsRead:
     def __init__(self, port, baudrate):
         self.gps_port = serial.Serial(port, baudrate)
 
-    def get_position(self):
+    def send_request(self, LonLat, url):
+        coordinates = json.dumps(LonLat)
+        post = requests.post(url, data=coordinates)
+        print(post)
+
+    def get_position(self, url):
+        LonLat = {"Logitude":0,
+                  "Latitude":0}
         try:
             s = (self.gps_port.read(500)).decode('utf-8')
             data = s.splitlines()
@@ -21,6 +30,9 @@ class gpsRead:
                         long = math.modf(long)
                         lat = lat[1]+(lat[0]*100)/60
                         long = long[1]+(long[0]*100)/60
-                        return [lat, -long]
+                        LonLat["Logitude"] = lat
+                        LonLat["Latitude"]= -long
+                        self.send_request(LonLat, url)
+                        return LonLat
         except:
             return ['error', 'error']
