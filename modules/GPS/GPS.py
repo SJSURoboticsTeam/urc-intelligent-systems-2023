@@ -7,11 +7,11 @@ class gpsRead:
         self.gps_port = serial.Serial(port, baudrate)
 
     def send_request(self, LonLat, url):
-        post = requests.post(url, data={"Logitude": LonLat["Logitude"], "Latitude": LonLat["Latitude"]})
+        post = requests.post(url, data={"longitude": LonLat["longitude"], "latitude": LonLat["latitude"]})
 
     def get_position(self, url):
-        LonLat = {"Logitude":"0",
-                  "Latitude":"0"}
+        LonLat = {"longitude":0,
+                  "latitude":0}
         try:
             s = (self.gps_port.read(500)).decode('utf-8')
             data = s.splitlines()
@@ -27,8 +27,8 @@ class gpsRead:
                         long = math.modf(long)
                         lat = lat[1]+(lat[0]*100)/60
                         long = long[1]+(long[0]*100)/60
-                        LonLat["Logitude"] = str(lat)
-                        LonLat["Latitude"]= str(-long)
+                        LonLat["longitude"] = -long
+                        LonLat["latitude"]= lat
                         self.send_request(LonLat, url)
                         return [long, -lat]
         except:

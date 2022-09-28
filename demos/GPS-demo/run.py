@@ -9,6 +9,6 @@ if __name__ == '__main__':
     except:
             print("Make sure your GPS is plugged in and you are using the correct port!")
             exit(1)
-    while True:
-        GPS_Coordinates = data.get_position(url)
-        print(GPS_Coordinates)
+    GPS_Coordinates = data.get_position(url)
+    print(GPS_Coordinates)
+    exit(1)
