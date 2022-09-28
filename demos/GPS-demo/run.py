@@ -5,7 +5,7 @@ from GPS import gpsRead
 if __name__ == '__main__':
     try:
         data = gpsRead("/dev/ttyACM0",9600)
-        url = "http://localhost:3000/gps"
+        url = "http://192.168.50.243:5000/gps"
     except:
             print("Make sure your GPS is plugged in and you are using the correct port!")
             exit(1)
