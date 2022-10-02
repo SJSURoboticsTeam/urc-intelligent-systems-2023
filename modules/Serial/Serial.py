@@ -31,6 +31,7 @@ class SerialSystem:
             except:
                 print("Error decoding data")
         time.sleep(1)
+        return c.decode("utf-8")
 
     def close_serial(self):
         self.ser.close()

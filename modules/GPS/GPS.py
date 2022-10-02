@@ -7,7 +7,7 @@ class gpsRead:
         self.gps_port = serial.Serial(port, baudrate)
 
     def send_request(self, LonLat, url):
-        post = requests.post(url, data={"longitude": LonLat["longitude"], "latitude": LonLat["latitude"]})
+        requests.post(url, data={"longitude": LonLat["longitude"], "latitude": LonLat["latitude"]})
 
     def get_position(self, url):
         LonLat = {"longitude":0,

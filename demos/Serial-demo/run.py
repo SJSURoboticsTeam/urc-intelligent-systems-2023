@@ -5,7 +5,6 @@ from Serial import SerialSystem
 
 port = "/dev/ttyUSB1"
 
-
 try:
     serial = SerialSystem(port, 38400)
     print("Using port: " + port)
