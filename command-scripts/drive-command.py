@@ -6,6 +6,7 @@ from Serial import SerialSystem
 import json
 
 port = "/dev/ttyUSB0"
+get_initial_commands_url = "http://192.168.50.243:5000/drive"
 
 def jsonParse(str):
     if(str.count("{") >= 1 and str.count("}") >= 1 ):
@@ -13,8 +14,6 @@ def jsonParse(str):
             return str[str.rfind("{"):str.rfind("}")+1]
         else:
             return str[str.rfind("{", 0, str.rfind("{")):str.rfind("}")+1]
-
-get_initial_commands_url = "http://192.168.50.243:5000/drive"
 
 web_response = requests.get(get_initial_commands_url)
 print("Getting data from: " + web_response.text)
