@@ -20,11 +20,11 @@ class gpsRead:
                 if d[0] == "$GPGGA" and len(d) == 15:
                     if d[2] == '' or d[4] == '':
                         return ["None", "None"]
-                    if d[1] == 'S':
+                    if d[3] == 'S':
                         LonLat["latitude"] = -float(d[2])
                     else:
                         LonLat["latitude"] = float(d[2])
-                    if d[3] == 'W':
+                    if d[5] == 'W':
                         LonLat["longitude"] = -float(d[4])
                     else:
                         LonLat["longitude"] = float(d[4])
