@@ -27,6 +27,6 @@ while True:
     response = serial.read_serial()
     if homing_end in response:
         while True:
+            web_response = requests.get(get_initial_commands_url)
             serial.write_serial(web_response.text)
             response += serial.read_serial()
-            # json_format = jsonParse(response)
