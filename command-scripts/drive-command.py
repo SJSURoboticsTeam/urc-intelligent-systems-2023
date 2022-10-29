@@ -4,8 +4,6 @@ import serial.tools.list_ports as port_list
 sys.path.append( '../modules/Serial')
 from Serial import SerialSystem
 import json
-import time
-starttime = time.time()
 
 port = "/dev/ttyUSB0"
 get_initial_commands_url = "http://172.20.10.3:5000/drive"
