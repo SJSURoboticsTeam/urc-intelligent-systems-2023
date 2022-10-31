@@ -6,14 +6,7 @@ from Serial import SerialSystem
 import json
 
 port = "/dev/ttyUSB0"
-get_initial_commands_url = "http://192.168.50.243:5000/drive"
-
-def jsonParse(str):
-    if(str.count("{") >= 1 and str.count("}") >= 1 ):
-        if(str.rfind("{") < str.rfind("}")):
-            return str[str.rfind("{"):str.rfind("}")+1]
-        else:
-            return str[str.rfind("{", 0, str.rfind("{")):str.rfind("}")+1]
+get_initial_commands_url = "http://172.20.10.3:5000/drive"
 
 web_response = requests.get(get_initial_commands_url)
 print("Getting data from: " + web_response.text)
@@ -31,15 +24,7 @@ homing_end = "Starting control loop..."
 while True:
     response = serial.read_serial()
     if homing_end in response:
-        print("Parsing Data from Pi...")
         while True:
+            web_response = requests.get(get_initial_commands_url)
             serial.write_serial(web_response.text)
             response += serial.read_serial()
-            json_format = jsonParse(response)
-
-            if json_format != None:
-                response = ''
-                json_format = json.loads(json_format)
-                web_response = requests.get(get_initial_commands_url, params=json_format)
-
-
