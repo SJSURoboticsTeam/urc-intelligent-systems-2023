@@ -7,7 +7,7 @@ import json
 import time
 
 port = "/dev/ttyUSB0"
-get_initial_commands_url = "http://192.168.1.133:5000/drive"
+get_initial_commands_url = "http://192.168.50.243:5000/drive"
 
 web_response = requests.get(get_initial_commands_url)
 print("Getting data from: " + web_response.text)
@@ -27,5 +27,9 @@ while True:
     if homing_end in response:
         while True:
             web_response = requests.get(get_initial_commands_url)
-            serial.write_serial(web_response.text)
             response += serial.read_serial()
+            if response != "No data received":
+                serial.write_serial(web_response.text)
+            else:
+                continue
+            
