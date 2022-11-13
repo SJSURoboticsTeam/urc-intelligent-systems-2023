@@ -1,5 +1,9 @@
 import math
+import sys
+
+sys.path.append( '/home/pi/Repos/urc-intelligent_systems-2022/modules/LSM303')
 from LSM303 import Compass
+
 
 class Autonomy():
 
@@ -22,44 +26,48 @@ class Autonomy():
         distanceMi = R_MI * form2
         return [distanceKM, distanceMi]
 
-    def get_angle(self, lon1, lat1, lon2, lat2):
+    def get_spin_angle(self, lon1, lat1, lon2, lat2):
         x = lat2 - lat1
         y = lon2 - lon1
         quad = 0
+        angle = 0
 
         compass = Compass()
         heading = compass.get_heading()
-        angle = heading
+        print(heading)
 
         if x < 0:
             if y < 0:
+                print("3")
                 quad = 3
             else:
+                print("2")
                 quad = 2
         else:
             if y < 0:
+                print("4")
                 quad = 4
             else:
+                print("1")
                 quad = 1
+                
+        angle += 360-heading
+        print(angle%360)
 
         if quad == 1:
-            angle += 90-heading
+            angle += 90-angle
+            angle -= math.degrees(math.atan(abs(y)/abs(x)))
         elif quad == 2:
-            angle += 360-heading
+            angle += 360-angle
+            angle -= math.degrees(math.atan(abs(y)/abs(x)))
         elif quad == 3:
-            angle += 270-heading
+            angle += 270-angle
+            angle -= 90 - math.degrees(math.atan(abs(y)/abs(x)))
         elif quad == 4:
-            angle += 180-heading
-        
-        #set angle to angle variable
-        if quad == 1:
-            angle -= math.atan(y/x)
-        elif quad == 2:
-            angle -= math.atan(y/x)
-        elif quad == 3:
-            angle -= 90 - math.atan(y/x)
-        else:
-            angle -= 90 - math.atan(y/x)
+            angle += 180-angle
+            angle -= 90 - math.degrees(math.atan(abs(y)/abs(x)))
 
         return angle
 
+auto = Autonomy()
+print(auto.get_angle(24, 36, 12, 52))
