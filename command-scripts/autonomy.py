@@ -32,25 +32,19 @@ class Autonomy:
 
             compass = Compass()
             heading = compass.get_heading()
-            print(heading)
 
             if x < 0:
                 if y < 0:
-                    print("3")
                     quad = 3
                 else:
-                    print("2")
                     quad = 2
             else:
                 if y < 0:
-                    print("4")
                     quad = 4
                 else:
-                    print("1")
                     quad = 1
                     
             angle += 360-heading
-            print(angle%360)
 
             if quad == 1:
                 angle += 90-angle
@@ -66,7 +60,6 @@ class Autonomy:
                 angle -= 90 - math.degrees(math.atan(abs(y)/abs(x)))
 
             if angle < (360-angle):
-                print("pos")
                 return angle
             else:
                 return -abs(360-angle)
