@@ -18,9 +18,21 @@ class Autonomy:
         self.max_speed = 20
         self.max_steering = 12
         self.commands = [0,0,0,'D',0,0]
+        self.current_GPS = [0,0]
+        self.desired_GPS = [-121.881073,37.335186]
         self.serial = SerialSystem(self.port, self.baudrate)
         self.serial.connect()
+        self.connect_GPS()
 
+
+    def connect_GPS(self):
+        while True:
+            try:
+                self.GPS_data = gpsRead("/dev/ttyACM0",9600)
+            except:
+                print("Make sure your GPS is plugged in and you are using the correct port!")
+                continue
+            break
 
     def get_distance(self, lon1 ,lat1, lon2, lat2):
 
@@ -86,16 +98,6 @@ class Autonomy:
         json_command = json.dumps(json_command)
         return json_command
 
-    def get_current_GPS(self):
-        while True:
-            try:
-                data = gpsRead("/dev/ttyACM0",9600)
-                url = f"{self.url}/gps"
-            except:
-                print("Make sure your GPS is plugged in and you are using the correct port!")
-                continue
-            break
-        return data.get_position(url)
 
     def get_bearing(self, lon1, lat1, lon2, lat2):
         lat1 = math.radians(lat1)
@@ -147,10 +149,15 @@ class Autonomy:
         elif(lon2==lon1 and lat1==lat2):
             self.stop_rover(self.commands)
 
-    def start_rover(self):
+    def get_rover_status(self):
+        bearing = self.get_bearing(self.current_GPS[0], self.current_GPS[1], self.desired_GPS[0], self.desired_GPS[1])
+        distance = self.get_distance(self.current_GPS[0], self.current_GPS[1], self.desired_GPS[0], self.desired_GPS[1])
+        GPS = self.current_GPS
+        json_command = {"Bearing":bearing,"Distance":distance,"GPS":[GPS[0],GPS[1]]}
+        json_command = json.dumps(json_command)
+        requests.post(self.url, data=None, json=json_command)
 
-        web_response = requests.get(self.url)
-        print("Getting data from: " + web_response.text)
+    def start_mission(self):
 
         try:
             serial = SerialSystem(self.port, self.baudrate)
@@ -166,14 +173,9 @@ class Autonomy:
             response = serial.read_serial()
             if homing_end in response:
                 while True:
-                    example_lon = -121.881073
-                    example_lat = 37.335186
-                    GPS = self.get_current_GPS()
-                    self.get_steering(self, GPS[0], GPS[1], example_lon, example_lat)
-                    web_response = requests.get(self.url)
+                    self.current_GPS = self.GPS_data.get_position(f"{self.url}/gps")
+                    command = self.get_steering(self.current_GPS[0], self.current_GPS[1], self.desired_GPS[0], self.desired_GPS[1])
                     response += serial.read_serial()
-                    if response != "No data received":
-                        serial.write_serial(web_response.text)
-                    else:
-                        continue
+                    serial.write_serial(command.text)
+                    self.get_rover_status()
                     
