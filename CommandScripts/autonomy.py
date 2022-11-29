@@ -1,4 +1,3 @@
-import sys
 import math
 import json
 import requests
@@ -10,9 +9,8 @@ from modules.GPS import gpsRead
 from modules.Serial import SerialSystem
 
 class Autonomy:
-    def __init__(self, port, baudrate, url, max_speed, max_steering, GPS_coordinate_map):
-        self.port = port
-        self.baudrate = baudrate
+    def __init__(self, serial, url, max_speed, max_steering, GPS_coordinate_map):
+        self.serial = serial
         self.url = url
         self.max_speed = max_speed
         self.max_steering = max_steering
@@ -169,26 +167,17 @@ class Autonomy:
 
 
     def start_mission(self):
-        try:
-            serial = SerialSystem(self.port, self.baudrate)
-            print("Using port: " + self.port)
-        except:
-            ports = list(port_list.comports())
-            print('====> Designated Port not found. Using Port:', ports[0].device)
-            self.port = ports[0].device
-            serial = SerialSystem(self.port, self.baudrate)
-
         homing_end = "Starting control loop..."
         while True:
-            response = serial.read_serial()
+            response = self.serial.read_serial()
             if homing_end in response:
                 while True:
                     self.current_GPS = self.GPS_data.get_position(f"{self.url}/gps")
                     command = self.get_steering(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
-                    response += serial.read_serial()
+                    response += self.serial.read_serial()
                     self.get_rover_status()
                     if response != "No data received":
-                        serial.write_serial(command.text)
+                        self.serial.write_serial(command.text)
                     else:
                         continue
                     
