@@ -1,10 +1,36 @@
 import sys
 import math
 import json
-sys.path.append( '/home/pi/Repos/urc-intelligent_systems-2022/modules/LSM303')
+import requests
+sys.path.append( '../modules/LSM303')
+sys.path.append( '../modules/Serial')
+sys.path.append( '../modules/GPS')
 from LSM303 import Compass
+from GPS import gpsRead
 
 class Autonomy:
+    def __init__(self, serial, url, max_speed, max_steering, GPS_coordinate_map):
+        self.serial =serial
+        self.url = url
+        self.max_speed = max_speed
+        self.max_steering = max_steering
+        self.commands = [0,0,0,'D',0,0]
+        self.current_GPS = [0,0]
+        self.GPS_coordinate_map = GPS_coordinate_map
+        self.GPS_target = self.GPS_coordinate_map[0]
+        self.serial.connect()
+        self.connect_GPS()
+
+
+    def connect_GPS(self):
+        while True:
+            try:
+                self.GPS_data = gpsRead("/dev/ttyACM0",9600)
+            except:
+                print("Make sure your GPS is plugged in and you are using the correct port!")
+                continue
+            break
+
     def get_distance(self, lon1 ,lat1, lon2, lat2):
 
         R_KM = 6373.0
@@ -85,36 +111,72 @@ class Autonomy:
         return bearing
 
 
-    def forward_rover(self):
-        commands = [0,0,0,'D',50,0]
+    def forward_rover(self, commands):
+        self.commands[4] = self.max_speed
         self.jsonify_commands(commands)
 
-    def steer_left(self):
-        commands = [0,0,0,'D',0,-12]
+    def steer_left(self, commands):
+        self.commands[5] = -self.max_steering
         self.jsonify_commands(commands)
 
-    def steer_right(self):
-        commands = [0,0,0,'D',0,12]
+    def steer_right(self, commands):
+        self.commands[5] = self.max_steering
         self.jsonify_commands(commands)
 
-    def stop_rover(self):
-        commands = [0,0,0,'D',0,0]
+    def stop_rover(self, commands):
+        self.commands = [0,0,0,'D',0,0]
         self.jsonify_commands(commands)
+
+    def goto_next_coordinate(self):
+        self.GPS_coordinate_map.pop(0)
+        self.GPS_target = self.GPS_coordinate_map[0]
+
+
 
     def get_steering(self, lon1, lat1, lon2, lat2):
+        
         final_angle = Compass.get_heading()/self.get_bearing(lon1, lat1, lon2, lat2)
 
         if(final_angle >= 0 and final_angle <= 1):
-            self.forward_rover()
+            print("Rover moving forward!")
+            self.forward_rover(self.commands)
             
-
         elif(final_angle > 1 and final_angle <= 8):
-            self.steer_left()
+            print("Rover turning left!")
+            self.steer_left(self.commands)
             
 
         elif(final_angle <= 13 and final_angle >= 8):
-            self.steer_right()
+            print("Rover turning right!")
+            self.steer_right(self.commands)
             
 
         elif(lon2==lon1 and lat1==lat2):
-            self.stop_rover()
+            print("Rover has reached destination!")
+            self.stop_rover(self.commands)
+            self.goto_next_coordinate()
+
+    def get_rover_status(self):
+        bearing = self.get_bearing(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
+        distance = self.get_distance(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
+        GPS = self.current_GPS
+        json_command = {"Bearing":bearing,"Distance":distance[0],"GPS":[GPS[0],GPS[1]],"Target":[self.GPS_target[0],self.GPS_target[1]]}
+        json_command = json.dumps(json_command)
+        requests.post(self.url, data=None, json=json_command)
+
+    def start_mission(self):
+
+        homing_end = "Starting control loop..."
+        while True:
+            response = self.serial.read_serial()
+            if homing_end in response:
+                while True:
+                    self.current_GPS = self.GPS_data.get_position(f"{self.url}/gps")
+                    command = self.get_steering(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
+                    response += self.serial.read_serial()
+                    self.get_rover_status()
+                    if response != "No data received":
+                        self.serial.write_serial(command.text)
+                    else:
+                        continue
+                    
