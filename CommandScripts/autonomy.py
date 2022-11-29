@@ -18,7 +18,6 @@ class Autonomy:
         self.current_GPS = [0,0]
         self.GPS_coordinate_map = GPS_coordinate_map
         self.GPS_target = self.GPS_coordinate_map[0]
-        self.serial = SerialSystem(self.port, self.baudrate)
         self.serial.connect()
         self.connect_GPS()
 
@@ -164,7 +163,6 @@ class Autonomy:
         json_command = {"Bearing":bearing,"Distance":distance[0],"GPS":[GPS[0],GPS[1]],"Target":[self.GPS_target[0],self.GPS_target[1]]}
         json_command = json.dumps(json_command)
         requests.post(self.url, data=None, json=json_command)
-
 
     def start_mission(self):
         homing_end = "Starting control loop..."
