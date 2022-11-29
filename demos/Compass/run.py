@@ -1,7 +1,7 @@
 import sys
 import time
-sys.path.append( '../../modules/LSM303' )
-from LSM303 import Compass
+sys.path.append( '../../')
+from modules.LSM303 import Compass
 
 if __name__ == '__main__':
     try:

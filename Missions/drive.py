@@ -1,10 +1,9 @@
-import sys
+import os, sys
+sys.path.insert(0, os.path.abspath(".."))
 import requests
 import serial.tools.list_ports as port_list
-sys.path.append( '../CommandScripts')
-sys.path.append( '../modules/Serial')
-from Serial import SerialSystem
-from autonomy import Autonomy
+from modules.Serial import SerialSystem
+from CommandScripts.autonomy import Autonomy
 
 port = "dev/ttyACM0"
 baudrate = 38400
@@ -26,4 +25,3 @@ GPS_map = requests.get(get_GPS_map_url)
 
 rover = Autonomy(serial, "http://192.168.50.243:5000/drive", 20, 12, GPS_map.text)
 rover.start_mission()
-
