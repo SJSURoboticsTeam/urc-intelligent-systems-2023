@@ -2,13 +2,12 @@ import sys
 import math
 import json
 import requests
+import os, sys
+sys.path.insert(0, os.path.abspath(".."))
 import serial.tools.list_ports as port_list
-sys.path.append( '../modules/LSM303')
-sys.path.append( '../modules/Serial')
-sys.path.append( '../modules/GPS')
-from LSM303 import Compass
-from GPS import gpsRead
-from Serial import SerialSystem
+from modules.LSM303 import Compass
+from modules.GPS import gpsRead
+from modules.Serial import SerialSystem
 
 class Autonomy:
     def __init__(self, port, baudrate, url, max_speed, max_steering, GPS_coordinate_map):
@@ -136,7 +135,6 @@ class Autonomy:
         self.GPS_target = self.GPS_coordinate_map[0]
 
 
-
     def get_steering(self, lon1, lat1, lon2, lat2):
         
         final_angle = Compass.get_heading()/self.get_bearing(lon1, lat1, lon2, lat2)
@@ -160,6 +158,7 @@ class Autonomy:
             self.stop_rover(self.commands)
             self.goto_next_coordinate()
 
+
     def get_rover_status(self):
         bearing = self.get_bearing(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
         distance = self.get_distance(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
@@ -168,8 +167,8 @@ class Autonomy:
         json_command = json.dumps(json_command)
         requests.post(self.url, data=None, json=json_command)
 
-    def start_mission(self):
 
+    def start_mission(self):
         try:
             serial = SerialSystem(self.port, self.baudrate)
             print("Using port: " + self.port)

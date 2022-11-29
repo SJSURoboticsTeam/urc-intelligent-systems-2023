@@ -1,6 +1,6 @@
 import sys
-sys.path.append( '../../modules/GPS' )
-from GPS import gpsRead
+sys.path.append( '../../')
+from modules.GPS import gpsRead
 
 if __name__ == '__main__':
     try:

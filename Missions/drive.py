@@ -1,7 +1,5 @@
-import sys
 import requests
-sys.path.append( '../CommandScripts')
-from autonomy import Autonomy
+from CommandScripts.autonomy import Autonomy
 
 
 get_GPS_map_url = "http://192.168.50.243:5000/gps_map"
