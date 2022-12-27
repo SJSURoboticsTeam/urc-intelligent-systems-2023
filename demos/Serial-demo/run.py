@@ -1,7 +1,7 @@
 import sys
 import serial.tools.list_ports as port_list
-sys.path.append( '../../modules/Serial' )
-from Serial import SerialSystem
+sys.path.append( '../../')
+from modules.Serial import SerialSystem
 
 port = "/dev/ttyUSB1"
 

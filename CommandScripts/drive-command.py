@@ -1,8 +1,8 @@
-import sys
+import sys, os
 import requests
 import serial.tools.list_ports as port_list
-sys.path.append( '../modules/Serial')
-from Serial import SerialSystem
+sys.path.insert(0, os.path.abspath(".."))
+from modules.Serial import SerialSystem
 import json
 import time
 
