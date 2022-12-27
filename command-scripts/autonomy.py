@@ -83,7 +83,20 @@ class Autonomy:
 
         bearing=(math.atan2(x,y))*(180/3.14);
         return bearing
-
+    
+    def obstacle_detected(self, lon, lat, x, y, step):
+        x = x + lat
+        y = y + lon
+        i = 0
+        
+        step = x/step
+        self.commands[5] = 90
+        Autonomy.steer_left(self.commands)
+        for i in range(0, x, step):
+            j = (i/x * 100) * y 
+            angle = math.atan(i, j)
+            self.commands[5] = angle
+            Autonomy.steer_right(self.commands)
 
     def forward_rover(self):
         commands = [0,0,0,'D',50,0]
