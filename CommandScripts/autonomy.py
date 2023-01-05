@@ -131,10 +131,9 @@ class Autonomy:
         self.GPS_coordinate_map.pop(0)
         self.GPS_target = self.GPS_coordinate_map[0]
         
-    def obstacle_detected(self, lon, lat, x, y, step):
+    def obstacle_detected(self, x, y, step):
         x = x - self.current_GPS[0]
         y = y - self.current_GPS[1]
-        i = 0
         
         step = x/step
         self.commands[5] = 90
@@ -143,8 +142,9 @@ class Autonomy:
             j = (i/x * 100) * y 
             angle = math.atan(i, j)
             self.commands[5] = angle
-            Autonomy.steer_right(self.commands) 
-            while(self.current_GPS[0] != i):
+            Autonomy.steer_right(self.commands)
+            current = self.current_GPS[0]
+            while(self.current_GPS[0] < (current + i)):
                 continue
 
 
