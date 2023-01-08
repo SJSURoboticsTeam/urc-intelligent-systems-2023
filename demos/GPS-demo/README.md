@@ -9,5 +9,5 @@ Open the run.py file and edit the port `"/dev/ttyACM0"` to match your connection
 
 ## RUN
 ```bash
-python3 main.py
+python3 run.py
 ```
