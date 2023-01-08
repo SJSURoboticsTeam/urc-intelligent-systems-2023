@@ -20,7 +20,7 @@ class SerialSystem:
     def write_serial(self, message):
         self.ser.write(message.encode('utf-8'))
 
-    def read_serial(self, message):
+    def read_serial(self):
         line = self.ser.read()
         if len(line) != 0:
             try:
@@ -29,8 +29,18 @@ class SerialSystem:
             except:
                 print("Error decoding data")
             time.sleep(0.05)
+            return line.decode("utf-8")
+
+    def read_write_serial(self, message):
+        line = self.ser.read()
+        if len(line) != 0:
+            try:
+                line += self.ser.read(self.ser.inWaiting())
+                print(line.decode("utf-8"))
+            except:
+                print("Error decoding data")
+            #time.sleep(0.5)
             self.ser.write(message.encode('utf-8'))
-            # self.ser.write("{\"HB\":0,\"IO\":1,\"WO\":0,\"DM\":\"D\",\"CMD\":[100,10]}\n".encode('utf-8'))
             
 
     def close_serial(self):
