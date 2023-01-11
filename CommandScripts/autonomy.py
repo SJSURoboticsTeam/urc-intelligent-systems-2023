@@ -185,7 +185,7 @@ class Autonomy:
                 self.stop_rover(self.commands)
                 self.goto_next_coordinate()
             else:
-                self.forward_gain_rover(self,dist)
+                self.forward_gain_rover(dist)
 
 
 
