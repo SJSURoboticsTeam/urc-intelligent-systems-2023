@@ -16,6 +16,7 @@ class Autonomy:
         self.max_steering = max_steering
         self.commands = [0,0,0,'D',0,0]
         self.current_GPS = [0,0]
+        self.gain = 1
         self.GPS_coordinate_map = GPS_coordinate_map
         self.GPS_target = self.GPS_coordinate_map[0]
         self.serial.connect()
@@ -155,6 +156,41 @@ class Autonomy:
             self.stop_rover(self.commands)
             self.goto_next_coordinate()
 
+    def forward_gain_rover(self, commands,error):
+        self.commands[4] = error*self.gain
+        self.jsonify_commands(commands)
+    
+    def set_gain(self,ingain):
+        self.gain = ingain
+
+    def steer_gain_left(self, commands,error):
+        self.commands[5] = -error*self.gain
+        self.jsonify_commands(commands)
+
+    def steer_gain_right(self, commands,gain,error):
+        self.commands[5] = error*self.gain
+        self.jsonify_commands(commands)
+
+    def get_ctl_steer(self, lon1, lat1, lon2, lat2):
+        bearing = self.get_bearing(lon1, lat1, lon2, lat2)
+        dist = self.get_distance(lon1, lat1, lon2, lat2)
+        # maximum deviation allowed by bearing
+        threshold = 1
+        if bearing >= threshold:
+            if(bearing > 180):
+                self.steer_gain_left(self.commands,bearing)
+            else:
+                self.steer_gain_right(self.commands,bearing)
+        else:
+            if(lon2==lon1 and lat1==lat2):
+                print("Rover has reached destination!")
+                self.stop_rover(self.commands)
+                self.goto_next_coordinate()
+            else:
+                self.forward_gain_rover(self,dist)
+
+
+
 
     def get_rover_status(self):
         bearing = self.get_bearing(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
@@ -171,7 +207,8 @@ class Autonomy:
             if homing_end in response:
                 while True:
                     self.current_GPS = self.GPS_data.get_position(f"{self.url}/gps")
-                    command = self.get_steering(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
+                    # command = self.get_steering(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
+                    command = self.get_ctl_steering(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
                     response += self.serial.read_serial()
                     self.get_rover_status()
                     if response != "No data received":
