@@ -3,10 +3,8 @@ import json
 import requests
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
-import serial.tools.list_ports as port_list
 from modules.LSM303 import Compass
 from modules.GPS import gpsRead
-from modules.Serial import SerialSystem
 
 class Autonomy:
     def __init__(self, serial, url, max_speed, max_steering, GPS_coordinate_map):
@@ -32,7 +30,7 @@ class Autonomy:
                 continue
             break
 
-    def get_distance(self, lon1 ,lat1, lon2, lat2):
+    def get_distance(self, current_GPS, target_GPS):
 
         R_KM = 6373.0
         R_MI = 3958.8
@@ -51,9 +49,9 @@ class Autonomy:
         distanceMi = R_MI * form2
         return [distanceKM, distanceMi]
 
-    def get_spin_angle(self, lon1, lat1, lon2, lat2):
-            x = lat2 - lat1
-            y = lon2 - lon1
+    def get_spin_angle(self, current_GPS, target_GPS):
+            x = target_GPS[1] - current_GPS[1]
+            y = target_GPS[0] - current_GPS[0]
             quad = 0
             angle = 0
 
@@ -97,16 +95,16 @@ class Autonomy:
         return json_command
 
 
-    def get_bearing(self, lon1, lat1, lon2, lat2):
-        lat1 = math.radians(lat1)
-        lon1 = math.radians(lon1)
-        lat2 = math.radians(lat2)
-        lon2 = math.radians(lon2)
+    def get_bearing(self, current_GPS, target_GPS):
+        current_latitude = math.radians(current_GPS[1])
+        current_longitude = math.radians(current_GPS[0])
+        target_latitude = math.radians(target_GPS[1])
+        target_longitude = math.radians(target_GPS[0])
 
-        deltalog= lon2-lon1;
+        deltalog= target_longitude-current_longitude;
 
-        x=math.cos(lat2)*math.sin(deltalog);
-        y=(math.cos(lat1)*math.sin(lat2))-(math.sin(lat1)*math.cos(lat2)*math.cos(deltalog));
+        x=math.cos(target_latitude)*math.sin(deltalog);
+        y=(math.cos(current_latitude)*math.sin(target_latitude))-(math.sin(current_latitude)*math.cos(target_latitude)*math.cos(deltalog));
 
         bearing=(math.atan2(x,y))*(180/3.14);
         return bearing
@@ -133,9 +131,9 @@ class Autonomy:
         self.GPS_target = self.GPS_coordinate_map[0]
 
 
-    def get_steering(self, lon1, lat1, lon2, lat2):
+    def get_steering(self, current_GPS, target_GPS):
         
-        final_angle = Compass.get_heading()/self.get_bearing(lon1, lat1, lon2, lat2)
+        final_angle = Compass.get_heading()/self.get_bearing(current_GPS, target_GPS)
 
         if(final_angle >= 0 and final_angle <= 1):
             print("Rover moving forward!")
@@ -151,7 +149,7 @@ class Autonomy:
             self.steer_right(self.commands)
             
 
-        elif(lon2==lon1 and lat1==lat2):
+        elif(target_GPS[0]==current_GPS[0] and current_GPS[1]==target_GPS[1]):
             print("Rover has reached destination!")
             self.stop_rover(self.commands)
             self.goto_next_coordinate()
@@ -163,17 +161,17 @@ class Autonomy:
     def set_gain(self,ingain):
         self.gain = ingain
 
-    def steer_gain_left(self, commands,error):
+    def steer_gain_left(self, commands, error):
         self.commands[5] = -error*self.gain
         self.jsonify_commands(commands)
 
-    def steer_gain_right(self, commands,gain,error):
+    def steer_gain_right(self, commands, error):
         self.commands[5] = error*self.gain
         self.jsonify_commands(commands)
 
-    def get_ctl_steer(self, lon1, lat1, lon2, lat2):
-        bearing = self.get_bearing(lon1, lat1, lon2, lat2)
-        dist = self.get_distance(lon1, lat1, lon2, lat2)
+    def get_ctl_steer(self, current_GPS, target_GPS):
+        bearing = self.get_bearing(current_GPS, target_GPS)
+        dist = self.get_distance(current_GPS, target_GPS)
         # maximum deviation allowed by bearing
         threshold = 1
         if bearing >= threshold:
@@ -182,7 +180,7 @@ class Autonomy:
             else:
                 self.steer_gain_right(self.commands,bearing)
         else:
-            if(lon2==lon1 and lat1==lat2):
+            if(target_GPS[0]==current_GPS[0] and current_GPS[1]==target_GPS[1]):
                 print("Rover has reached destination!")
                 self.stop_rover(self.commands)
                 self.goto_next_coordinate()
@@ -193,10 +191,9 @@ class Autonomy:
 
 
     def get_rover_status(self):
-        bearing = self.get_bearing(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
-        distance = self.get_distance(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
-        GPS = self.current_GPS
-        json_command = {"Bearing":bearing,"Distance":distance[0],"GPS":[GPS[0],GPS[1]],"Target":[self.GPS_target[0],self.GPS_target[1]]}
+        bearing = self.get_bearing(self.current_GPS, self.GPS_target)
+        distance = self.get_distance(self.current_GPS, self.GPS_target)
+        json_command = {"Bearing":bearing,"Distance":distance[0],"GPS":[self.current_GPS[0],self.current_GPS[1]],"Target":[self.GPS_target[0],self.GPS_target[1]]}
         json_command = json.dumps(json_command)
         requests.post(self.url, data=None, json=json_command)
 
@@ -207,8 +204,8 @@ class Autonomy:
             if homing_end in response:
                 while True:
                     self.current_GPS = self.GPS_data.get_position(f"{self.url}/gps")
-                    # command = self.get_steering(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
-                    command = self.get_ctl_steering(self.current_GPS[0], self.current_GPS[1], self.GPS_target[0], self.GPS_target[1])
+                    # command = self.get_steering(self.current_GPS, self.GPS_target)
+                    command = self.get_ctl_steering(self.current_GPS, self.GPS_target)
                     response += self.serial.read_serial()
                     self.get_rover_status()
                     if response != "No data received":
