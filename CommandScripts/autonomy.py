@@ -34,15 +34,15 @@ class Autonomy:
 
         R_KM = 6373.0
         R_MI = 3958.8
-        lat1 = math.radians(lat1)
-        lon1 = math.radians(lon1)
-        lat2 = math.radians(lat2)
-        lon2 = math.radians(lon2)
+        current_lat = math.radians(current_GPS[1])
+        current_lon = math.radians(current_GPS[0])
+        target_lat = math.radians(target_GPS[1])
+        target_lon = math.radians(target_GPS[0])
 
-        dis_lon = lon2 - lon1
-        dis_lat = lat2 - lat1
+        dis_lon = target_lon - current_lon
+        dis_lat = target_lat - current_lat
 
-        form1 = math.sin(dis_lat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dis_lon / 2)**2
+        form1 = math.sin(dis_lat / 2)**2 + math.cos(current_lat) * math.cos(target_lat) * math.sin(dis_lon / 2)**2
         form2 = 2 * math.atan2(math.sqrt(form1), math.sqrt(1 - form1))
 
         distanceKM = R_KM * form2
