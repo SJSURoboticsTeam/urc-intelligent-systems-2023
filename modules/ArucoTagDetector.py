@@ -5,15 +5,16 @@ from collections.abc import Iterable
 from typing import Union
 import math
 
-calibration = np.load('../calibration.npz')
-mtx = calibration['mtx']
-dist = calibration['dist']
-MARKER_SIZE_CM = 15
 
-def distance_to_tags(tag_corners):
-    # get the translation vectors from the camera to each tag and return it as a list
-    rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(tag_corners, MARKER_SIZE_CM, mtx, dist)
-    return tvecs
+# calibration = np.load('../calibration.npz')
+# mtx = calibration['mtx']
+# dist = calibration['dist']
+# MARKER_SIZE_CM = 15
+#
+# def distance_to_tags(tag_corners):
+#     # get the translation vectors from the camera to each tag and return it as a list
+#     rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(tag_corners, MARKER_SIZE_CM, mtx, dist)
+#     return tvecs
 
 
 def translate_lat_lon(lat, lon, tvec, heading):
@@ -66,9 +67,8 @@ class ArucoTagDetector():
                 # also filter the ids
                 ids = np.array(ids[i] for i in range(len(ids)) if ids[i] in tag_ids)
 
-
             # corners is a tuple of np arrays (with the shape [1, 4, 2] for some reason), so concat them to an array with shape [n, 4, 2]
-            corners = np.concatenate(corners, axis=0)
+            corners = np.concatenate(corners, axis=0).astype(np.int32)
 
             return corners, ids
         else:
