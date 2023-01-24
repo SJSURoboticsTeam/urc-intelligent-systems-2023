@@ -22,13 +22,25 @@ class Autonomy:
 
 
     def connect_GPS(self):
-        while True:
-            try:
-                self.GPS_data = gpsRead("/dev/ttyACM0",9600)
-            except:
-                print("Make sure your GPS is plugged in and you are using the correct port!")
-                continue
-            break
+        try:
+            self.GPS_data = gpsRead("/dev/ttyACM0",9600)
+            print("GPS Port found")
+        except:
+                port_number = 0
+                ports = list(port_list.comports())
+                print('====> Designated Port not found. Using Port:', ports[port_number].device)
+                port = ports[port_number].device
+                self.GPS_data = gpsRead(port,9600)
+                while self.GPS_data.get_position() == ['error', 'error'] or self.GPS_data.get_position() == ["None", "None"]:
+                    print("Port not found, going to next port...")
+                    port_number += 1
+                    port = ports[port_number].device
+                    try:
+                        self.GPS_data = gpsRead(port,9600)
+                        break
+                    except:
+                        continue
+                    
 
     def get_distance(self, current_GPS, target_GPS):
 
