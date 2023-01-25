@@ -2,9 +2,11 @@ import math
 import json
 import requests
 import os, sys
+import time
 sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
 from modules.GPS import gpsRead
+from modules.IR_Sensor import IR_Sensor
 
 class Autonomy:
     def __init__(self, serial, url, max_speed, max_steering, GPS_coordinate_map):
@@ -131,24 +133,19 @@ class Autonomy:
         self.GPS_target = self.GPS_coordinate_map[0]
         
     def obstacle_detected(self, x, y, step):
-        if 
-        
-        
-        # x = x - self.current_GPS[0]
-        # y = y - self.current_GPS[1]
-        
-        # step = x/step
-        # self.commands[5] = 90
-        # Autonomy.steer_left(self.commands)
-        # for i in range(0, x, step):
-        #     j = (i/x * 100) * y 
-        #     angle = math.atan(i, j)
-        #     self.commands[5] = angle
-        #     Autonomy.steer_right(self.commands)
-        #     current = self.current_GPS[0]
-        #     while(self.current_GPS[0] < (current + i)):
-        #         continue
-
+        while(IR_Sensor.DetectObject()):
+            self.commands[4] = 20
+            self.commands[3] = 'R'
+            self.forward_rover(self.commands)
+            self.commands[5] = -90
+            self.steer_left(self.commands)
+            time.sleep(0.2)
+            
+            self.commands[3] = 'D'
+            self.commands[4] = 20
+            self.forward_rover(self.commands)
+            self.commands[5] = 90
+            self.steer_left(self.commands)
 
     def get_steering(self, current_GPS, target_GPS):
         
@@ -205,8 +202,6 @@ class Autonomy:
                 self.goto_next_coordinate()
             else:
                 self.forward_gain_rover(dist)
-
-
 
 
     def get_rover_status(self):
