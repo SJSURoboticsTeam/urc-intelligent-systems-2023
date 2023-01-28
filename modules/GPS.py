@@ -9,7 +9,7 @@ class gpsRead:
     def send_request(self, LonLat, url):
         requests.post(url, data={"longitude": LonLat["longitude"], "latitude": LonLat["latitude"]})
 
-    def get_position(self, url):
+    def get_position(self, url=None):
         LonLat = {"longitude":0,
                   "latitude":0}
         try:
@@ -37,7 +37,8 @@ class gpsRead:
                     long = long[1]+(long[0]*100)/60
                     LonLat["longitude"] = long
                     LonLat["latitude"]= lat
-                    self.send_request(LonLat, url)
+                    if url is not None:
+                        self.send_request(LonLat, url)
                     return [long, lat]
         except:
             return ['error', 'error']

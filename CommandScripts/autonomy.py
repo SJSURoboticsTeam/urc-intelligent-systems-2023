@@ -22,27 +22,39 @@ class Autonomy:
 
 
     def connect_GPS(self):
-        while True:
-            try:
-                self.GPS_data = gpsRead("/dev/ttyACM0",9600)
-            except:
-                print("Make sure your GPS is plugged in and you are using the correct port!")
-                continue
-            break
+        try:
+            self.GPS_data = gpsRead("/dev/ttyACM0",9600)
+            print("GPS Port found")
+        except:
+                port_number = 0
+                ports = list(port_list.comports())
+                print('====> Designated Port not found. Using Port:', ports[port_number].device)
+                port = ports[port_number].device
+                self.GPS_data = gpsRead(port,9600)
+                while self.GPS_data.get_position() == ['error', 'error'] or self.GPS_data.get_position() == ["None", "None"]:
+                    print("Port not found, going to next port...")
+                    port_number += 1
+                    port = ports[port_number].device
+                    try:
+                        self.GPS_data = gpsRead(port,9600)
+                        break
+                    except:
+                        continue
+                    
 
     def get_distance(self, current_GPS, target_GPS):
 
         R_KM = 6373.0
         R_MI = 3958.8
-        lat1 = math.radians(lat1)
-        lon1 = math.radians(lon1)
-        lat2 = math.radians(lat2)
-        lon2 = math.radians(lon2)
+        current_lat = math.radians(current_GPS[1])
+        current_lon = math.radians(current_GPS[0])
+        target_lat = math.radians(target_GPS[1])
+        target_lon = math.radians(target_GPS[0])
 
-        dis_lon = lon2 - lon1
-        dis_lat = lat2 - lat1
+        dis_lon = target_lon - current_lon
+        dis_lat = target_lat - current_lat
 
-        form1 = math.sin(dis_lat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dis_lon / 2)**2
+        form1 = math.sin(dis_lat / 2)**2 + math.cos(current_lat) * math.cos(target_lat) * math.sin(dis_lon / 2)**2
         form2 = 2 * math.atan2(math.sqrt(form1), math.sqrt(1 - form1))
 
         distanceKM = R_KM * form2
