@@ -183,10 +183,13 @@ class Autonomy:
         self.jsonify_commands(commands)
 
     def get_ctl_steer(self, current_GPS, target_GPS):
+        final_angle = Compass.get_heading()/self.get_bearing(current_GPS, target_GPS)
         bearing = self.get_bearing(current_GPS, target_GPS)
         dist = self.get_distance(current_GPS, target_GPS)
         # maximum deviation allowed by bearing
         threshold = 1
+        if(final_angle >= 0 and final_angle <= 1):
+            self.forward_rover(self.commands)
         if bearing >= threshold:
             if(bearing > 180):
                 self.steer_gain_left(self.commands,bearing)
