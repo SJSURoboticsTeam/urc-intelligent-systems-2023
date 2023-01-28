@@ -1,10 +1,7 @@
 # Aruco Tag Detector
 
----
-
 ## Testing Maximum Aruco Tag Distance
 
----
 Use the notebooks `aruco-tag-detection.ipynb` and `aruco-tag-detection-oakd.ipynb` to test the maximum distance at which camera can detect Aruco tags.
 The challenge will have Aruco tags indicating the true target location anywhere from 5m to 20m (15 feet to 67 feet) away from the provided GPS coordinates.
 We need to make sure that the camera can detect the Aruco tags at the maximum distance (or farther for a safety margin).
@@ -41,9 +38,7 @@ This is a two-person job. Ryan has done it with me before, so he should know the
 
 **NOTE:** You may want to try running the notebooks before you go out into the hall to make sure that they are working properly.
 
-## ArucoDetector Class Demo 
-
----
+## ArucoDetector Class Demo
 
 `run.py` is a demo of how to use the `ArucoDetector` class. Start it with:
 
