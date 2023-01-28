@@ -5,6 +5,7 @@ import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
 from modules.GPS import gpsRead
+import serial.tools.list_ports as port_list
 
 class Autonomy:
     def __init__(self, serial, url, max_speed, max_steering, GPS_coordinate_map):
@@ -216,12 +217,8 @@ class Autonomy:
             if homing_end in response:
                 while True:
                     self.current_GPS = self.GPS_data.get_position(f"{self.url}/gps")
-                    # command = self.get_steering(self.current_GPS, self.GPS_target)
-                    command = self.get_ctl_steering(self.current_GPS, self.GPS_target)
-                    response += self.serial.read_serial()
+                    command = self.get_ctl_steer(self.current_GPS, self.GPS_target)
+                    self.serial.read_write_serial(command)
                     self.get_rover_status()
-                    if response != "No data received":
-                        self.serial.write_serial(command.text)
-                    else:
-                        continue
+
                     
