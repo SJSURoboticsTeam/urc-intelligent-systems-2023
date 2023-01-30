@@ -105,6 +105,8 @@ class Autonomy:
     def jsonify_commands(self, commands):
         json_command = {"HB":commands[0],"IO":commands[1],"WO":commands[2],"DM":f"{commands[3]}","CMD":[commands[4],commands[5]]}
         json_command = json.dumps(json_command)
+        json_command = f"{json_command}\n"
+        json_command = json_command.replace(" ", "")
         return json_command
 
 
@@ -223,5 +225,3 @@ class Autonomy:
                     command = self.get_ctl_steer(self.current_GPS, self.GPS_target)
                     self.serial.read_write_serial(command)
                     self.get_rover_status()
-
-                    
