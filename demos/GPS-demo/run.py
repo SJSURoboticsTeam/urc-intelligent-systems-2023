@@ -27,8 +27,5 @@ if __name__ == '__main__':
     GPS_Coordinates = data.get_position()
 
     while True:
-        if GPS_Coordinates != None:
-            print(GPS_Coordinates)
-        else:
-             print("Waiting for satellite lock")
+        print(GPS_Coordinates)
         time.sleep(1)
