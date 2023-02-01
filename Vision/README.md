@@ -9,11 +9,12 @@ sudo wget -qO- https://docs.luxonis.com/install_dependencies.sh | bash
     >source ~/.bashrc
 
 ### Windows (All Requirements)
+Reccomeneded to use Python 3.9-3.10
 ```bash
 git clone https://github.com/luxonis/depthai.git
 cd depthai
-python3 install_requirements.py
-python3 depthai_demo.py
+python -m pip install -r requirements.txt --user
+python depthai_demo.py
 ```
 
 
