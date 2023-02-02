@@ -5,6 +5,10 @@ import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
 from modules.GPS import gpsRead
+from modules.ArucoTagDetector import ArucoTagAutonomy
+from Vision.modules.OAKD import OakD
+
+import numpy as np
 
 class Autonomy:
     def __init__(self, serial, url, max_speed, max_steering, GPS_coordinate_map):
@@ -19,6 +23,8 @@ class Autonomy:
         self.GPS_target = self.GPS_coordinate_map[0]
         self.serial.connect()
         self.connect_GPS()
+
+        self.aruco_autonomy = ArucoTagAutonomy(cap=OakD())
 
 
     def connect_GPS(self):
@@ -139,13 +145,59 @@ class Autonomy:
         self.jsonify_commands(commands)
 
     def goto_next_coordinate(self):
-        self.GPS_coordinate_map.pop(0)
-        self.GPS_target = self.GPS_coordinate_map[0]
+        corners, ids = self.spin_and_search_for_tags()
+        tvec = None
 
+        go_to_aruco_tag = True
+
+        if len(corners) == 0:
+            print('No aruco tag detected')
+            go_to_aruco_tag = False
+        elif len(corners) > 1:
+            for marker_corners, id in zip(corners, ids): # TODO: handle the gate case
+                tvec = self.aruco_autonomy.distance_to_tags(marker_corners)
+
+                if np.linalg.norm(tvec) < 2: # if we're within 2 meters of an aruco tag, we don't need to go to it (maybe add a buffer)
+                    go_to_aruco_tag = False
+                    self.aruco_autonomy.target_tag += 1 # also increment the target tag
+
+        if go_to_aruco_tag:
+            self.GPS_target = self.aruco_autonomy.translate_lat_lon(lat=self.current_GPS[0], lon=self.current_GPS[1], tvec=tvec, heading=Compass().get_heading())
+        else:
+            self.GPS_coordinate_map.pop(0)
+            self.GPS_target = self.GPS_coordinate_map[0]
+
+    def spin_and_search_for_tags(self):
+        corners, ids = [], []
+
+        start_angle = Compass().get_heading()
+        current_angle = start_angle
+        rotation_count = 0
+
+        while True:
+            heading = Compass().get_heading()
+            # compute the difference between the current angle and the heading taking into account the wrap around
+            angle_diff = (heading - current_angle + 180) % 360 - 180 # https://stackoverflow.com/a/7869457
+
+            if abs(angle_diff) >= 30: # TODO: make the turn angle a constant
+                current_angle = heading
+                print("Spinning left and searching for tags") # TODO: right now, we can just print that we need to turn the rover, but in the future, we'll have to send json commands to the rover
+
+                corners, ids = self.aruco_autonomy.search_for_tags()
+
+                if len(corners) > 0:
+                    print("Found tags")
+                    return corners, ids
+
+            if abs(angle_diff) < 3 and rotation_count >= 12: # TODO: make the angle error a constant and the rotation count based on the turn angle
+                print("Stop")
+                break
+
+        return corners, ids
 
     def get_steering(self, current_GPS, target_GPS):
         
-        final_angle = Compass.get_heading()/self.get_bearing(current_GPS, target_GPS)
+        final_angle = Compass().get_heading()/self.get_bearing(current_GPS, target_GPS)
 
         if(final_angle >= 0 and final_angle <= 1):
             print("Rover moving forward!")
@@ -192,14 +244,12 @@ class Autonomy:
             else:
                 self.steer_gain_right(self.commands,bearing)
         else:
-            if(target_GPS[0]==current_GPS[0] and current_GPS[1]==target_GPS[1]):
+            if dist[0] < .002: # if the rover is within 2 meters of the target, we can stop TODO: maybe add a buffer and make this a magic number
                 print("Rover has reached destination!")
                 self.stop_rover(self.commands)
                 self.goto_next_coordinate()
             else:
                 self.forward_gain_rover(dist)
-
-
 
 
     def get_rover_status(self):
@@ -217,7 +267,7 @@ class Autonomy:
                 while True:
                     self.current_GPS = self.GPS_data.get_position(f"{self.url}/gps")
                     # command = self.get_steering(self.current_GPS, self.GPS_target)
-                    command = self.get_ctl_steering(self.current_GPS, self.GPS_target)
+                    command = self.get_ctl_steer(self.current_GPS, self.GPS_target)
                     response += self.serial.read_serial()
                     self.get_rover_status()
                     if response != "No data received":
