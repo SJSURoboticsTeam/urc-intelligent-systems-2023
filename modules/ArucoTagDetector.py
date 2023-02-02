@@ -9,30 +9,8 @@ import math
 # calibration = np.load('../calibration.npz')
 # mtx = calibration['mtx']
 # dist = calibration['dist']
-# MARKER_SIZE_CM = 15
-#
-# def distance_to_tags(tag_corners):
-#     # get the translation vectors from the camera to each tag and return it as a list
-#     rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(tag_corners, MARKER_SIZE_CM, mtx, dist)
-#     return tvecs
+MARKER_SIZE_M = .15
 
-
-def translate_lat_lon(lat, lon, tvec, heading):
-    # Convert the heading to radians and get the x and y components of the distance
-    heading = np.deg2rad(heading)
-
-    # combine the compass heading with the tvec to get the distance in x and y
-    x = tvec[0] * np.cos(heading) - tvec[1] * np.sin(heading)
-    y = tvec[0] * np.sin(heading) + tvec[1] * np.cos(heading)
-
-    R_M = 6371000
-    delta_lat = np.tan(y / R_M) * 180 / np.pi
-
-    # get the radius of the earth at the camera's current latitude
-    radius = R_M * np.cos(np.deg2rad(lat))
-    delta_lon = np.tan(x / radius) * 180 / np.pi
-
-    return lat + delta_lat, lon + delta_lon
 
 class ArucoTagDetector():
     def __init__(self):
@@ -76,7 +54,7 @@ class ArucoTagDetector():
 
 class ArucoTagAutonomy():
 
-    def __init__(self, cap, num_frames_to_search):
+    def __init__(self, cap, num_frames_to_search = 4):
         self.cap = cap
 
         self.detector = ArucoTagDetector()
@@ -85,11 +63,15 @@ class ArucoTagAutonomy():
 
         self.num_frames = num_frames_to_search
 
+        calibration = np.load('../calibration.npz')
+        self.mtx = calibration['mtx']
+        self.dist = calibration['dist']
+
     def search_for_tags(self):
         frames = []
 
         for i in range(self.num_frames):
-            _, frame = self.cap.read()
+            _, frame = self.cap.read() # TODO: add error handling
             frames.append(frame)
 
         for frame in reversed(frames): # look at the most recent frame first
@@ -100,6 +82,32 @@ class ArucoTagAutonomy():
                 return corners, ids
 
         return [], [] # if we don't find the tags we're looking for in any of the frames, return two empty lists so we can check len(corners) to determine if the tags were found
+
+    def distance_to_tags(self, tag_corners):
+        # TODO: get mtx and dist for the Oak-D camera
+        # get the translation vectors from the camera to each tag and return it as a list
+        rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(tag_corners, MARKER_SIZE_M, self.cap.mtx, self.cap.dist)
+        return tvecs
+
+    @staticmethod
+    def translate_lat_lon(lat, lon, tvec, heading):
+        # Convert the heading to radians and get the x and y components of the distance
+        heading = np.deg2rad(heading)
+
+        # combine the compass heading with the tvec to get the distance in x and y
+        x = tvec[0] * np.cos(heading) - tvec[1] * np.sin(heading)
+        y = tvec[0] * np.sin(heading) + tvec[1] * np.cos(heading)
+
+        R_M = 6371000
+        delta_lat = np.tan(y / R_M) * 180 / np.pi
+
+        # get the radius of the earth at the camera's current latitude
+        radius = R_M * np.cos(np.deg2rad(lat))
+        delta_lon = np.tan(x / radius) * 180 / np.pi
+
+        return lat + delta_lat, lon + delta_lon
+
+
 
 
 
@@ -135,7 +143,7 @@ if __name__ == '__main__':
     errors = []
     for heading in headings:
         for tvec in tvecs:
-            pred_lat, pred_lon = translate_lat_lon(lat, lon, tvec, heading)
+            pred_lat, pred_lon = ArucoTagAutonomy.translate_lat_lon(lat, lon, tvec, heading)
             pred_distance = get_distance(lon, lat, pred_lon, pred_lat)
             true_distance = np.linalg.norm(tvec)
 
