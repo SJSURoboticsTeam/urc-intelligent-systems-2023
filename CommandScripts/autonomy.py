@@ -104,6 +104,7 @@ class Autonomy:
     def jsonify_commands(self, commands):
         json_command = {"HB":commands[0],"IO":commands[1],"WO":commands[2],"DM":f"{commands[3]}","CMD":[commands[4],commands[5]]}
         json_command = json.dumps(json_command)
+        json_command = json_command.replace(" ", "")
         return json_command
 
 
@@ -207,6 +208,7 @@ class Autonomy:
         distance = self.get_distance(self.current_GPS, self.GPS_target)
         json_command = {"Bearing":bearing,"Distance":distance[0],"GPS":[self.current_GPS[0],self.current_GPS[1]],"Target":[self.GPS_target[0],self.GPS_target[1]]}
         json_command = json.dumps(json_command)
+        json_command = json_command.replace(" ", "")
         requests.post(self.url, data=None, json=json_command)
 
     def start_mission(self):

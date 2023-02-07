@@ -17,29 +17,11 @@ class SerialSystem:
         self.ser.dtr = False
         self.ser.timeout = 0
 
-    def write_serial(self, message):
-        self.ser.write(message.encode('utf-8'))
-
-    def read_serial(self):
-        line = self.ser.read()
-        if len(line) != 0:
-            try:
-                line += self.ser.read(self.ser.inWaiting())
-                print(line.decode("utf-8"))
-            except:
-                print("Error decoding data")
-            time.sleep(0.05)
-            return line.decode("utf-8")
-
     def read_write_serial(self, message):
-        line = self.ser.read()
-        if len(line) != 0:
-            try:
-                line += self.ser.read(self.ser.inWaiting())
-                print(line.decode("utf-8"))
-            except:
-                print("Error decoding data")
-            #time.sleep(0.5)
+        line = self.ser.read(self.ser.inWaiting())
+        print(line.decode("utf-8"))
+        time.sleep(0.10)
+        if (len(line) != 0):
             self.ser.write(message.encode('utf-8'))
             
 
