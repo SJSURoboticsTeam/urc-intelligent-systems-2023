@@ -18,12 +18,21 @@ class SerialSystem:
         self.ser.timeout = 0
 
     def read_write_serial(self, message):
-        line = self.ser.read(self.ser.inWaiting())
-        print(line.decode("utf-8"))
-        time.sleep(0.10)
-        if (len(line) != 0):
+        try:
             self.ser.write(message.encode('utf-8'))
+            time.sleep(0.1)
+            while self.ser.inWaiting()==0: pass
+            if  self.ser.inWaiting()>0:
+                response = self.ser.readline()
+                response = response.decode("utf-8")
+                print(response)
+                self.ser.flushInput()
+        except KeyboardInterrupt:
+            print("KeyboardInterrupt has been caught.")
+        return response
             
 
     def close_serial(self):
         self.ser.close()
+
+

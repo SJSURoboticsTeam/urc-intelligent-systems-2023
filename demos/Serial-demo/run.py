@@ -15,11 +15,14 @@ except:
     port = ports[0].device
     serial = SerialSystem(port, 38400)
 
-speeds = [50, 45, 20, 11]
+speeds = [50, 45, 20, 11, 77, 32, 88]
 while True:
-
     for i in speeds:
         data = {"HB":0,"IO":1,"WO":0,"DM":"D","CMD":[0,i]}
         data = json.dumps(data)
         data = data.replace(" ", "")
-        serial.read_write_serial(data)
+        answer = serial.read_write_serial(data)
+
+        
+
+    
