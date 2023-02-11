@@ -20,7 +20,7 @@ class SerialSystem:
     def read_write_serial(self, message):
         try:
             self.ser.write(message.encode('utf-8'))
-            time.sleep(0.1)
+            # time.sleep(0.1)
             while self.ser.inWaiting()==0: pass
             if  self.ser.inWaiting()>0:
                 response = self.ser.readline()

@@ -5,6 +5,7 @@ import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
 from modules.GPS import gpsRead
+import serial.tools.list_ports as port_list
 
 class Autonomy:
     def __init__(self, serial, url, max_speed, max_steering, GPS_coordinate_map):
