@@ -10,8 +10,8 @@ class gpsRead:
         requests.post(url, json={"longitude": LonLat["longitude"], "latitude": LonLat["latitude"]})
 
     def get_position(self, url=None):
-        LonLat = {"longitude":5,
-                  "latitude":10}
+        LonLat = {"longitude":0,
+                  "latitude":0}
         try:
             s = (self.gps_port.read(500)).decode('utf-8')
             data = s.splitlines()
