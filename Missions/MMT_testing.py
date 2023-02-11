@@ -6,9 +6,9 @@ from modules.Serial import SerialSystem
 from CommandScripts.autonomy import Autonomy
 import json
 
-port = "dev/ttyACM0"
+port = "/dev/ttyACM0"
 baudrate = 38400
-max_speed = 20
+max_speed = 5
 max_angle = 12
 server = 'http://192.168.1.133:5000'
 GPS_list = []
@@ -18,7 +18,7 @@ try:
     print("Using port: " + port)
 except:
     ports = list(port_list.comports())
-    print('====> Designated Port not found. Using Port:', ports[0].device)
+    print('====> Designated Port not found. Using Port:', ports[0].device, "For Serial Connection")
     port = ports[0].device
     serial = SerialSystem(port, baudrate)
 
@@ -33,7 +33,7 @@ for i in GPS_map:
     GPS_list.append(GPS_map[i])
 print(GPS_list)
 
-# example_GPS_map = [[-121.881073,37.335186],[-121.881054,37.335132]]
+example_GPS_map = [[-121.881073,37.335186],[-121.881054,37.335132]]
 
-# rover = Autonomy(serial, f"{server}/drive", max_speed, max_angle, GPS_list)
-# rover.start_mission()
+rover = Autonomy(serial, f"{server}/drive", max_speed, max_angle, example_GPS_map)
+rover.start_mission()
