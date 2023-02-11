@@ -17,16 +17,29 @@ class SerialSystem:
         self.ser.dtr = False
         self.ser.timeout = 0
 
-    def read_write_serial(self, message):
+    def read_serial(self):
         try:
-            self.ser.write(message.encode('utf-8'))
-            # time.sleep(0.1)
             while self.ser.inWaiting()==0: pass
             if  self.ser.inWaiting()>0:
                 response = self.ser.readline()
                 response = response.decode("utf-8")
                 print(response)
                 self.ser.flushInput()
+                time.sleep(0.1)
+        except KeyboardInterrupt:
+            print("KeyboardInterrupt has been caught.")
+        return response
+
+    def read_write_serial(self, message):
+        try:
+            self.ser.write(message.encode('utf-8'))
+            while self.ser.inWaiting()==0: pass
+            if  self.ser.inWaiting()>0:
+                response = self.ser.readline()
+                response = response.decode("utf-8")
+                print(response)
+                self.ser.flushInput()
+                time.sleep(0.1)
         except KeyboardInterrupt:
             print("KeyboardInterrupt has been caught.")
         return response

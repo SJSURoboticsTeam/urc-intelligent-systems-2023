@@ -19,7 +19,7 @@ class gpsRead:
                 d = data[i].split(',')
                 if d[0] == "$GPGGA" and len(d) == 15:
                     if d[2] == '' or d[4] == '':
-                        return ["None", "None"], "Need More Satellite Locks"
+                        return "Need More Satellite Locks"
                     if d[3] == 'S':
                         LonLat["latitude"] = -float(d[2])
                     else:

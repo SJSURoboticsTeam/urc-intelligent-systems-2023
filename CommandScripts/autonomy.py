@@ -4,43 +4,25 @@ import requests
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
-from modules.GPS import gpsRead
 import serial.tools.list_ports as port_list
 
 class Autonomy:
-    def __init__(self, serial, url, max_speed, max_steering, GPS_coordinate_map):
+    def __init__(self, serial, url, max_speed, max_steering, GPS, GPS_coordinate_map):
         self.serial = serial
         self.url = url
         self.max_speed = max_speed
         self.max_steering = max_steering
         self.commands = [0,0,0,'D',0,0]
         self.current_GPS = [0,0]
+        self.compass = Compass()
+        self.GPS = GPS
         self.gain = 1
         self.GPS_coordinate_map = GPS_coordinate_map
         self.GPS_target = self.GPS_coordinate_map[0]
-        self.serial.connect()
-        self.connect_GPS()
+        self.GPS = GPS
 
 
-    def connect_GPS(self):
-        try:
-            self.GPS_data = gpsRead("/dev/ttyACM0",9600)
-            print("GPS Port found")
-        except:
-                port_number = 0
-                ports = list(port_list.comports())
-                print('====> Designated Port not found. Using Port:', ports[port_number].device)
-                port = ports[port_number].device
-                self.GPS_data = gpsRead(port,9600)
-                while self.GPS_data.get_position() == ['error', 'error'] or self.GPS_data.get_position() == ["None", "None"]:
-                    print("Port not found, going to next port...")
-                    port_number += 1
-                    port = ports[port_number].device
-                    try:
-                        self.GPS_data = gpsRead(port,9600)
-                        break
-                    except:
-                        continue
+
                     
 
     def get_distance(self, current_GPS, target_GPS):
@@ -115,6 +97,7 @@ class Autonomy:
         target_latitude = math.radians(target_GPS[1])
         target_longitude = math.radians(target_GPS[0])
 
+
         deltalog= target_longitude-current_longitude;
 
         x=math.cos(target_latitude)*math.sin(deltalog);
@@ -147,7 +130,7 @@ class Autonomy:
 
     def get_steering(self, current_GPS, target_GPS):
         
-        final_angle = Compass.get_heading()/self.get_bearing(current_GPS, target_GPS)
+        final_angle = self.compass.get_heading()/self.get_bearing(current_GPS, target_GPS)
 
         if(final_angle >= 0 and final_angle <= 1):
             print("Rover moving forward!")
@@ -202,8 +185,6 @@ class Autonomy:
                 self.forward_gain_rover(dist)
 
 
-
-
     def get_rover_status(self):
         bearing = self.get_bearing(self.current_GPS, self.GPS_target)
         distance = self.get_distance(self.current_GPS, self.GPS_target)
@@ -212,19 +193,18 @@ class Autonomy:
         json_command = json_command.replace(" ", "")
         requests.post(self.url, data=None, json=json_command)
 
+
     def start_mission(self):
-        homing_end = "Starting control loop..."
         while True:
-            response = self.serial.read_serial()
-            if homing_end in response:
-                while True:
-                    self.current_GPS = self.GPS_data.get_position(f"{self.url}/gps")
-                    # command = self.get_steering(self.current_GPS, self.GPS_target)
-                    command = self.get_ctl_steering(self.current_GPS, self.GPS_target)
-                    response += self.serial.read_serial()
-                    self.get_rover_status()
-                    if response != "No data received":
-                        self.serial.write_serial(command.text)
-                    else:
-                        continue
-                    
+            self.current_GPS = self.GPS.get_position(f"{self.url}/gps")
+            if self.current_GPS != "Need More Satellite Locks":
+                command = self.get_steering(self.current_GPS, self.GPS_target)
+                # command = self.get_ctl_steering(self.current_GPS, self.GPS_target)
+                response += self.serial.read_serial()
+                self.get_rover_status()
+                if response != "No data received":
+                    self.serial.read_write_serial(command.text)
+                else:
+                    continue
+            else:
+                print(self.current_GPS)
