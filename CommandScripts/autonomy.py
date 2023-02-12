@@ -200,7 +200,7 @@ class Autonomy:
             if self.current_GPS != "Need More Satellite Locks":
                 command = self.get_steering(self.current_GPS, self.GPS_target)
                 # command = self.get_ctl_steering(self.current_GPS, self.GPS_target)
-                response += self.serial.read_serial()
+                response = self.serial.read_serial()
                 self.get_rover_status()
                 if response != "No data received":
                     self.serial.read_write_serial(command.text)
