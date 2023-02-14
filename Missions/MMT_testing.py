@@ -59,5 +59,5 @@ for i in GPS_map:
 example_GPS_map = [[-121.881073,37.335186],[-121.881054,37.335132]]
 # example_GPS_map = [[-121.881073,37.335186]]
 
-rover = Autonomy(serial, f"{server}/drive", max_speed, max_angle, GPS, example_GPS_map)
+rover = Autonomy(serial, server, max_speed, max_angle, GPS, example_GPS_map)
 rover.start_mission()

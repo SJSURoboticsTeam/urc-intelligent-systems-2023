@@ -4,7 +4,7 @@ import requests
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
-import serial.tools.list_ports as port_list
+import time
 
 class Autonomy:
     def __init__(self, serial, url, max_speed, max_steering, GPS, GPS_coordinate_map):
@@ -21,9 +21,6 @@ class Autonomy:
         self.GPS_target = self.GPS_coordinate_map[0]
         self.GPS = GPS
 
-
-
-                    
 
     def get_distance(self, current_GPS, target_GPS):
 
@@ -109,19 +106,20 @@ class Autonomy:
 
     def forward_rover(self, commands):
         self.commands[4] = self.max_speed
-        self.jsonify_commands(commands)
+        return self.jsonify_commands(commands)
 
     def steer_left(self, commands):
         self.commands[5] = -self.max_steering
-        self.jsonify_commands(commands)
+        print(self.commands)
+        return self.jsonify_commands(commands)
 
     def steer_right(self, commands):
         self.commands[5] = self.max_steering
-        self.jsonify_commands(commands)
+        return self.jsonify_commands(commands)
 
     def stop_rover(self, commands):
         self.commands = [0,0,0,'D',0,0]
-        self.jsonify_commands(commands)
+        return self.jsonify_commands(commands)
 
     def goto_next_coordinate(self):
         self.GPS_coordinate_map.pop(0)
@@ -130,41 +128,46 @@ class Autonomy:
 
     def get_steering(self, current_GPS, target_GPS):
         
+        # TODO Final angle may be having errors. Please test
         final_angle = self.compass.get_heading()/self.get_bearing(current_GPS, target_GPS)
+        print("1", final_angle)
+        final_angle = 1
+        print("2", final_angle)
 
         if(final_angle >= 0 and final_angle <= 1):
             print("Rover moving forward!")
-            self.forward_rover(self.commands)
+            return self.forward_rover(self.commands)
             
         elif(final_angle > 1 and final_angle <= 8):
             print("Rover turning left!")
-            self.steer_left(self.commands)
+            return self.steer_left(self.commands)
             
 
         elif(final_angle <= 13 and final_angle >= 8):
             print("Rover turning right!")
-            self.steer_right(self.commands)
+            return self.steer_right(self.commands)
             
 
         elif(target_GPS[0]==current_GPS[0] and current_GPS[1]==target_GPS[1]):
             print("Rover has reached destination!")
-            self.stop_rover(self.commands)
             self.goto_next_coordinate()
+            return self.stop_rover(self.commands)
+            
 
     def forward_gain_rover(self, commands,error):
         self.commands[4] = error*self.gain
-        self.jsonify_commands(commands)
+        return self.jsonify_commands(commands)
     
     def set_gain(self,ingain):
         self.gain = ingain
 
     def steer_gain_left(self, commands, error):
         self.commands[5] = -error*self.gain
-        self.jsonify_commands(commands)
+        return self.jsonify_commands(commands)
 
     def steer_gain_right(self, commands, error):
         self.commands[5] = error*self.gain
-        self.jsonify_commands(commands)
+        return self.jsonify_commands(commands)
 
     def get_ctl_steer(self, current_GPS, target_GPS):
         bearing = self.get_bearing(current_GPS, target_GPS)
@@ -191,19 +194,24 @@ class Autonomy:
         json_command = {"Bearing":bearing,"Distance":distance[0],"GPS":[self.current_GPS[0],self.current_GPS[1]],"Target":[self.GPS_target[0],self.GPS_target[1]]}
         json_command = json.dumps(json_command)
         json_command = json_command.replace(" ", "")
-        requests.post(self.url, data=None, json=json_command)
+        requests.post(f"{self.url}/auto_data", json=json_command)
 
 
     def start_mission(self):
         while True:
-            self.current_GPS = self.GPS.get_position(f"{self.url}/gps")
+
+            # self.current_GPS = self.GPS.get_position(f"{self.url}/gps")
+            #fake gps test, uncomment above when ready with real GPS
+            self.current_GPS = [-121.867154,37.374132]
+            print("Current GPS", self.current_GPS)
             if self.current_GPS != "Need More Satellite Locks":
                 command = self.get_steering(self.current_GPS, self.GPS_target)
-                # command = self.get_ctl_steering(self.current_GPS, self.GPS_target)
-                response += self.serial.read_serial()
+                print(command, "Sending Command")
+                # time.sleep(1)
+                response = self.serial.read_serial()
                 self.get_rover_status()
-                if response != "No data received":
-                    self.serial.read_write_serial(command.text)
+                if response != "No data received" and command != None:
+                    self.serial.read_write_serial(command)
                 else:
                     continue
             else:
