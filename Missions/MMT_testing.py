@@ -11,7 +11,7 @@ port = "/dev/ttyACM0"
 baudrate = 38400
 max_speed = 5
 max_angle = 12
-server = 'http://192.168.1.133:5000'
+server = 'http://192.168.50.243:5000'
 GPS_list = []
 
 try:
