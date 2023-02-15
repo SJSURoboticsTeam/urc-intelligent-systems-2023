@@ -130,9 +130,6 @@ class Autonomy:
         
         # TODO Final angle may be having errors. Please test
         final_angle = self.compass.get_heading()/self.get_bearing(current_GPS, target_GPS)
-        print("1", final_angle)
-        final_angle = 1
-        print("2", final_angle)
 
         if(final_angle >= 0 and final_angle <= 1):
             print("Rover moving forward!")
@@ -200,10 +197,8 @@ class Autonomy:
     def start_mission(self):
         while True:
 
-            # self.current_GPS = self.GPS.get_position(f"{self.url}/gps")
-            #fake gps test, uncomment above when ready with real GPS
-            self.current_GPS = [-121.867154,37.374132]
-            print("Current GPS", self.current_GPS)
+            self.current_GPS = self.GPS.get_position(f"{self.url}/gps")
+            print("Current GPS:", self.current_GPS)
             if self.current_GPS != "Need More Satellite Locks":
                 command = self.get_steering(self.current_GPS, self.GPS_target)
                 print("Sending Command:", command)
@@ -211,7 +206,7 @@ class Autonomy:
                 self.get_rover_status()
                 if response != "No data received" and command != None:
                     self.serial.write_serial(command)
-                    # time.sleep(1.5)
+                    time.sleep(1)
                 else:
                     continue
             else:
