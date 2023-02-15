@@ -22,27 +22,22 @@ class SerialSystem:
             while self.ser.inWaiting()==0: pass
             if  self.ser.inWaiting()>0:
                 response = self.ser.readline()
-                response = response.decode("utf-8")
-                print(response)
+                try:
+                    response = response.decode("utf-8")
+                except:
+                    print("Error Reading")
+                print("Recieving:", response)
                 self.ser.flushInput()
                 time.sleep(0.1)
         except KeyboardInterrupt:
             print("KeyboardInterrupt has been caught.")
         return response
 
-    def read_write_serial(self, message):
+    def write_serial(self, message):
         try:
             self.ser.write(message.encode('utf-8'))
-            while self.ser.inWaiting()==0: pass
-            if  self.ser.inWaiting()>0:
-                response = self.ser.readline()
-                response = response.decode("utf-8")
-                print(response)
-                self.ser.flushInput()
-                time.sleep(0.1)
-        except KeyboardInterrupt:
-            print("KeyboardInterrupt has been caught.")
-        return response
+        except:
+            print("Error Writing")
             
 
     def close_serial(self):
