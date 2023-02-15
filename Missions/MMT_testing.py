@@ -44,10 +44,15 @@ except:
             break
 
 
-get_GPS_map_url = f"{server}/gps_map"
-GPS_map = requests.get(get_GPS_map_url)
+GPS_map_url = f"{server}/gps_map"
+
+try:
+    GPS_map = requests.get(get_GPS_map_url)
+except:
+    print("Could not get GPS map from mission control")
+    exit(1)
+
 GPS_map = json.loads(GPS_map.text)
-GPS_map = json.loads(json_str_example)
 
 for i in GPS_map:
     GPS_list.append(GPS_map[i])

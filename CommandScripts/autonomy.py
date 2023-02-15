@@ -19,7 +19,6 @@ class Autonomy:
         self.gain = 1
         self.GPS_coordinate_map = GPS_coordinate_map
         self.GPS_target = self.GPS_coordinate_map[0]
-        self.GPS = GPS
 
 
     def get_distance(self, current_GPS, target_GPS):
@@ -93,7 +92,6 @@ class Autonomy:
         current_longitude = math.radians(current_GPS[0])
         target_latitude = math.radians(target_GPS[1])
         target_longitude = math.radians(target_GPS[0])
-
 
         deltalog= target_longitude-current_longitude;
 
@@ -196,8 +194,7 @@ class Autonomy:
 
     def start_mission(self):
         while True:
-
-            self.current_GPS = self.GPS.get_position(f"{self.url}/gps")
+            self.current_GPS = self.GPS.get_position()
             print("Current GPS:", self.current_GPS)
             if self.current_GPS != "Need More Satellite Locks":
                 command = self.get_steering(self.current_GPS, self.GPS_target)
@@ -210,4 +207,4 @@ class Autonomy:
                 else:
                     continue
             else:
-                print(self.current_GPS)
+                print("GPS Error. Current GPS:", self.current_GPS)
