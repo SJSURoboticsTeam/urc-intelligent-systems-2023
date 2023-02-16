@@ -103,7 +103,8 @@ class Autonomy:
 
 
     def forward_rover(self, commands):
-        self.commands[4] = self.max_speed
+        # self.commands[4] = self.max_speed
+        self.commands = [0,0,0,'D',self.max_speed,0]
         return self.jsonify_commands(commands)
 
     def steer_left(self, commands):
@@ -125,25 +126,30 @@ class Autonomy:
 
 
     def get_steering(self, current_GPS, target_GPS):
-        
-        # TODO Final angle may be having errors. Please test
-        final_angle = self.compass.get_heading()/self.get_bearing(current_GPS, target_GPS)
 
-        if(final_angle >= 0 and final_angle <= 1):
+        heading = self.compass.get_heading()
+        bearing = self.get_bearing(current_GPS, target_GPS)
+
+        final_angle = math.degrees(math.atan2(math.sin(math.radians(bearing - heading)), math.cos(math.radians(bearing - heading))))
+
+        if final_angle < 0:
+            final_angle += 360
+
+        print("Final Angle:", final_angle)
+
+        if final_angle <= 1 or final_angle > 359:
             print("Rover moving forward!")
             return self.forward_rover(self.commands)
-            
-        elif(final_angle > 1 and final_angle <= 8):
+
+        elif final_angle > 1 and final_angle <= 180:
             print("Rover turning left!")
             return self.steer_left(self.commands)
-            
 
-        elif(final_angle <= 13 and final_angle >= 8):
+        elif final_angle > 180 and final_angle < 359:
             print("Rover turning right!")
             return self.steer_right(self.commands)
-            
-
-        elif(target_GPS[0]==current_GPS[0] and current_GPS[1]==target_GPS[1]):
+        
+        if current_GPS == target_GPS:
             print("Rover has reached destination!")
             self.goto_next_coordinate()
             return self.stop_rover(self.commands)
