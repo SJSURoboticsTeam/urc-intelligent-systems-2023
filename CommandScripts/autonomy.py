@@ -19,6 +19,16 @@ class Autonomy:
         self.gain = 1
         self.GPS_coordinate_map = GPS_coordinate_map
         self.GPS_target = self.GPS_coordinate_map[0]
+        self.steer_error_sum = 0
+        self.steer_prev_error = 0
+        self.speed_error_sum = 0
+        self.speed_prev_error = 0
+        self.steer_kp = 0.2
+        self.steer_ki = 0.001
+        self.steer_kd = 0.1
+        self.speed_kp = 0.2
+        self.speed_ki = 0.001
+        self.speed_kd = 0.1
 
 
     def get_distance(self, current_GPS, target_GPS):
@@ -102,22 +112,70 @@ class Autonomy:
         return bearing
 
 
+    # def forward_rover(self, commands):
+    #     # self.commands[4] = self.max_speed
+    #     self.commands = [0,0,0,'D',self.max_speed,0]
+    #     return self.jsonify_commands(commands)
+
+    # def steer_left(self, commands):
+    #     self.commands[5] = -self.max_steering
+    #     print(self.commands)
+    #     return self.jsonify_commands(commands)
+
+    # def steer_right(self, commands):
+    #     self.commands[5] = self.max_steering
+    #     return self.jsonify_commands(commands)
+
+    # def stop_rover(self, commands):
+    #     self.commands = [0,0,0,'D',0,0]
+    #     return self.jsonify_commands(commands)
+
+    # def goto_next_coordinate(self):
+    #     self.GPS_coordinate_map.pop(0)
+    #     self.GPS_target = self.GPS_coordinate_map[0]
+
     def forward_rover(self, commands):
-        # self.commands[4] = self.max_speed
-        self.commands = [0,0,0,'D',self.max_speed,0]
+        self.commands = [0, 0, 0, 'D', self.max_speed, 0]
         return self.jsonify_commands(commands)
 
     def steer_left(self, commands):
-        self.commands[5] = -self.max_steering
+        steer_error = -self.max_steering
+        self.steer_error_sum += steer_error
+        steer_derivative = steer_error - self.steer_prev_error
+        steer_output = self.steer_kp * steer_error + self.steer_ki * self.steer_error_sum + self.steer_kd * steer_derivative
+        self.steer_prev_error = steer_error
+
+        speed_error = -steer_output
+        self.speed_error_sum += speed_error
+        speed_derivative = speed_error - self.speed_prev_error
+        speed_output = self.speed_kp * speed_error + self.speed_ki * self.speed_error_sum + self.speed_kd * speed_derivative
+        self.speed_prev_error = speed_error
+
+        self.commands[4] = round(max(0, min(self.max_speed + speed_output, self.max_speed)))
+        self.commands[5] = round(max(-self.max_steering, min(steer_output, self.max_steering)))
         print(self.commands)
         return self.jsonify_commands(commands)
 
     def steer_right(self, commands):
-        self.commands[5] = self.max_steering
+        steer_error = self.max_steering
+        self.steer_error_sum += steer_error
+        steer_derivative = steer_error - self.steer_prev_error
+        steer_output = self.steer_kp * steer_error + self.steer_ki * self.steer_error_sum + self.steer_kd * steer_derivative
+        self.steer_prev_error = steer_error
+
+        speed_error = -steer_output
+        self.speed_error_sum += speed_error
+        speed_derivative = speed_error - self.speed_prev_error
+        speed_output = self.speed_kp * speed_error + self.speed_ki * self.speed_error_sum + self.speed_kd * speed_derivative
+        self.speed_prev_error = speed_error
+
+        self.commands[4] = round(max(0, min(self.max_speed + speed_output, self.max_speed)))
+        self.commands[5] = round(max(-self.max_steering, min(steer_output, self.max_steering)))
+        print(self.commands)
         return self.jsonify_commands(commands)
 
     def stop_rover(self, commands):
-        self.commands = [0,0,0,'D',0,0]
+        self.commands = [0, 0, 0, 'D', 0, 0]
         return self.jsonify_commands(commands)
 
     def goto_next_coordinate(self):
