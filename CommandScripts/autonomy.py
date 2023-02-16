@@ -196,7 +196,7 @@ class Autonomy:
         while True:
             self.current_GPS = self.GPS.get_position()
             print("Current GPS:", self.current_GPS)
-            if self.current_GPS != "Need More Satellite Locks":
+            if self.current_GPS != "Need More Satellite Locks" and self.current_GPS != None:
                 command = self.get_steering(self.current_GPS, self.GPS_target)
                 print("Sending Command:", command)
                 response = self.serial.read_serial()

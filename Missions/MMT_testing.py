@@ -7,26 +7,28 @@ from CommandScripts.autonomy import Autonomy
 from modules.GPS import gpsRead
 import json
 
-port = "/dev/ttyACM0"
+serial_port = "/dev/ttyACM0"
+gps_port = "/dev/ttyACM2"
 baudrate = 38400
 max_speed = 5
 max_angle = 12
-server = 'http://192.168.50.243:5000'
+server = 'http://192.168.50.243:5002'
 GPS_list = []
 
 try:
-    serial = SerialSystem(port, baudrate)
-    print("Using port: " + port, "For Serial Comms")
+    serial = SerialSystem(serial_port, baudrate)
+    print("Using port: " + serial_port, "For Serial Comms")
 except:
     ports = list(port_list.comports())
     print('====> Designated Port not found. Using Port:', ports[0].device, "For Serial Connection")
-    port = ports[0].device
-    serial = SerialSystem(port, baudrate)
+    serial_port = ports[0].device
+    serial = SerialSystem(serial_port, baudrate)
 
 
 try:
-    GPS = gpsRead("/dev/ttyACM1",9600)
-    print("GPS Port found")
+
+    GPS = gpsRead(gps_port,9600)
+    print("Using port: " + gps_port, "For GPS")
 except:
         port_number = 0
         ports = list(port_list.comports())
@@ -36,7 +38,7 @@ except:
         while GPS.get_position() == ['error', 'error'] or GPS.get_position() == ["None", "None"]:
             print("Port not found, going to next port...")
             port_number += 1
-            port = ports[port_number].device
+            gps_port = ports[port_number].device
             try:
                 GPS = gpsRead(port,9600)
             except:
@@ -47,7 +49,7 @@ except:
 GPS_map_url = f"{server}/gps_map"
 
 try:
-    GPS_map = requests.get(get_GPS_map_url)
+    GPS_map = requests.get(GPS_map_url)
 except:
     print("Could not get GPS map from mission control")
     exit(1)
