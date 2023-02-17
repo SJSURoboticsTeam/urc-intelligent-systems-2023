@@ -7,57 +7,58 @@ from CommandScripts.autonomy import Autonomy
 from modules.GPS import gpsRead
 import json
 
-port = "/dev/ttyACM0"
+serial_port = "/dev/ttyACM0"
+gps_port = "/dev/ttyACM2"
 baudrate = 38400
 max_speed = 5
 max_angle = 12
-server = 'http://192.168.50.243:5000'
+server = 'http://10.251.253.243:5002'
 GPS_list = []
 
 try:
-    serial = SerialSystem(port, baudrate)
-    print("Using port: " + port, "For Serial Comms")
+    serial = SerialSystem(serial_port, baudrate)
+    print("Using port: " + serial_port, "For Serial Comms")
 except:
     ports = list(port_list.comports())
     print('====> Designated Port not found. Using Port:', ports[0].device, "For Serial Connection")
-    port = ports[0].device
-    serial = SerialSystem(port, baudrate)
+    serial_port = ports[0].device
+    serial = SerialSystem(serial_port, baudrate)
 
 
 try:
-    GPS = gpsRead("/dev/ttyACM1",9600)
-    print("GPS Port found")
+
+    GPS = gpsRead(gps_port,9600)
+    print("Using port: " + gps_port, "For GPS")
 except:
         port_number = 0
         ports = list(port_list.comports())
         print('====> Designated Port not found. Using Port:', ports[port_number].device, "For GPS Connection")
         port = ports[port_number].device
-        # GPS = gpsRead(port,9600)
-        # while GPS.get_position() == ['error', 'error'] or GPS.get_position() == ["None", "None"]:
-        #     print("Port not found, going to next port...")
-        #     port_number += 1
-        #     port = ports[port_number].device
-        #     try:
-        #         GPS = gpsRead(port,9600)
-        #     except:
-        #         continue
-        #     break
+        GPS = gpsRead(port,9600)
+        while GPS.get_position() == ['error', 'error'] or GPS.get_position() == ["None", "None"]:
+            print("Port not found, going to next port...")
+            port_number += 1
+            gps_port = ports[port_number].device
+            try:
+                GPS = gpsRead(port,9600)
+            except:
+                continue
+            break
 
 
-# json_str_example = '{"1": [-121.881073,37.335186], "2": [-121.881054,37.335132]}'
-json_str_example = '{"1": [-121.881073,37.335186]}'
+GPS_map_url = f"{server}/gps_map"
 
-# get_GPS_map_url = f"{server}/gps_map"
-# GPS_map = requests.get(get_GPS_map_url)
-# GPS_map = json.loads(GPS_map.text)
-GPS_map = json.loads(json_str_example)
+try:
+    GPS_map = requests.get(GPS_map_url)
+except:
+    print("Could not get GPS map from mission control")
+    exit(1)
+
+GPS_map = json.loads(GPS_map.text)
 
 for i in GPS_map:
     GPS_list.append(GPS_map[i])
-# print("GPS List", GPS_list)
+print("GPS List:", GPS_list)
 
-example_GPS_map = [[-121.881073,37.335186],[-121.881054,37.335132]]
-# example_GPS_map = [[-121.881073,37.335186]]
-
-rover = Autonomy(serial, server, max_speed, max_angle, GPS, example_GPS_map)
+rover = Autonomy(serial, server, max_speed, max_angle, GPS, GPS_list)
 rover.start_mission()

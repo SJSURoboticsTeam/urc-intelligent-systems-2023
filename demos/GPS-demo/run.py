@@ -24,7 +24,7 @@ if __name__ == '__main__':
                     break
                 except:
                     continue
-    GPS_Coordinates = data.get_position(url)
+    GPS_Coordinates = data.get_position() # You can add the url as an argument if you want to post the gps coordinates
 
     while True:
         print(GPS_Coordinates)

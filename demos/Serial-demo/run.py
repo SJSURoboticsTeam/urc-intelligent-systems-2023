@@ -21,7 +21,8 @@ while True:
         data = {"HB":0,"IO":1,"WO":0,"DM":"D","CMD":[0,i]}
         data = json.dumps(data)
         data = data.replace(" ", "")
-        answer = serial.read_write_serial(data)
+        answer = serial.read_serial()
+        serial.write_serial(data)
 
         
 
