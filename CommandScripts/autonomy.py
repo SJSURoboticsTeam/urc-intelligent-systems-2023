@@ -132,7 +132,6 @@ class Autonomy:
 
         self.commands[4] = round(max(0, min(self.max_speed + speed_output, self.max_speed)))
         self.commands[5] = round(max(-self.max_steering, min(steer_output, self.max_steering)))
-        print(self.commands)
         return self.jsonify_commands(commands)
 
     def steer_right(self, commands):
@@ -150,7 +149,6 @@ class Autonomy:
 
         self.commands[4] = round(max(0, min(self.max_speed + speed_output, self.max_speed)))
         self.commands[5] = round(max(-self.max_steering, min(steer_output, self.max_steering)))
-        print(self.commands)
         return self.jsonify_commands(commands)
 
     def stop_rover(self, commands):
@@ -163,10 +161,12 @@ class Autonomy:
 
 
     def get_steering(self, current_GPS, target_GPS):
-        heading = self.compass.get_heading()
-        bearing = self.get_bearing(current_GPS, target_GPS)
+        # heading = self.compass.get_heading()
+        # bearing = self.get_bearing(current_GPS, target_GPS)
 
-        final_angle = math.degrees(math.atan2(math.sin(math.radians(bearing - heading)), math.cos(math.radians(bearing - heading))))
+        # final_angle = math.degrees(math.atan2(math.sin(math.radians(bearing - heading)), math.cos(math.radians(bearing - heading))))
+        final_angle = self.compass.get_heading()/self.get_bearing(current_GPS, target_GPS)
+
 
         if final_angle < 0:
             final_angle += 360
@@ -193,11 +193,11 @@ class Autonomy:
 
     def get_rover_status(self):
         bearing = self.get_bearing(self.current_GPS, self.GPS_target)
-        distance = self.get_distance(self.current_GPS, self.GPS_target)
-        json_command = {"Bearing":bearing,"Distance":distance[0],"GPS":[self.current_GPS[0],self.current_GPS[1]],"Target":[self.GPS_target[0],self.GPS_target[1]]}
+        distance = round(self.get_distance(self.current_GPS, self.GPS_target)[0]*1000)
+        json_command = {"Bearing":bearing,"Distance":distance,"GPS":[self.current_GPS[0],self.current_GPS[1]],"Target":[self.GPS_target[0],self.GPS_target[1]]}
         json_command = json.dumps(json_command)
         json_command = json_command.replace(" ", "")
-        requests.post(f"{self.url}/auto_data", json=json_command)
+        requests.post(f"{self.url}/autonomy/status", json=json_command)
 
 
     def start_mission(self):
@@ -208,8 +208,11 @@ class Autonomy:
                 while True:
                     self.current_GPS = self.GPS.get_position()
                     print("Current GPS:", self.current_GPS)
+                    print("Target GPS:", self.GPS_target)
                     if self.current_GPS != "Need More Satellite Locks" and self.current_GPS != None:
                         command = self.get_steering(self.current_GPS, self.GPS_target)
+                        distance = round(self.get_distance(self.current_GPS, self.GPS_target)[0]*1000)
+                        print("Distance from Target GPS:", distance, "Meters")
                         print("Sending Command:", command)
                         response = self.serial.read_serial()
                         self.get_rover_status()

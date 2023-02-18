@@ -11,9 +11,9 @@ serial_port = "/dev/ttyACM0"
 gps_port = "/dev/ttyACM2"
 serial_baudrate = 38400
 gps_baudrate = 9600
-max_speed = 5
+max_speed = 50
 max_angle = 12
-server = 'http://10.251.253.243:5002'
+server = 'http://13.56.207.97:5000'
 GPS_list = []
 
 try:
@@ -46,7 +46,7 @@ except:
             break
 
 
-GPS_map_url = f"{server}/gps_map"
+GPS_map_url = f"{server}/gps"
 try:
     GPS_map = requests.get(GPS_map_url)
 except:
