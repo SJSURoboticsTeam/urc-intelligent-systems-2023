@@ -1,4 +1,19 @@
 import depthai
+import numpy as np
+
+def get_camera_intrinsics(device):
+    """Gets the camera intrinsics from the device (camera matrix and distortion coefficients).
+    It returns them as mtx, dist. It takes a depthai.Device object as an argument.
+
+    """
+    calibData = device.readCalibration()
+
+    # get the camera matrix
+    mtx = np.array(calibData.getCameraIntrinsics(depthai.CameraBoardSocket.RGB))
+    # get the distortion coefficients
+    dist = np.array(calibData.getDistortionCoefficients(depthai.CameraBoardSocket.RGB))
+
+    return mtx, dist
 
 class OakD():
     def __init__(self): # TODO: add video size to constructor
@@ -20,7 +35,7 @@ class OakD():
         self.device = depthai.Device(self.pipeline)
         self.q_rgb = self.device.getOutputQueue("rgb")
 
-        # TODO: add camera matrix and distortion coefficients to this class
+        self.mtx, self.dist = get_camera_intrinsics(self.device)
 
     def read(self):
         """Gets a frame from the camera. It has the same signature as the read() from an OpenCV video capture
