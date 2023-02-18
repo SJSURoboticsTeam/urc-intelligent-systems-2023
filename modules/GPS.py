@@ -7,7 +7,8 @@ class gpsRead:
         self.gps_port = serial.Serial(port, baudrate)
 
     def send_request(self, LonLat, url):
-        requests.post(url, data={"longitude": LonLat["longitude"], "latitude": LonLat["latitude"]})
+        LonLat = list(LonLat)
+        requests.post(url, json={"longitude": LonLat["longitude"], "latitude": LonLat["latitude"]})
 
     def get_position(self, url=None):
         LonLat = {"longitude":0,
@@ -19,7 +20,7 @@ class gpsRead:
                 d = data[i].split(',')
                 if d[0] == "$GPGGA" and len(d) == 15:
                     if d[2] == '' or d[4] == '':
-                        return ["None", "None"]
+                        return "Need More Satellite Locks"
                     if d[3] == 'S':
                         LonLat["latitude"] = -float(d[2])
                     else:

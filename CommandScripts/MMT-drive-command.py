@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath(".."))
 from modules.Serial import SerialSystem
 
 port = "/dev/ttyUSB0"
-get_initial_commands_url = "http://192.168.50.243:5000/drive"
+get_initial_commands_url = "http://192.168.1.133:5000/drive"
 
 web_response = requests.get(get_initial_commands_url)
 print("Getting data from: " + web_response.text)

@@ -8,13 +8,22 @@ sudo wget -qO- https://docs.luxonis.com/install_dependencies.sh | bash
     >echo "export OPENBLAS_CORETYPE=ARMV8" >> ~/.bashrc
     >source ~/.bashrc
 
+### Windows (All Requirements)
+Reccomeneded to use Python 3.9-3.10
+```bash
+git clone https://github.com/luxonis/depthai.git
+cd depthai
+python -m pip install -r requirements.txt --user
+python depthai_demo.py
+```
+
 
 ### Raspberry Pi
 ```bash
 sudo curl -fL https://docs.luxonis.com/install_dependencies.sh | bash
 ```
 
-# Requirements Installation
+# Requirements Installation for RPI and Ubuntu
 To install this package, run the following command in your terminal window.
 **Use either pip or pip3 depending on your Python version**
 ```bash
