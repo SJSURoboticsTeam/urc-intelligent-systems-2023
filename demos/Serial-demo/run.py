@@ -2,8 +2,9 @@ import sys
 import serial.tools.list_ports as port_list
 sys.path.append( '../../')
 from modules.Serial import SerialSystem
+import json
 
-port = "/dev/ttyUSB1"
+port = "/dev/ttyACM0"
 
 try:
     serial = SerialSystem(port, 38400)
@@ -14,8 +15,15 @@ except:
     port = ports[0].device
     serial = SerialSystem(port, 38400)
 
-serial.read_serial()
-message = input("Write something to the serial to read\n")
-serial.write_serial(message)
+speeds = [50, 45, 20, 11, 77, 32, 88]
 while True:
-    serial.read_serial()
+    for i in speeds:
+        data = {"HB":0,"IO":1,"WO":0,"DM":"D","CMD":[0,i]}
+        data = json.dumps(data)
+        data = data.replace(" ", "")
+        answer = serial.read_serial()
+        serial.write_serial(data)
+
+        
+
+    
