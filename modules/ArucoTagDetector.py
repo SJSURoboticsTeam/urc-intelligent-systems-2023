@@ -64,13 +64,11 @@ class ArucoTagAutonomy():
         self.dist = calibration['dist']
 
     def search_for_tags(self):
-        frames = []
+        # the detector doesn't always find the tags, even when standing still, so search for the tag in a few frames first
 
-        for i in range(self.num_frames):
-            _, frame = self.cap.read() # TODO: add error handling
-            frames.append(frame)
+        for _ in range(self.num_frames):
+            _, frame = self.cap.read()  # TODO: add error handling
 
-        for frame in reversed(frames): # look at the most recent frame first
             tag_ids = [4, 5] if self.target_tag == 4 else self.target_tag # posts 4 and 5 are the gate, so we want to look for both of them
 
             corners, ids = self.detector.detect(frame, tag_ids=tag_ids)

@@ -27,6 +27,9 @@ class Autonomy:
 
         self.aruco_autonomy = ArucoTagAutonomy(cap=OakD())
 
+        # this helps us track when to look for the current aruco tag and update the GPS target with a more accurate prediction
+        self.distance_to_tag = 0
+
 
     def get_distance(self, current_GPS, target_GPS):
 
@@ -143,9 +146,11 @@ class Autonomy:
                 if np.linalg.norm(tvec) < 2: # if we're within 2 meters of an aruco tag, we don't need to go to it (maybe add a buffer)
                     go_to_aruco_tag = False
                     self.aruco_autonomy.target_tag += 1 # also increment the target tag
+                    self.distance_to_tag = 0
 
         if go_to_aruco_tag:
             self.GPS_target = self.aruco_autonomy.translate_lat_lon(lat=self.current_GPS[0], lon=self.current_GPS[1], tvec=tvec, heading=Compass().get_heading())
+            self.distance_to_tag = self.get_distance(self.current_GPS, self.GPS_target)
         else:
             self.GPS_coordinate_map.pop(0)
             self.GPS_target = self.GPS_coordinate_map[0]
@@ -165,7 +170,7 @@ class Autonomy:
             if abs(angle_diff) >= 30: # TODO: make the turn angle a constant
                 current_angle = heading
                 print("Spinning left and searching for tags") # TODO: right now, we can just print that we need to turn the rover, but in the future, we'll have to send json commands to the rover
-
+                time.sleep(2) # sleep for 2 seconds to give us time to stop turning the rover
                 corners, ids = self.aruco_autonomy.search_for_tags()
 
                 if len(corners) > 0:
@@ -202,11 +207,14 @@ class Autonomy:
             print("Rover turning right!")
             return self.steer_right(self.commands)
 
-        if current_GPS == target_GPS:
+        if self.get_distance(current_GPS, target_GPS)[0] < .002: # if we're within 2 meters of the target, go to the next target
             print("Rover has reached destination!")
             self.goto_next_coordinate()
             return self.stop_rover(self.commands)
-
+        # if we have halfway to the tag, stop and search again to update the aruco tag coordinates
+        # we divide by 2000 and not 2 because the get_distance returns KM but distance_to_tag is in meters
+        elif self.get_distance(current_GPS, target_GPS)[0] < self.distance_to_tag / 2000:
+            self.goto_next_coordinate() # TODO: if we don't find the tag again, it'll automatically try to go to the next coordinates, which isn't good, but we can fix that later
 
     def forward_gain_rover(self, commands,error):
         self.commands[4] = error*self.gain
