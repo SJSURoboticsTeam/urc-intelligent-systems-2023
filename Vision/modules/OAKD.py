@@ -43,7 +43,7 @@ class OakD():
 
         It returns ret, frame where ret indicated whether the frame was successfully grabbed or if there was an error"""
 
-        frame = self.q_rgb.get()
+        frame = self.q_rgb.get().getCvFrame()
 
         ret = True
 
