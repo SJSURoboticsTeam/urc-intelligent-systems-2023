@@ -99,18 +99,22 @@ class Autonomy:
 
 
     def get_bearing(self, current_GPS, target_GPS):
-        current_latitude = math.radians(current_GPS[1])
-        current_longitude = math.radians(current_GPS[0])
-        target_latitude = math.radians(target_GPS[1])
-        target_longitude = math.radians(target_GPS[0])
+        try:
+            current_latitude = math.radians(current_GPS[1])
+            current_longitude = math.radians(current_GPS[0])
+            target_latitude = math.radians(target_GPS[1])
+            target_longitude = math.radians(target_GPS[0])
 
-        deltalog= target_longitude-current_longitude;
+            deltalog= target_longitude-current_longitude;
 
-        x=math.cos(target_latitude)*math.sin(deltalog);
-        y=(math.cos(current_latitude)*math.sin(target_latitude))-(math.sin(current_latitude)*math.cos(target_latitude)*math.cos(deltalog));
-
-        bearing=(math.atan2(x,y))*(180/3.14);
-        return bearing
+            x=math.cos(target_latitude)*math.sin(deltalog);
+            y=(math.cos(current_latitude)*math.sin(target_latitude))-(math.sin(current_latitude)*math.cos(target_latitude)*math.cos(deltalog));
+            bearing = math.atan2(y, x)
+            bearing = math.degrees(bearing)
+            bearing = (bearing + 360) % 360
+            return bearing
+        except:
+            print("Now GPS Data")
 
 
     def forward_rover(self, commands):
@@ -161,32 +165,31 @@ class Autonomy:
 
 
     def get_steering(self, current_GPS, target_GPS):
-        # heading = self.compass.get_heading()
-        # bearing = self.get_bearing(current_GPS, target_GPS)
+        rover_heading = self.compass.get_heading()
+        bearing = self.get_bearing(current_GPS, target_GPS)
+        distance = round(self.get_distance(self.current_GPS, self.GPS_target)[0]*1000)
 
-        # final_angle = math.degrees(math.atan2(math.sin(math.radians(bearing - heading)), math.cos(math.radians(bearing - heading))))
-        final_angle = self.compass.get_heading()/self.get_bearing(current_GPS, target_GPS)
+        direction = (bearing - rover_heading + 360) % 360
+        if direction > 180:
+            direction -= 360
+        direction = bearing - rover_heading
+        print("Direction:", direction)
 
+        if abs(direction) > 5:
 
-        if final_angle < 0:
-            final_angle += 360
-
-        print("Final Angle:", final_angle)
-
-        if final_angle <= 1 or final_angle > 359:
-            print("Rover moving forward!")
-            return self.forward_rover(self.commands)
-
-        elif final_angle > 1 and final_angle <= 180:
-            print("Rover turning left!")
-            return self.steer_left(self.commands)
-
-        elif final_angle > 180 and final_angle < 359:
-            print("Rover turning right!")
-            return self.steer_right(self.commands)
+            if direction > 0:
+                    print("Turning right")
+                    return self.steer_right(self.commands)
+            else:
+                print("Turning left")
+                return self.steer_left(self.commands)
+            rover_heading = bearing
         
-        if current_GPS == target_GPS:
-            print("Rover has reached destination!")
+        if distance > 0.1:
+            print("Moving forward")
+            return self.forward_rover(self.commands)
+        else:
+            print("Arrived at target!")
             self.goto_next_coordinate()
             return self.stop_rover(self.commands)
 
@@ -209,6 +212,8 @@ class Autonomy:
                     self.current_GPS = self.GPS.get_position()
                     print("Current GPS:", self.current_GPS)
                     print("Target GPS:", self.GPS_target)
+                    print("Heading:", self.compass.get_heading())
+                    print("Bearing:", self.get_bearing(self.current_GPS, self.GPS_target))
                     if self.current_GPS != "Need More Satellite Locks" and self.current_GPS != None:
                         command = self.get_steering(self.current_GPS, self.GPS_target)
                         distance = round(self.get_distance(self.current_GPS, self.GPS_target)[0]*1000)

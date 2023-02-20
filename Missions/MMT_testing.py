@@ -59,5 +59,7 @@ for i in GPS_map:
     GPS_list.append(GPS_map[i])
 print("GPS List:", GPS_list)
 
+GPS_list = [[-121.8818685, 37.33699716666666], [-121.881868, 37.33696233333334], [-121.88177050000002, 37.336928833333324]]
+
 rover = Autonomy(serial, server, max_speed, max_angle, GPS, GPS_list)
 rover.start_mission()
