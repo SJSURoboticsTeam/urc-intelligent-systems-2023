@@ -170,14 +170,11 @@ class Autonomy:
         distance = round(self.get_distance(self.current_GPS, self.GPS_target)[0]*1000)
 
         direction = (bearing - rover_heading + 360) % 360
-        if direction > 180:
-            direction -= 360
-        direction = bearing - rover_heading
         print("Direction:", direction)
 
-        if abs(direction) > 5:
+        if abs(direction) > 10:
 
-            if direction > 0:
+            if direction < 120:
                     print("Turning right")
                     return self.steer_right(self.commands)
             else:
