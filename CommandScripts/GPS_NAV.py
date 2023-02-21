@@ -43,9 +43,7 @@ class GPS_Nav:
         return self.AutoHelp.jsonify_commands(commands)
 
     def drive(self, commands, drive_error):
-        speed_output = self.speed_controller(drive_error)
-
-        self.commands[4] = round(max(0, min(self.max_speed + speed_output, self.max_speed)))
+        self.commands[4] = self.max_speed
         self.commands[5] = 0
 
         return self.AutoHelp.jsonify_commands(commands)
@@ -55,8 +53,14 @@ class GPS_Nav:
         return self.AutoHelp.jsonify_commands(commands)
 
     def goto_next_coordinate(self):
-        self.GPS_coordinate_map.pop(0)
-        self.GPS_target = self.GPS_coordinate_map[0]
+        try:
+            old = self.GPS_coordinate_map.pop(0)
+            self.GPS_target = self.GPS_coordinate_map[0]
+            print("Going to new coordinate!")
+            print("NEW:", self.GPS_target)
+        except:
+            print("No more GPS coordniates in Mission... Mission Success!")
+            exit(1)
 
 
     def get_steering(self, current_GPS, GPS_target):
@@ -76,7 +80,7 @@ class GPS_Nav:
                 return self.steer_left(self.commands, direction)
         rover_heading = bearing
         
-        if distance > 0.2:
+        if distance > 0.5:
             print("Moving forward")
             return self.drive(self.commands, direction)
         else:
