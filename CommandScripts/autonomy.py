@@ -3,16 +3,18 @@ import json
 import requests
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
+from CommandScripts import Trajectory
+from CommandScripts import GPS_Nav
+from CommandScripts import AutoHelp
 import time
 
 class Autonomy:
-    def __init__(self, serial, url, GPS, GPS_coordinate_map):
+    def __init__(self, serial, url, max_speed, max_steering):
         self.serial = serial
         self.url = url
         self.commands = [0,0,0,'D',0,0]
-        self.current_GPS = [0,0]
-        self.GPS = GPS
-        self.gain = 1
+        self.GPS = GPS_Nav.GPS_Nav(self.url, max_speed, max_steering, self.current_GPS)
+        self.AutoHelp = AutoHelp.AutoHelp()
 
     def start_mission(self):
         # homing_end = "Starting control loop..."

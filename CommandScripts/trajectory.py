@@ -1,6 +1,6 @@
 import math
 
-class trajectory:
+class Trajectory:
     
     def object_detected(self, d):
             angle = math.atan(d, d)

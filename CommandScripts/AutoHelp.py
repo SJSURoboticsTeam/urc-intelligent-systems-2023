@@ -1,7 +1,8 @@
 import math
 from modules.LSM303 import Compass
+import json
 
-class Autohelp:
+class AutoHelp:
     def get_distance(self, current_GPS, target_GPS):
             R_KM = 6373.0
             R_MI = 3958.8
