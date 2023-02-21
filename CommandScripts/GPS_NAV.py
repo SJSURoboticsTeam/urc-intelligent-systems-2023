@@ -6,10 +6,10 @@ from CommandScripts import AutoHelp
 from simple_pid import PID
 
 class GPS_Nav:
-    def __init__(self, url, max_speed, max_steering, GPS, compass, GPS_coordinate_map):
+    def __init__(self, max_speed, max_steering, GPS, compass, GPS_coordinate_map):
         self.max_speed = max_speed
         self.max_steering = max_steering
-        self.commands = [0,0,0,'D',0,0]
+        self.commands = [0,1,0,'D',0,0]
         self.compass = compass
         self.AutoHelp = AutoHelp.AutoHelp()
 
@@ -54,7 +54,7 @@ class GPS_Nav:
 
     def goto_next_coordinate(self):
         try:
-            old = self.GPS_coordinate_map.pop(0)
+            self.GPS_coordinate_map.pop(0)
             self.GPS_target = self.GPS_coordinate_map[0]
             print("Going to new coordinate!")
             print("NEW:", self.GPS_target)
@@ -70,7 +70,7 @@ class GPS_Nav:
         direction = round((bearing - rover_heading + 360) % 360, 3)
         print("Direction:", direction)
 
-        if abs(direction) > 10:
+        if abs(direction) > 5:
 
             if direction < 120:
                 print("Turning right")
