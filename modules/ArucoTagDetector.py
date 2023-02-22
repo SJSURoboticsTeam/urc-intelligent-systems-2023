@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from collections import deque
 from collections.abc import Iterable
 from typing import Union
 import math
@@ -48,6 +47,7 @@ class ArucoTagDetector():
         else:
             return np.zeros((0, 4, 2)), np.zeros((0,))
 
+
 class ArucoTagAutonomy():
 
     def __init__(self, cap, num_frames_to_search = 4):
@@ -55,13 +55,9 @@ class ArucoTagAutonomy():
 
         self.detector = ArucoTagDetector()
 
-        self.target_tag = 1
+        self.target_tags = 1
 
         self.num_frames = num_frames_to_search
-
-        calibration = np.load('../calibration.npz')
-        self.mtx = calibration['mtx']
-        self.dist = calibration['dist']
 
     def search_for_tags(self):
         # the detector doesn't always find the tags, even when standing still, so search for the tag in a few frames first
@@ -69,18 +65,43 @@ class ArucoTagAutonomy():
         for _ in range(self.num_frames):
             _, frame = self.cap.read()  # TODO: add error handling
 
-            tag_ids = [4, 5] if self.target_tag == 4 else self.target_tag # posts 4 and 5 are the gate, so we want to look for both of them
-
-            corners, ids = self.detector.detect(frame, tag_ids=tag_ids)
+            corners, ids = self.detector.detect(frame, tag_ids=self.target_tags)
             if len(corners) > 0:
                 return corners, ids
 
         return [], [] # if we don't find the tags we're looking for in any of the frames, return two empty lists so we can check len(corners) to determine if the tags were found
 
+    def search_for_post(self):
+        """
+        Searches for a post marked by Aruco tags matching the target tag and returns the translation vector (x, y, z) from the camera to the post (in meters).
+        If the target tag is the gate, then the translation vector is the average of the two posts (assuming the tags of both gate posts are in sight, otherwise, it is just the translation vector to the post that is in sight).
+        If no aruco tags are detected, returns None.
+        """
+        post_tvec = None
+
+        corners, ids = self.search_for_tags()
+
+        if len(corners) > 0:
+            tvecs = self.distance_to_tags(corners)
+
+            post_tvec = self.calculate_target_translation(tvecs[0], ids)
+
+        return post_tvec
+
     def distance_to_tags(self, tag_corners):
         # get the translation vectors from the camera to each tag and return it as a list
         rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(tag_corners, MARKER_SIZE_M, self.cap.mtx, self.cap.dist)
         return tvecs
+
+    def update_target_tag(self):
+        """
+        After the rover has reached a post, the target aruco tag needs to be updated to the next post.
+        If the rover has reached the last post (with the tag 3), then the target tag needs to be updated to the gate (tags 4 and 5).
+        """
+        if self.target_tags == 3:
+            self.target_tags = [4, 5]
+        else:
+            self.target_tags += 1
 
     @staticmethod
     def translate_lat_lon(lat, lon, tvec, heading):
@@ -94,11 +115,41 @@ class ArucoTagAutonomy():
         R_M = 6371000
         delta_lat = np.tan(y / R_M) * 180 / np.pi
 
-        # get the radius of the earth at the camera's current latitude
+        # get the radius of the earth at the camera's current latitude (needed to calculate the change in longitude)
         radius = R_M * np.cos(np.deg2rad(lat))
         delta_lon = np.tan(x / radius) * 180 / np.pi
 
         return lat + delta_lat, lon + delta_lon
+
+    @staticmethod
+    def calculate_target_translation(tvecs: np.ndarray, ids: np.ndarray) -> np.ndarray:
+        """
+        Calculates the distance (x, y, z) between the target aruco tag post and the current location of the rover.
+        If we're dealing with the gate, then we just use the average of the two posts (assuming both posts are visible).
+
+        :param tvecs: an array of translation with the shape (n, 3) between the rover and each individual tag.
+        :param ids: the ID of each aruco tag with the shape (n, 1).
+        :return: a numpy array of shape (1, 3) containing the (x, y, z) distance between the target aruco tag post and the current location of the rover.
+
+        """
+
+        unique_ids = np.unique(ids)
+        post_locations = np.zeros((len(unique_ids), 3))
+
+        for i, unique_id in enumerate(unique_ids):
+            indices = np.nonzero(ids == unique_id)[0]
+            if len(indices) > 1:
+                # Calculate the average of the tvecs for the tags with the same id
+                post_location = np.mean(tvecs[indices], axis=0)
+            else:
+                # Use the tvec for the single tag with this id as the post location
+                post_location = tvecs[indices[0]]
+            post_locations[i] = post_location
+
+        # Calculate the target location as the average of all post locations
+        target_location = np.mean(post_locations, axis=0)
+
+        return target_location
 
 
 
