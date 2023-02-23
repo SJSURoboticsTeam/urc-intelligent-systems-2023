@@ -4,7 +4,7 @@ sys.path.append( '../../')
 from modules.Serial import SerialSystem
 import json
 
-port = "/dev/ttyACM0"
+port = "/dev/ttyACM1"
 
 try:
     serial = SerialSystem(port, 38400)
@@ -21,6 +21,7 @@ while True:
         data = {"HB":0,"IO":1,"WO":0,"DM":"D","CMD":[0,i]}
         data = json.dumps(data)
         data = data.replace(" ", "")
+        print("Here")
         answer = serial.read_serial()
         serial.write_serial(data)
 
