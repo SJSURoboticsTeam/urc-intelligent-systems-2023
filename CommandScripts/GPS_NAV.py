@@ -51,9 +51,9 @@ class GPS_Nav:
         return self.AutoHelp.jsonify_commands(commands)
 
     def spin_left(self): # Spins the rover left in-place using the rotation mode
-        self.commands[3] = 'R' # TODO: not sure if this is how you get into rotation mode
-        self.commands[4] = 0
-        self.commands[5] = self.max_steering
+        self.commands[3] = 'S'
+        self.commands[4] = self.max_speed
+        self.commands[5] = 0
 
         return self.AutoHelp.jsonify_commands(self.commands)
 
@@ -160,7 +160,7 @@ class GPS_Nav:
 
             return self.stop_rover(self.commands) # stop the rover so that the movement doesn't interfere with the aruco tag detection algorithm
 
-        elif self.navigating_to_tag or self.num_failed_searches > 12: # if we are within .5 meters of the aruco tag post, or we've already searched in a full circle and haven't found the aruco tag, we can stop searching and move on to the next GPS coordinate
+        elif self.navigating_to_tag or self.num_failed_searches == 12: # if we are within .5 meters of the aruco tag post, or we've already searched in a full circle and haven't found the aruco tag, we can stop searching and move on to the next GPS coordinate
             self.navigating_to_tag = False
             self.num_failed_searches = 0
             self.distance_until_recheck = -1
@@ -171,3 +171,5 @@ class GPS_Nav:
             print("Arrived at target!")
             self.goto_next_coordinate()
             return self.stop_rover(self.commands)
+
+        # FOR GATE: navigate close to the gate (perhaps perpendicular to it) and then spin to face the center between the two posts. Then, transfer into translate mode and go forward.
