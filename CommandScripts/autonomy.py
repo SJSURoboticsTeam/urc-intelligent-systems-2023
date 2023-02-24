@@ -31,7 +31,6 @@ class Autonomy:
                     self.current_GPS = new_GPS
 
 
-
     def get_rover_status(self, bearing, distance):
         try:
             json_command = {"Bearing":bearing,"Distance":distance,"GPS":[self.current_GPS[0],self.current_GPS[1]],"Target":[self.GPS_Nav.GPS_target[0],self.GPS_Nav.GPS_target[1]]}
