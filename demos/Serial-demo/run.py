@@ -4,7 +4,7 @@ sys.path.append( '../../')
 from modules.Serial import SerialSystem
 import json
 
-port = "/dev/ttyACM1"
+port = "/dev/ttyUSB0"
 
 try:
     serial = SerialSystem(port, 38400)

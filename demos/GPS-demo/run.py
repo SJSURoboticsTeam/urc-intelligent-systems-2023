@@ -6,7 +6,7 @@ from modules.GPS import gpsRead
 
 if __name__ == '__main__':
     try:
-        data = gpsRead("/dev/ttyACM1",9600)
+        data = gpsRead("/dev/ttyACM0",9600)
         print("GPS Port found")
         url = "http://192.168.1.133:5000/gps"
     except:
