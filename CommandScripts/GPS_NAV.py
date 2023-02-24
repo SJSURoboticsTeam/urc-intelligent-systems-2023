@@ -45,6 +45,11 @@ class GPS_Nav:
         self.commands[5] = 0
         return self.AutoHelp.jsonify_commands(commands)
 
+    def spin(self, commands, spin_error):
+        self.commands[4] = round(self.max_speed/2)
+        self.commands[5] = 0
+        return self.AutoHelp.jsonify_commands(commands)
+
     def stop_rover(self, commands):
         self.commands = [0, 0, 0, 'D', 0, 0]
         return self.AutoHelp.jsonify_commands(commands)
@@ -60,14 +65,43 @@ class GPS_Nav:
             exit(1)
 
 
+    def change_modes(self, desired_mode):
+        if desired_mode == 'D':
+            self.commands[3] = 'D'
+            self.commands[4] = 0
+            self.commands[5] = 0
+            return self.AutoHelp.jsonify_commands(self.commands)
+        elif desired_mode == 'S':
+            self.commands[3] = 'S'
+            self.commands[4] = 0
+            self.commands[5] = 0
+            return self.AutoHelp.jsonify_commands(self.commands)
+        elif desired_mode == 'T':
+            self.commands[3] = 'T'
+            self.commands[4] = 0
+            self.commands[5] = 0
+            return self.AutoHelp.jsonify_commands(self.commands)
+
+
     def get_steering(self, current_GPS, GPS_target):
         rover_heading = self.compass.get_heading()
         bearing = self.AutoHelp.get_bearing(current_GPS, GPS_target)
         distance = round(self.AutoHelp.get_distance(current_GPS, GPS_target)[0]*1000, 3)
         direction = round((bearing - rover_heading + 360) % 360, 3)
+        # direction = 
         print("Direction:", direction)
 
+
         if abs(direction) > 5:
+
+            if direction > 90 and direction < 150:
+                print("Going to Spin Mode")
+                self.change_modes('S')
+                return self.spin(self.commands, direction)
+            
+            if self.commands[3] == 'S' and direction < 120:
+                self.change_modes('D')
+
             if direction < 120:
                 print("Turning right")
                 return self.PID_steer(self.commands, direction, 'right')
