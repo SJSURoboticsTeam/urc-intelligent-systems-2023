@@ -44,6 +44,11 @@ class Autonomy:
         gps_thread = threading.Thread(target=self.update_gps)
         gps_thread.start()
 
+                # Uncomment this below for testing on the Rover
+        # homing_end = "Starting control loop..."
+        # while True:
+        #     response = self.serial.read_serial()
+        #     if homing_end in response:
         while True:
             with self.GPS_lock:
                 current_GPS = self.current_GPS

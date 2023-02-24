@@ -39,13 +39,12 @@ class GPS_Nav:
             self.commands[5] = round(steer_output)
         return self.AutoHelp.jsonify_commands(commands)
 
-    def drive(self, commands, drive_error):
-        speed_output = self.speed_controller(drive_error)
-        self.commands[4] = speed_output
+    def drive(self, commands):
+        self.commands[4] = self.max_speed
         self.commands[5] = 0
         return self.AutoHelp.jsonify_commands(commands)
 
-    def spin(self, commands, spin_error):
+    def spin(self, commands):
         self.commands[4] = round(self.max_speed/2)
         self.commands[5] = 0
         return self.AutoHelp.jsonify_commands(commands)
@@ -92,12 +91,12 @@ class GPS_Nav:
         print("Direction:", direction)
 
 
-        if abs(direction) > 5:
+        if abs(direction) > 10:
 
             if direction > 90 and direction < 150:
                 print("Going to Spin Mode")
                 self.change_modes('S')
-                return self.spin(self.commands, direction)
+                return self.spin(self.commands)
             
             if self.commands[3] == 'S' and direction < 120:
                 self.change_modes('D')
@@ -112,7 +111,7 @@ class GPS_Nav:
         
         if distance > 0.5:
             print("Moving forward")
-            return self.drive(self.commands, direction)
+            return self.drive(self.commands)
         else:
             print("Arrived at target!")
             self.goto_next_coordinate()
