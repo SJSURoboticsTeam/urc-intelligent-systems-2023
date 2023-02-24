@@ -27,8 +27,9 @@ class Autonomy:
         while True:
             new_GPS = self.GPS.get_position()
             with self.GPS_lock:
-                self.current_GPS = new_GPS
-            time.sleep(1)
+                if new_GPS is not None:
+                    self.current_GPS = new_GPS
+
 
 
     def get_rover_status(self, bearing, distance):
@@ -66,7 +67,6 @@ class Autonomy:
                 self.get_rover_status(bearing, distance)
                 if response != "No data received" and command != None:
                     self.serial.write_serial(command)
-                    # time.sleep(1)
             else:
                 print("GPS Error. Current GPS:", current_GPS)
             

@@ -7,8 +7,8 @@ from CommandScripts.autonomy import Autonomy
 from modules.GPS import gpsRead
 import json
 
-serial_port = "/dev/ttyACM0"
-gps_port = "/dev/ttyACM1"
+serial_port = "/dev/ttyUSB1"
+gps_port = "/dev/ttyACM0"
 serial_baudrate = 38400
 gps_baudrate = 9600
 max_speed = 100
