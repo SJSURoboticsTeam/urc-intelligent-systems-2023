@@ -8,9 +8,9 @@ from modules.GPS import gpsRead
 import json
 
 serial_port = "/dev/ttyUSB1"
-gps_port = "/dev/ttyACM0"
+gps_port = "/dev/ttyUSB0"
 serial_baudrate = 38400
-gps_baudrate = 9600
+gps_baudrate = 57600
 max_speed = 50
 max_angle = 12
 server = 'http://13.56.207.97:5000'

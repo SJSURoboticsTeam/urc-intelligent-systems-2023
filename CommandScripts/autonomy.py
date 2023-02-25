@@ -68,5 +68,6 @@ class Autonomy:
                     self.serial.write_serial(command)
             else:
                 print("GPS Error. Current GPS:", current_GPS)
+                time.sleep(1)
             
         gps_thread.join()

@@ -74,16 +74,19 @@ class AutoHelp:
 
 
     def get_bearing(self, current_GPS, target_GPS):
-        current_latitude = math.radians(current_GPS[1])
-        current_longitude = math.radians(current_GPS[0])
-        target_latitude = math.radians(target_GPS[1])
-        target_longitude = math.radians(target_GPS[0])
+        try:
+            current_latitude = math.radians(current_GPS[1])
+            current_longitude = math.radians(current_GPS[0])
+            target_latitude = math.radians(target_GPS[1])
+            target_longitude = math.radians(target_GPS[0])
 
-        deltalog= target_longitude-current_longitude;
+            deltalog= target_longitude-current_longitude;
 
-        x=math.cos(target_latitude)*math.sin(deltalog);
-        y=(math.cos(current_latitude)*math.sin(target_latitude))-(math.sin(current_latitude)*math.cos(target_latitude)*math.cos(deltalog));
+            x=math.cos(target_latitude)*math.sin(deltalog);
+            y=(math.cos(current_latitude)*math.sin(target_latitude))-(math.sin(current_latitude)*math.cos(target_latitude)*math.cos(deltalog));
 
-        bearing=(math.atan2(x,y))*(180/3.14);
-        return bearing
+            bearing=(math.atan2(x,y))*(180/3.14);
+            return bearing
+        except:
+            print("No GPS Data")
     
