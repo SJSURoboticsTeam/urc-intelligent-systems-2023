@@ -6,7 +6,7 @@ from modules.GPS import gpsRead
 
 if __name__ == '__main__':
     try:
-        data = gpsRead("/dev/ttyACM1",9600)
+        data = gpsRead("/dev/ttyUSB0",57600)
         print("GPS Port found")
         url = "http://192.168.1.133:5000/gps"
     except:
@@ -14,13 +14,13 @@ if __name__ == '__main__':
             ports = list(port_list.comports())
             print('====> Designated Port not found. Using Port:', ports[port_number].device)
             port = ports[port_number].device
-            data = gpsRead(port,9600)
+            data = gpsRead(port,57600)
             while data.get_position() == ['error', 'error'] or data.get_position() == ["None", "None"]:
                 print("Port not found, going to next port...")
                 port_number += 1
                 port = ports[port_number].device
                 try:
-                    data = gpsRead(port,9600)
+                    data = gpsRead(port,57600)
                     break
                 except:
                     continue

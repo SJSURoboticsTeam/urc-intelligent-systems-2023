@@ -1,5 +1,6 @@
 import requests
 import os, sys
+import time
 sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
 from modules.OAKD import OakD
@@ -19,8 +20,18 @@ class GPS_Nav:
         self.GPS_coordinate_map = GPS_coordinate_map
         self.GPS_target = self.GPS_coordinate_map[0]
 
+        # Create a PID controller for steering
+        self.steer_controller = PID(Kp=1, Ki=0.5, Kd=0.05, setpoint=0)
+        self.steer_controller.sample_time = 0.1
+        self.steer_controller.output_limits = (-self.max_steering, self.max_steering)
+        self.steer_controller.proportional_on_measurement = True  # Use derivative of error instead of error for Kp
         self.steer_controller = PID(0.5, 0.1, 0.05, setpoint=0)
         self.steer_controller.output_limits = (-self.max_steering, self.max_steering)  # Add windup guard
+
+        # Create a PID controller for speed
+        self.speed_controller = PID(Kp=0.5, Ki=0.1, Kd=0.05, setpoint=self.max_speed)
+        self.speed_controller.sample_time = 0.1
+        self.speed_controller.output_limits = (0, self.max_speed)
 
         ############################
         # Aruco Tag Detection stuff
@@ -36,19 +47,12 @@ class GPS_Nav:
         self.starting_heading = 0
         self.num_failed_searches = 0 # if we can't find the tag after 12 searches, (a whole rotation of the rover), then we need to stop searching for the tag
         self.SEARCH_ANGLE = 30
-        
+
     def forward_rover(self, commands):
         self.commands = [0, 0, 0, 'D', self.max_speed, 0]
         return self.AutoHelp.jsonify_commands(commands)
 
-    def steer_left(self, commands, steer_error):
-        steer_output = self.steer_controller(steer_error)  # Set output to negative for left steering
-        speed_output = -steer_output
 
-        self.commands[4] = round(max(0, min(self.max_speed/2 + speed_output, self.max_speed)))
-        self.commands[5] = round(max(-self.max_steering, min(steer_output, self.max_steering)))
-
-        return self.AutoHelp.jsonify_commands(commands)
 
     def spin_left(self): # Spins the rover left in-place using the rotation mode
         self.commands[3] = 'S'
@@ -66,11 +70,32 @@ class GPS_Nav:
 
         return self.AutoHelp.jsonify_commands(commands)
 
-    def drive(self, commands, drive_error):
+    def PID_steer(self, commands, steer_error, angle):
+        steer_output = self.steer_controller(steer_error)
+        speed_error = self.max_steering/abs(steer_output)   # scale speed error based on steering output
+        print("Speed Error:", speed_error)
+        speed_output = self.speed_controller(speed_error)
+        self.commands[4] = round(speed_output)
+        if angle == "right":
+            self.commands[5] = abs(round(steer_output))
+        elif angle == "left":
+            self.commands[5] = -abs(round(steer_output))
+        return self.AutoHelp.jsonify_commands(commands)
+
+
+    def forward_drive(self, commands):
         self.commands[4] = self.max_speed
         self.commands[5] = 0
-
         return self.AutoHelp.jsonify_commands(commands)
+
+    def spin(self, commands, angle):
+        self.commands[5] = 0
+        if angle == "right":
+            self.commands[4] = abs(round(self.max_speed/2))
+        elif angle == "left":
+            self.commands[4] = -abs(round(self.max_speed/2))
+        return self.AutoHelp.jsonify_commands(commands)
+
 
     def stop_rover(self, commands):
         self.commands = [0, 0, 0, 'D', 0, 0]
@@ -128,6 +153,24 @@ class GPS_Nav:
             else: # otherwise, just keep spinning
                 return self.spin_left()
 
+    def change_modes(self, desired_mode):
+        if desired_mode == 'D':
+            self.commands[3] = 'D'
+            self.commands[4] = 0
+            self.commands[5] = 0
+            return self.AutoHelp.jsonify_commands(self.commands)
+        elif desired_mode == 'S':
+            self.commands[3] = 'S'
+            self.commands[4] = 0
+            self.commands[5] = 0
+            return self.AutoHelp.jsonify_commands(self.commands)
+        elif desired_mode == 'T':
+            self.commands[3] = 'T'
+            self.commands[4] = 0
+            self.commands[5] = 0
+            return self.AutoHelp.jsonify_commands(self.commands)
+
+
     def get_steering(self, current_GPS, GPS_target):
         rover_heading = self.compass.get_heading()
 
@@ -139,18 +182,34 @@ class GPS_Nav:
         direction = round((bearing - rover_heading + 360) % 360, 3)
         print("Direction:", direction)
 
-        if abs(direction) > 5:
 
-            if direction < 120:
+        if abs(direction) > 15:
+
+            if direction >= 150 and direction <= 180:
+                print("Going to Spin Mode Right")
+                self.change_modes('S')
+                return self.spin(self.commands, 'right')
+            elif direction >= 180 and direction <= 210:
+                print("Going to Spin Mode Left")
+                self.change_modes('S')
+                return self.spin(self.commands, 'left')
+
+            if self.commands[3] == 'S' and direction < 150 and direction > 120:
+                self.change_modes('D')
+
+            if self.commands[3] == 'D' and direction < 150:
                 print("Turning right")
-                return self.steer_right(self.commands, direction)
-            else:
+                return self.PID_steer(self.commands, direction, 'right')
+            elif self.commands[3] == 'D' and direction > 210:
                 print("Turning left")
-                return self.steer_left(self.commands, direction)
+                return self.PID_steer(self.commands, direction, 'left')
         rover_heading = bearing
         
-        if distance > 0.5:
+        if direction <= 15:
             print("Moving forward")
+            self.change_modes('D')
+            return self.forward_drive(self.commands)
+        if distance <= 0.5:
             return self.drive(self.commands, direction)
 
         elif self.num_failed_searches == 0: # if we're within .5 meters of the GPS target, but we haven't searched for the aruco tag, start searching
@@ -170,6 +229,7 @@ class GPS_Nav:
 
             print("Arrived at target!")
             self.goto_next_coordinate()
+            time.sleep(3)
             return self.stop_rover(self.commands)
 
         # FOR GATE: navigate close to the gate (perhaps perpendicular to it) and then spin to face the center between the two posts. Then, transfer into translate mode and go forward.
