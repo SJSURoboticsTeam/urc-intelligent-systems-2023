@@ -83,14 +83,17 @@ class GPS_Nav:
     def spin(self, commands, angle):
         self.commands[5] = 0
         if angle == "right":
+            print('TEST: Spin Right')
             self.commands[4] = abs(round(self.max_speed/2))
         elif angle == "left":
+            print('TEST: Spin Left')
             self.commands[4] = -abs(round(self.max_speed/2))
         return self.AutoHelp.jsonify_commands(commands)
 
 
     def stop_rover(self, commands):
         self.commands = [0, 0, 0, 'D', 0, 0]
+        print('TEST: stop')
         return self.AutoHelp.jsonify_commands(commands)
 
     def goto_next_coordinate(self):
@@ -112,12 +115,11 @@ class GPS_Nav:
         If it doesn't find the aruco tag, it will return a spin left command.
         """
 
-        heading = self.compass.get_heading()
-
         if self.rover_stopped: # we can only search for aruco tags when the rover is stopped
             tvec = self.aruco_autonomy.search_for_post()
 
             if tvec is not None: # if we've found a post, we can set the GPS target to the post's GPS coordinates
+                print("!!!Found Aruco Tag!!!")
                 self.GPS_target = ArucoTagAutonomy.translate_lat_lon(lat=current_GPS[1], lon=current_GPS[0], tvec=tvec, heading=rover_heading)
                 # also need to stop spinning and searching and start navigating to the aruco tag
                 self.spinning_and_searching = False
@@ -138,7 +140,7 @@ class GPS_Nav:
 
         else:
             # compute the difference between the current angle and the heading taking into account the wrap around
-            angle_diff = (heading - self.starting_heading + 180) % 360 - 180  # https://stackoverflow.com/a/7869457
+            angle_diff = (rover_heading - self.starting_heading + 180) % 360 - 180  # https://stackoverflow.com/a/7869457
 
             if abs(angle_diff) >= self.SEARCH_ANGLE * self.num_failed_searches: # if we've rotated at least 30 degrees, we can stop and search for the aruco tag
                 self.rover_stopped = True
