@@ -4,14 +4,14 @@ import requests
 import serial.tools.list_ports as port_list
 from modules.Serial import SerialSystem
 from CommandScripts.autonomy import Autonomy
-from modules.GPS import gpsRead
+from modules.old_GPS import gpsRead
 import json
 
-serial_port = "/dev/ttyUSB1"
-gps_port = "/dev/ttyUSB0"
+serial_port = "/dev/ttyACM2"
+gps_port = "/dev/ttyACM3"
 serial_baudrate = 38400
 gps_baudrate = 57600
-max_speed = 50
+max_speed = 1
 max_angle = 12
 server = 'http://13.56.207.97:5000'
 GPS_list = []

@@ -47,8 +47,8 @@ class Autonomy:
                 # Uncomment this below for testing on the Rover
         # homing_end = "Starting control loop..."
         # while True:
-        #     response = self.serial.read_serial()
-        #     if homing_end in response:
+        # response = self.serial.read_serial()
+        # if homing_end in response:
         while True:
             with self.GPS_lock:
                 current_GPS = self.current_GPS
@@ -69,5 +69,5 @@ class Autonomy:
             else:
                 print("GPS Error. Current GPS:", current_GPS)
                 time.sleep(1)
-            
+                
         gps_thread.join()

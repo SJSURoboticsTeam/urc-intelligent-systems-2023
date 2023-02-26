@@ -2,7 +2,7 @@ import sys
 import time
 import serial.tools.list_ports as port_list
 sys.path.append( '../../')
-from modules.GPS import gpsRead
+from modules.old_GPS import gpsRead
 
 if __name__ == '__main__':
     try:
