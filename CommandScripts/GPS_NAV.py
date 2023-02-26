@@ -31,8 +31,7 @@ class GPS_Nav:
     
 
 
-    def PID_steer(self, commands, steer_error, angle):
-        steer_output = self.steer_controller(steer_error)
+    def PID_steer(self, commands, steer_output, angle):
         speed_error = self.max_steering/abs(steer_output)   # scale speed error based on steering output
         print("Speed Error:", speed_error)
         speed_output = self.speed_controller(speed_error)
