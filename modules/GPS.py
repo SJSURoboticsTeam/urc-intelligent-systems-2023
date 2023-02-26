@@ -14,32 +14,20 @@ class gpsRead:
         LonLat = {"longitude":0,
                   "latitude":0}
         try:
-            s = (self.gps_port.read(500)).decode('utf-8')
-            data = s.splitlines()
-            for i in range(len(data)):
-                d = data[i].split(',')
-                if d[0] == "$GPGGA" and len(d) == 15:
-                    if d[2] == '' or d[4] == '':
-                        return "Need More Satellite Locks"
-                    if d[3] == 'S':
-                        LonLat["latitude"] = -float(d[2])
-                    else:
-                        LonLat["latitude"] = float(d[2])
-                    if d[5] == 'W':
-                        LonLat["longitude"] = -float(d[4])
-                    else:
-                        LonLat["longitude"] = float(d[4])
-                    
-                    lat = LonLat["latitude"] / 100
-                    long = LonLat["longitude"] / 100
-                    lat = math.modf(lat)
-                    long = math.modf(long)
-                    lat = lat[1]+(lat[0]*100)/60
-                    long = long[1]+(long[0]*100)/60
-                    LonLat["longitude"] = long
-                    LonLat["latitude"]= lat
+            line = self.gps_port.readline().decode('utf-8').strip()
+            if line.startswith('$GNRMC'):
+                parts = line.split(',')
+                if parts[2] == 'A':
+                    latitude = float(parts[3][:2]) + float(parts[3][2:]) / 60
+                    if parts[4] == 'S':
+                        latitude *= -1
+                    longitude = float(parts[5][:3]) + float(parts[5][3:]) / 60
+                    if parts[6] == 'W':
+                        longitude *= -1
+                    LonLat["longitude"] = longitude
+                    LonLat["latitude"]= latitude
                     if url is not None:
                         self.send_request(LonLat, url)
-                    return [long, lat]
+                    return [longitude, latitude]
         except:
             return ['error', 'error']

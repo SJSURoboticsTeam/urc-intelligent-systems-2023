@@ -27,8 +27,8 @@ class Autonomy:
         while True:
             new_GPS = self.GPS.get_position()
             with self.GPS_lock:
-                self.current_GPS = new_GPS
-            time.sleep(1)
+                if new_GPS is not None:
+                    self.current_GPS = new_GPS
 
 
     def get_rover_status(self, bearing, distance):
@@ -44,6 +44,11 @@ class Autonomy:
         gps_thread = threading.Thread(target=self.update_gps)
         gps_thread.start()
 
+                # Uncomment this below for testing on the Rover
+        # homing_end = "Starting control loop..."
+        # while True:
+        #     response = self.serial.read_serial()
+        #     if homing_end in response:
         while True:
             with self.GPS_lock:
                 current_GPS = self.current_GPS
@@ -61,8 +66,8 @@ class Autonomy:
                 self.get_rover_status(bearing, distance)
                 if response != "No data received" and command != None:
                     self.serial.write_serial(command)
-                    # time.sleep(1)
             else:
                 print("GPS Error. Current GPS:", current_GPS)
+                time.sleep(1)
             
         gps_thread.join()
