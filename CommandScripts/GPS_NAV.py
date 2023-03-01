@@ -4,6 +4,7 @@ sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
 from CommandScripts import AutoHelp
 from simple_pid import PID
+import time
 
 class GPS_Nav:
     def __init__(self, max_speed, max_steering, GPS, compass, GPS_coordinate_map):
@@ -109,7 +110,7 @@ class GPS_Nav:
                 self.change_modes('S')
                 return self.spin(self.commands, 'left')
 
-            if self.commands[3] == 'S' and direction < 150 and direction > 120:
+            if self.commands[3] == 'S' and direction < 30 or direction > 330:
                 self.change_modes('D')
 
             if self.commands[3] == 'D' and direction < 150:
