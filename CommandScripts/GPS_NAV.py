@@ -25,8 +25,6 @@ class GPS_Nav:
         self.steer_controller.sample_time = 0.1
         self.steer_controller.output_limits = (-self.max_steering, self.max_steering)
         self.steer_controller.proportional_on_measurement = True  # Use derivative of error instead of error for Kp
-        self.steer_controller = PID(0.5, 0.1, 0.05, setpoint=0)
-        self.steer_controller.output_limits = (-self.max_steering, self.max_steering)  # Add windup guard
 
         # Create a PID controller for speed
         self.speed_controller = PID(Kp=0.5, Ki=0.1, Kd=0.05, setpoint=self.max_speed)
@@ -48,22 +46,8 @@ class GPS_Nav:
         self.num_failed_searches = 0 # if we can't find the tag after 12 searches, (a whole rotation of the rover), then we need to stop searching for the tag
         self.SEARCH_ANGLE = 30
 
-    def forward_rover(self, commands):
-        self.commands = [0, 0, 0, 'D', self.max_speed, 0]
-        return self.AutoHelp.jsonify_commands(commands)
 
-
-    def steer_right(self, commands, steer_error):
-        steer_output = self.steer_controller(steer_error)  # Set output to positive for right steering
-        speed_output = -steer_output
-
-        self.commands[4] = round(max(0, min(self.max_speed/2 + speed_output, self.max_speed)))
-        self.commands[5] = abs(round(max(-self.max_steering, min(steer_output, self.max_steering))))
-
-        return self.AutoHelp.jsonify_commands(commands)
-
-    def PID_steer(self, commands, steer_error, angle):
-        steer_output = self.steer_controller(steer_error)
+    def PID_steer(self, commands, steer_output, angle):
         speed_error = self.max_steering/abs(steer_output)   # scale speed error based on steering output
         print("Speed Error:", speed_error)
         speed_output = self.speed_controller(speed_error)
@@ -83,17 +67,14 @@ class GPS_Nav:
     def spin(self, commands, angle):
         self.commands[5] = 0
         if angle == "right":
-            print('TEST: Spin Right')
             self.commands[4] = abs(round(self.max_speed/2))
         elif angle == "left":
-            print('TEST: Spin Left')
             self.commands[4] = -abs(round(self.max_speed/2))
+        
         return self.AutoHelp.jsonify_commands(commands)
-
 
     def stop_rover(self, commands):
         self.commands = [0, 0, 0, 'D', 0, 0]
-        print('TEST: stop')
         return self.AutoHelp.jsonify_commands(commands)
 
     def goto_next_coordinate(self):
@@ -175,10 +156,18 @@ class GPS_Nav:
             return self.spin_and_search(current_GPS, rover_heading)
 
         bearing = self.AutoHelp.get_bearing(current_GPS, GPS_target)
+        self.steer_controller.setpoint= bearing
         distance = round(self.AutoHelp.get_distance(current_GPS, GPS_target)[0]*1000, 3)
         direction = round((bearing - rover_heading + 360) % 360, 3)
+
+        steer_error = self.steer_controller(rover_heading)
         print("Direction:", direction)
 
+        if distance <= 3:
+            print("Arrived at target!")
+            self.goto_next_coordinate()
+            time.sleep(3)
+            return self.stop_rover(self.commands)
 
         if abs(direction) > 15:
 
@@ -191,12 +180,12 @@ class GPS_Nav:
                 self.change_modes('S')
                 return self.spin(self.commands, 'left')
 
-            if self.commands[3] == 'S' and direction < 150 and direction > 120:
+            if self.commands[3] == 'S' and direction < 30 or direction > 330:
                 self.change_modes('D')
 
             if self.commands[3] == 'D' and direction < 150:
                 print("Turning right")
-                return self.PID_steer(self.commands, direction, 'right')
+                return self.PID_steer(self.commands, steer_error, 'right')
             elif self.commands[3] == 'D' and direction > 210:
                 print("Turning left")
                 return self.PID_steer(self.commands, direction, 'left')

@@ -44,30 +44,27 @@ class Autonomy:
         gps_thread = threading.Thread(target=self.update_gps)
         gps_thread.start()
 
-                # Uncomment this below for testing on the Rover
-        # homing_end = "Starting control loop..."
-        # while True:
-        #     response = self.serial.read_serial()
-        #     if homing_end in response:
+        homing_end = "Starting control loop..."
         while True:
-            with self.GPS_lock:
-                current_GPS = self.current_GPS
-            if current_GPS and current_GPS != "Need More Satellite Locks":
-                command = self.GPS_Nav.get_steering(current_GPS, self.GPS_Nav.GPS_target)
-                bearing = round(self.AutoHelp.get_bearing(current_GPS, self.GPS_Nav.GPS_target), 3)
-                distance = round(self.AutoHelp.get_distance(current_GPS, self.GPS_Nav.GPS_target)[0]*1000, 3)
-                print("Current GPS:", current_GPS)
-                print("Target GPS:", self.GPS_Nav.GPS_target)
-                print("Heading:", self.compass.get_heading())
-                print("Bearing:", bearing)
-                print("Distance from Target GPS:", distance, "Meters")
-                print("Sending Command:", command)
-                response = self.serial.read_serial()
-                self.get_rover_status(bearing, distance)
-                if response != "No data received" and command != None:
-                    self.serial.write_serial(command)
-            else:
-                print("GPS Error. Current GPS:", current_GPS)
-                time.sleep(1)
-            
-        gps_thread.join()
+            response = self.serial.read_serial()
+            if homing_end in response:
+                while True:
+                    with self.GPS_lock:
+                        current_GPS = self.current_GPS
+                    if current_GPS and current_GPS != "Need More Satellite Locks":
+                        command = self.GPS_Nav.get_steering(current_GPS, self.GPS_Nav.GPS_target)
+                        bearing = round(self.AutoHelp.get_bearing(current_GPS, self.GPS_Nav.GPS_target), 3)
+                        distance = round(self.AutoHelp.get_distance(current_GPS, self.GPS_Nav.GPS_target)[0]*1000, 3)
+                        print("Current GPS:", current_GPS)
+                        print("Target GPS:", self.GPS_Nav.GPS_target)
+                        print("Heading:", self.compass.get_heading())
+                        print("Bearing:", bearing)
+                        print("Distance from Target GPS:", distance, "Meters")
+                        print("Sending Command:", command)
+                        response = self.serial.read_serial()
+                        self.get_rover_status(bearing, distance)
+                        if response != "No data received" and command != None:
+                            self.serial.write_serial(command)
+                    else:
+                        print("GPS Error. Current GPS:", current_GPS)
+                        time.sleep(1)
