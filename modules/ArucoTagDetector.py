@@ -31,17 +31,25 @@ class ArucoTagDetector():
             # ids is a 2d array for some reason, so flatten it
             ids = ids.flatten()
 
-            if tag_ids is not None and not isinstance(tag_ids, Iterable):
+            if tag_ids is not None and not isinstance(tag_ids, Iterable): # if tag_ids is an int, make it into a list so we can iterate over it
                 tag_ids = [tag_ids]
 
             # filter out any corners that don't match the tag_id
             if tag_ids is not None:
-                corners = (corners[i] for i in range(len(ids)) if ids[i] in tag_ids)
-                # also filter the ids
-                ids = np.array(ids[i] for i in range(len(ids)) if ids[i] in tag_ids)
+                filtered_corners = []
+                filtered_ids = []
 
-            # corners is a tuple of np arrays (with the shape [1, 4, 2] for some reason), so concat them to an array with shape [n, 4, 2]
-            corners = np.concatenate(corners, axis=0).astype(np.int32)
+                for i in range(len(ids)):
+                    if ids[i] in tag_ids:
+                        filtered_corners.append(corners[i])
+                        filtered_ids.append(ids[i])
+
+                corners = filtered_corners
+                ids = np.array(filtered_ids)
+
+            if len(corners) > 0: # need to check this again because we might have filtered out all the corners
+                # corners is a tuple of np arrays (with the shape [1, 4, 2] for some reason), so concat them to an array with shape [n, 4, 2]
+                corners = np.concatenate(corners, axis=0)
 
             return corners, ids
         else:
@@ -84,13 +92,14 @@ class ArucoTagAutonomy():
         if len(corners) > 0:
             tvecs = self.distance_to_tags(corners)
 
-            post_tvec = self.calculate_target_translation(tvecs[0], ids)
+            post_tvec = self.calculate_target_translation(tvecs, ids)
 
         return post_tvec
 
     def distance_to_tags(self, tag_corners):
-        # get the translation vectors from the camera to each tag and return it as a list
+
         rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(tag_corners, MARKER_SIZE_M, self.cap.mtx, self.cap.dist)
+        tvecs = tvecs[:, 0, :] # for some reason, cv2 returns [n, 1, 3] where n is the number of tags detected, so we need to remove the extra dimension
         return tvecs
 
     def update_target_tag(self):
