@@ -7,11 +7,11 @@ from CommandScripts.autonomy import Autonomy
 from modules.GPS import gpsRead
 import json
 
-serial_port = "/dev/ttyACM0"
-gps_port = "/dev/ttyACM2"
+serial_port = "/dev/ttyACM2"
+gps_port = "/dev/ttyUSB2"
 serial_baudrate = 38400
-gps_baudrate = 9600
-max_speed = 5
+gps_baudrate = 57600
+max_speed = 50
 max_angle = 12
 server = 'http://10.251.253.243:5002'
 GPS_list = []
@@ -46,17 +46,19 @@ except:
             break
 
 
-GPS_map_url = f"{server}/gps_map"
-try:
-    GPS_map = requests.get(GPS_map_url)
-except:
-    print("Could not get GPS map from mission control")
-    exit(1)
+# GPS_map_url = f"{server}/gps_map"
+# try:
+#     GPS_map = requests.get(GPS_map_url)
+# except:
+#     print("Could not get GPS map from mission control")
+#     exit(1)
 
-GPS_map = json.loads(GPS_map.text)
+# GPS_map = json.loads(GPS_map.text)
 
-for i in GPS_map:
-    GPS_list.append(GPS_map[i])
+# for i in GPS_map:
+#     GPS_list.append(GPS_map[i])
+
+GPS_list = [[-121.8818685, 37.33699716666666], [-121.881868, 37.33696233333334], [-121.88177050000002, 37.336928833333324]]
 print("GPS List:", GPS_list)
 
 rover = Autonomy(serial, server, max_speed, max_angle, GPS, GPS_list)

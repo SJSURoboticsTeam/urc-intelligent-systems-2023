@@ -4,6 +4,7 @@ sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
 from CommandScripts import AutoHelp
 from simple_pid import PID
+import time
 
 class GPS_Nav:
     def __init__(self, max_speed, max_steering, GPS, compass, GPS_coordinate_map):
@@ -100,6 +101,11 @@ class GPS_Nav:
         steer_error = self.steer_controller(rover_heading)
         print("Direction:", direction)
 
+        if distance <= 3:
+            print("Arrived at target!")
+            self.goto_next_coordinate()
+            time.sleep(3)
+            return self.stop_rover(self.commands)
 
         if abs(direction) > 15:
 
@@ -112,7 +118,7 @@ class GPS_Nav:
                 self.change_modes('S')
                 return self.spin(self.commands, 'left')
 
-            if self.commands[3] == 'S' and direction < 150 and direction > 120:
+            if self.commands[3] == 'S' and direction < 30 or direction > 330:
                 self.change_modes('D')
 
             if self.commands[3] == 'D' and direction < 150:
@@ -127,8 +133,3 @@ class GPS_Nav:
             print("Moving forward")
             self.change_modes('D')
             return self.forward_drive(self.commands)
-        if distance <= 0.5:
-            print("Arrived at target!")
-            self.goto_next_coordinate()
-            time.sleep(3)
-            return self.stop_rover(self.commands)
