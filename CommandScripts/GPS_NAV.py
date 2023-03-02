@@ -29,10 +29,10 @@ class GPS_Nav:
         self.speed_controller.sample_time = 0.1
         self.speed_controller.output_limits = (0, self.max_speed)
 
-        
+    
 
-    def PID_steer(self, commands, steer_error, angle):
-        steer_output = self.steer_controller(steer_error)
+
+    def PID_steer(self, commands, steer_output, angle):
         speed_error = self.max_steering/abs(steer_output)   # scale speed error based on steering output
         print("Speed Error:", speed_error)
         speed_output = self.speed_controller(speed_error)
@@ -94,8 +94,11 @@ class GPS_Nav:
     def get_steering(self, current_GPS, GPS_target):
         rover_heading = self.compass.get_heading()
         bearing = self.AutoHelp.get_bearing(current_GPS, GPS_target)
+        self.steer_controller.setpoint= bearing
         distance = round(self.AutoHelp.get_distance(current_GPS, GPS_target)[0]*1000, 3)
         direction = round((bearing - rover_heading + 360) % 360, 3)
+
+        steer_error = self.steer_controller(rover_heading)
         print("Direction:", direction)
 
         if distance <= 3:
@@ -120,10 +123,10 @@ class GPS_Nav:
 
             if self.commands[3] == 'D' and direction < 150:
                 print("Turning right")
-                return self.PID_steer(self.commands, direction, 'right')
+                return self.PID_steer(self.commands, steer_error, 'right')
             elif self.commands[3] == 'D' and direction > 210:
                 print("Turning left")
-                return self.PID_steer(self.commands, direction, 'left')
+                return self.PID_steer(self.commands, steer_error, 'left')
         rover_heading = bearing
         
         if direction <= 15:

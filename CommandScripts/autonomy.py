@@ -68,4 +68,3 @@ class Autonomy:
                     else:
                         print("GPS Error. Current GPS:", current_GPS)
                         time.sleep(1)
-            
