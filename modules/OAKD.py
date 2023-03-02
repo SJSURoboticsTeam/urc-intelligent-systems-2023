@@ -16,14 +16,15 @@ def get_camera_intrinsics(device):
     return mtx, dist
 
 class OakD():
-    def __init__(self): # TODO: add video size to constructor
+    def __init__(self, resolution=depthai.ColorCameraProperties.SensorResolution.THE_12_MP):
         self.pipeline = depthai.Pipeline()
 
         # First, we want the Color camera as the output
         self.cam_rgb = self.pipeline.createColorCamera()
         self.cam_rgb.setInterleaved(False)
-        self.cam_rgb.setResolution(depthai.ColorCameraProperties.SensorResolution.THE_13_MP)
-        self.cam_rgb.setVideoSize(3840, 2160)
+        self.cam_rgb.setResolution(resolution)
+        #self.cam_rgb.setResolution(depthai.ColorCameraProperties.SensorResolution.THE_12_MP)
+        #self.cam_rgb.setVideoSize(width, height)
 
         # XLinkOut is a "way out" from the device. Any data you want to transfer to host need to be send via XLink
         self.xout_rgb = self.pipeline.createXLinkOut()
