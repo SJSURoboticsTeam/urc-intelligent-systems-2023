@@ -44,7 +44,6 @@ class Autonomy:
         gps_thread = threading.Thread(target=self.update_gps)
         gps_thread.start()
 
-                # Uncomment this below for testing on the Rover
         homing_end = "Starting control loop..."
         while True:
             response = self.serial.read_serial()
@@ -52,7 +51,6 @@ class Autonomy:
                 while True:
                     with self.GPS_lock:
                         current_GPS = self.current_GPS
-                        # current_GPS = [-121.88177050000002, 37.336928833333324]
                     if current_GPS and current_GPS != "Need More Satellite Locks":
                         command = self.GPS_Nav.get_steering(current_GPS, self.GPS_Nav.GPS_target)
                         bearing = round(self.AutoHelp.get_bearing(current_GPS, self.GPS_Nav.GPS_target), 3)
@@ -70,5 +68,4 @@ class Autonomy:
                     else:
                         print("GPS Error. Current GPS:", current_GPS)
                         time.sleep(1)
-                    
-                gps_thread.join()
+            

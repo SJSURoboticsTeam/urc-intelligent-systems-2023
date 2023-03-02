@@ -98,6 +98,11 @@ class GPS_Nav:
         direction = round((bearing - rover_heading + 360) % 360, 3)
         print("Direction:", direction)
 
+        if distance <= 3:
+            print("Arrived at target!")
+            self.goto_next_coordinate()
+            time.sleep(3)
+            return self.stop_rover(self.commands)
 
         if abs(direction) > 15:
 
@@ -125,8 +130,3 @@ class GPS_Nav:
             print("Moving forward")
             self.change_modes('D')
             return self.forward_drive(self.commands)
-        if distance <= 0.5:
-            print("Arrived at target!")
-            self.goto_next_coordinate()
-            time.sleep(3)
-            return self.stop_rover(self.commands)
