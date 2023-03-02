@@ -1,10 +1,12 @@
 import requests
 import os, sys
+import time
 sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
+from modules.OAKD import OakD
+from modules.ArucoTagDetector import ArucoTagAutonomy
 from CommandScripts import AutoHelp
 from simple_pid import PID
-import time
 
 class GPS_Nav:
     def __init__(self, max_speed, max_steering, GPS, compass, GPS_coordinate_map):
@@ -29,7 +31,20 @@ class GPS_Nav:
         self.speed_controller.sample_time = 0.1
         self.speed_controller.output_limits = (0, self.max_speed)
 
-    
+        ############################
+        # Aruco Tag Detection stuff
+        self.aruco_autonomy = ArucoTagAutonomy(cap=OakD())
+
+        # we use these variables to occasionally re-check the location of the aruco tag or gate because our initial detection may be slightly inaccurate
+        self.navigating_to_tag = False
+        self.distance_until_recheck = -1 # TODO: checking the location of the tag mid-journey is not implemented yet
+
+        # when we search for the aruco tag, we basically need to spin in a complete circle, coming to a complete stop to search for it every 30 degrees
+        self.spinning_and_searching = False
+        self.camera_stabilized = False # the aruco tag detection algorithm is sensitive to movement, so we need to stop the rover before we search for the tag
+        self.starting_heading = 0
+        self.num_failed_searches = 0 # if we can't find the tag after 12 searches, (a whole rotation of the rover), then we need to stop searching for the tag
+        self.SEARCH_ANGLE = 30
 
 
     def PID_steer(self, commands, steer_output, angle):
@@ -72,6 +87,49 @@ class GPS_Nav:
             print("No more GPS coordniates in Mission... Mission Success!")
             exit(1)
 
+    def spin_and_search(self, current_GPS, rover_heading):
+        """
+        This function is called when we need to search for an aruco tag on a post.
+        It requires self.starting_heading to be set to the rover's heading when it starts searching.
+        It will spin the rover in a complete circle, stopping to search for the aruco tag every 30 degrees.
+        If it finds the aruco tag, it will set self.GPS_target to the GPS coordinates of the post and return a stop command.
+        If it doesn't find the aruco tag, it will return a spin left command.
+        """
+
+        if self.camera_stabilized: # we can only search for aruco tags when the rover is stopped
+            tvec = self.aruco_autonomy.search_for_post()
+
+            if tvec is not None: # if we've found a post, we can set the GPS target to the post's GPS coordinates
+                print(f"!!!Found Aruco Post {self.aruco_autonomy.target_tags}!!!")
+                self.GPS_target = ArucoTagAutonomy.translate_lat_lon(lat=current_GPS[1], lon=current_GPS[0], tvec=tvec, heading=rover_heading)
+                # also need to stop spinning and searching and start navigating to the aruco tag
+                self.spinning_and_searching = False
+                self.navigating_to_tag = True
+
+                return self.stop_rover(self.commands) # we should already be stopped, but we have to return something, so we'll just return a stop command
+
+            else: # otherwise, we need to keep spinning and searching
+                self.num_failed_searches += 1
+                self.camera_stabilized = False
+                self.change_modes('S')
+                return self.spin(self.commands, 'left')
+
+        elif self.num_failed_searches == 12: # if we've searched for the aruco tag 12 times (completing a full rotation) and haven't found it, there is probably no aruco tag so we can stop searching
+            self.spinning_and_searching = False
+            self.change_modes('D')
+            return self.stop_rover(self.commands)
+
+        else:
+            # compute the difference between the current angle and the heading taking into account the wrap around
+            angle_diff = (rover_heading - self.starting_heading + 180) % 360 - 180  # https://stackoverflow.com/a/7869457
+
+            if abs(angle_diff) >= self.SEARCH_ANGLE * self.num_failed_searches: # if we've rotated at least 30 degrees, we can stop and search for the aruco tag
+                self.camera_stabilized = True
+                self.change_modes('D')
+                return self.stop_rover(self.commands)
+            else: # otherwise, just keep spinning
+                self.change_modes('S')
+                return self.spin(self.commands, 'left')
 
     def change_modes(self, desired_mode):
         if desired_mode == 'D':
@@ -93,6 +151,10 @@ class GPS_Nav:
 
     def get_steering(self, current_GPS, GPS_target):
         rover_heading = self.compass.get_heading()
+
+        if self.spinning_and_searching:
+            return self.spin_and_search(current_GPS, rover_heading)
+
         bearing = self.AutoHelp.get_bearing(current_GPS, GPS_target)
         self.steer_controller.setpoint= bearing
         distance = round(self.AutoHelp.get_distance(current_GPS, GPS_target)[0]*1000, 3)
@@ -101,8 +163,32 @@ class GPS_Nav:
         steer_error = self.steer_controller(rover_heading)
         print("Direction:", direction)
 
-        if distance <= 3:
-            print("Arrived at target!")
+        # if we're within 2 meters of the aruco tag, we can go to the next coordinate.
+        if distance <= 2 and self.navigating_to_tag:
+            # TODO: we will have to modify this for the gate, also we should probably double check to make sure we're actually at the aruco tag
+            print(f"Arrived at Aruco Post {self.aruco_autonomy.target_tags}")
+
+            # after printing that we reached the post, update the target tag and reset all aruco-related variables
+            self.reset_aruco_variables(update_target_tag=True)
+
+            self.goto_next_coordinate()
+            time.sleep(3)
+            return self.stop_rover(self.commands)
+
+        # if we're within 3 meters of the GPS coordinate, but we haven't started looking for an aruco tag, start looking
+        elif distance <= 3 and self.num_failed_searches == 0 and not self.navigating_to_tag:
+            self.starting_heading = bearing
+            self.spinning_and_searching = True
+            self.camera_stabilized = True
+
+            return self.stop_rover(self.commands)  # stop the rover so that the movement doesn't interfere with the aruco tag detection algorithm
+
+        # lastly, if we're within 3 meters of the GPS coordinate, and we've already searched for the aruco tag but didn't find it, we can assume there is none
+        # nearby, so we can just go to the next coordinates
+        elif distance <= 3 and self.num_failed_searches == 12 and not self.navigating_to_tag:
+            self.reset_aruco_variables()
+
+            print("Arrived at GPS target!")
             self.goto_next_coordinate()
             time.sleep(3)
             return self.stop_rover(self.commands)
@@ -126,10 +212,22 @@ class GPS_Nav:
                 return self.PID_steer(self.commands, steer_error, 'right')
             elif self.commands[3] == 'D' and direction > 210:
                 print("Turning left")
-                return self.PID_steer(self.commands, steer_error, 'left')
-        rover_heading = bearing
-        
-        if direction <= 15:
+                return self.PID_steer(self.commands, direction, 'left')
+
+        else:
             print("Moving forward")
             self.change_modes('D')
             return self.forward_drive(self.commands)
+
+        # FOR GATE: navigate close to the gate (perhaps perpendicular to it) and then spin to face the center between the two posts. Then, transfer into translate mode and go forward.
+
+
+    def reset_aruco_variables(self, update_target_tag=False):
+        if update_target_tag:
+            self.aruco_autonomy.update_target_tag()
+
+        self.navigating_to_tag = False
+        self.num_failed_searches = 0
+        self.distance_until_recheck = -1
+        self.camera_stabilized = False
+        self.spinning_and_searching = False
