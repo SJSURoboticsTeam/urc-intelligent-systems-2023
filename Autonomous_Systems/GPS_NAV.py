@@ -2,7 +2,7 @@ import requests
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 from modules.LSM303 import Compass
-from CommandScripts import AutoHelp
+from Autonomous_Systems import AutoHelp
 from simple_pid import PID
 import time
 

@@ -1,11 +1,11 @@
 import math
 import json
 import requests
-from CommandScripts import Trajectory
+from Autonomous_Systems import Trajectory
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
-from CommandScripts.GPS_NAV import GPS_Nav
-from CommandScripts import AutoHelp
+from Autonomous_Systems.GPS_NAV import GPS_Nav
+from Autonomous_Systems import AutoHelp
 from modules.LSM303 import Compass
 import time
 import threading
