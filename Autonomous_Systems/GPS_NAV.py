@@ -92,7 +92,7 @@ class GPS_Nav:
 
     def get_steering(self, current_GPS, GPS_target):
         quat_i, quat_j, quat_k, quat_real = self.IMU.get_rotation()
-        rover_heading = self.IMU.find_heading(quat_real, quat_i, quat_j, quat_k)
+        rover_heading = self.IMU.get_heading(quat_real, quat_i, quat_j, quat_k)
         bearing = self.AutoHelp.get_bearing(current_GPS, GPS_target)
         self.steer_controller.setpoint= bearing
         distance = round(self.AutoHelp.get_distance(current_GPS, GPS_target)[0]*1000, 3)

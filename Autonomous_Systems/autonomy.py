@@ -56,7 +56,7 @@ class Autonomy:
                         bearing = round(self.AutoHelp.get_bearing(current_GPS, self.GPS_Nav.GPS_target), 3)
                         distance = round(self.AutoHelp.get_distance(current_GPS, self.GPS_Nav.GPS_target)[0]*1000, 3)
                         quat_i, quat_j, quat_k, quat_real = self.IMU.get_rotation()
-                        self.heading = self.IMU.find_heading(quat_real, quat_i, quat_j, quat_k)
+                        self.heading = self.IMU.get_heading(quat_real, quat_i, quat_j, quat_k)
                         print("Current GPS:", current_GPS)
                         print("Target GPS:", self.GPS_Nav.GPS_target)
                         print("Heading:", self.heading)
