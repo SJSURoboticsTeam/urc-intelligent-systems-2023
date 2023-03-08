@@ -1,6 +1,7 @@
 import board
 import busio
 from math import atan2, sqrt, pi
+import time
 from adafruit_bno08x import (
     BNO_REPORT_ACCELEROMETER,
     BNO_REPORT_GYROSCOPE,
@@ -10,7 +11,6 @@ from adafruit_bno08x import (
     BNO_REPORT_GEOMAGNETIC_ROTATION_VECTOR,
 )
 from adafruit_bno08x.i2c import BNO08X_I2C
-import math
 
 class BN08x:
     def __init__(self):
@@ -49,6 +49,12 @@ class BN08x:
         return (quat_i, quat_j, quat_k, quat_real)
 
 
+    def get_geomagnetic_rotation(self):
+        """Get geomagnetic rotation values (i, j, k, real) in quaternion."""
+        quat_i, quat_j, quat_k, quat_real = self.bno.geomagnetic_quaternion
+        return (quat_i, quat_j, quat_k, quat_real)
+
+
     def get_heading(self, quat_i, quat_j, quat_k, quat_real):
         """Get heading in degrees from rotation vector."""
         norm = sqrt(quat_i * quat_i + quat_j * quat_j + quat_k * quat_k + quat_real * quat_real)
@@ -70,10 +76,21 @@ class BN08x:
         return yaw  # heading in 360 clockwise
     
 
-    def collision_detect(self, accel_mag):
+    def collision_detect(self, threshold=8.0, duration=0.1):
         """Detect collision."""
-        if accel_mag > 8.0:
-            print("Collision detected!")
+        accel_list = []
+        start_time = time.monotonic()
+
+        # Collect acceleration data for duration
+        while time.monotonic() - start_time < duration:
+            accel = self.get_acceleration()
+            accel_mag = sqrt(sum(a ** 2 for a in accel))
+            accel_list.append(accel_mag)
+
+        # Check if maximum acceleration exceeds threshold
+        max_accel = max(accel_list)
+        if max_accel > threshold:
+            print("Collision detected! Max acceleration: {:.2f}".format(max_accel))
             return True
         else:
             return False
