@@ -6,7 +6,7 @@ import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 from Autonomous_Systems.GPS_NAV import GPS_Nav
 from Autonomous_Systems import AutoHelp
-from modules.LSM303 import Compass
+from modules.BN08x import BN08x as IMU
 import time
 import threading
 
@@ -14,10 +14,10 @@ class Autonomy:
     def __init__(self, serial, url, max_speed, max_steering, GPS, GPS_coordinate_map):
         self.serial = serial
         self.url = url
-        self.compass = Compass()
+        self.IMU = IMU()
         self.GPS = GPS
 
-        self.GPS_Nav = GPS_Nav(max_speed, max_steering, self.GPS, self.compass, GPS_coordinate_map)
+        self.GPS_Nav = GPS_Nav(max_speed, max_steering, self.GPS, self.IMU, GPS_coordinate_map)
         self.AutoHelp = AutoHelp.AutoHelp()
 
         self.current_GPS = None
@@ -55,14 +55,16 @@ class Autonomy:
                         command = self.GPS_Nav.get_steering(current_GPS, self.GPS_Nav.GPS_target)
                         bearing = round(self.AutoHelp.get_bearing(current_GPS, self.GPS_Nav.GPS_target), 3)
                         distance = round(self.AutoHelp.get_distance(current_GPS, self.GPS_Nav.GPS_target)[0]*1000, 3)
+                        quat_i, quat_j, quat_k, quat_real = self.IMU.get_rotation()
+                        self.heading = self.IMU.find_heading(quat_real, quat_i, quat_j, quat_k)
                         print("Current GPS:", current_GPS)
                         print("Target GPS:", self.GPS_Nav.GPS_target)
-                        print("Heading:", self.compass.get_heading())
+                        print("Heading:", self.heading)
                         print("Bearing:", bearing)
                         print("Distance from Target GPS:", distance, "Meters")
                         print("Sending Command:", command)
                         response = self.serial.read_serial()
-                        self.get_rover_status(bearing, distance)
+                        # self.get_rover_status(bearing, distance)
                         if response != "No data received" and command != None:
                             self.serial.write_serial(command)
                     else:

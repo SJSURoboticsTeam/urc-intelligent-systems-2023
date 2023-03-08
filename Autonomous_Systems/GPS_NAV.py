@@ -1,17 +1,16 @@
 import requests
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
-from modules.LSM303 import Compass
 from Autonomous_Systems import AutoHelp
 from simple_pid import PID
 import time
 
 class GPS_Nav:
-    def __init__(self, max_speed, max_steering, GPS, compass, GPS_coordinate_map):
+    def __init__(self, max_speed, max_steering, GPS, IMU, GPS_coordinate_map):
         self.max_speed = max_speed
         self.max_steering = max_steering
         self.commands = [0,1,0,'D',0,0]
-        self.compass = compass
+        self.IMU = IMU
         self.AutoHelp = AutoHelp.AutoHelp()
 
         self.GPS = GPS
@@ -92,7 +91,8 @@ class GPS_Nav:
 
 
     def get_steering(self, current_GPS, GPS_target):
-        rover_heading = self.compass.get_heading()
+        quat_i, quat_j, quat_k, quat_real = self.IMU.get_rotation()
+        rover_heading = self.IMU.find_heading(quat_real, quat_i, quat_j, quat_k)
         bearing = self.AutoHelp.get_bearing(current_GPS, GPS_target)
         self.steer_controller.setpoint= bearing
         distance = round(self.AutoHelp.get_distance(current_GPS, GPS_target)[0]*1000, 3)
