@@ -52,7 +52,8 @@ class Autonomy:
                     with self.GPS_lock:
                         current_GPS = self.current_GPS
                     if current_GPS and current_GPS != "Need More Satellite Locks":
-                        command = self.GPS_Nav.get_steering(current_GPS, self.GPS_Nav.GPS_target)
+                        # command = self.GPS_Nav.get_steering(current_GPS, self.GPS_Nav.GPS_target)
+                        command = self.GPS_Nav.follow_path(self.GPS_Nav.GPS_target)
                         bearing = round(self.AutoHelp.get_bearing(current_GPS, self.GPS_Nav.GPS_target), 3)
                         distance = round(self.AutoHelp.get_distance(current_GPS, self.GPS_Nav.GPS_target)[0]*1000, 3)
                         quat_i, quat_j, quat_k, quat_real = self.IMU.get_rotation()
