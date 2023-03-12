@@ -6,6 +6,7 @@ from modules.Serial import SerialSystem
 from Autonomous_Systems.autonomy import Autonomy
 from modules.GPS import gpsRead
 import json
+import logging
 
 serial_port = "/dev/ttyUSB0"
 gps_port = "/dev/ttyACM0"
@@ -16,27 +17,30 @@ max_angle = 12
 server = 'http://10.251.253.243:5002'
 GPS_list = []
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename='example.log', encoding='utf-8',level=logging.DEBUG)
+
 try:
     serial = SerialSystem(serial_port, serial_baudrate)
-    print("Using port: " + serial_port, "For Serial Comms")
+    logging.info("Using port: " + serial_port, "For Serial Comms")
 except:
     ports = list(port_list.comports())
-    print('====> Designated Port not found. Using Port:', ports[0].device, "For Serial Connection")
+    logging.info('====> Designated Port not found. Using Port:', ports[0].device, "For Serial Connection")
     serial_port = ports[0].device
     serial = SerialSystem(serial_port, serial_baudrate)
 
 
 try:
     GPS = gpsRead(gps_port,gps_baudrate)
-    print("Using port: " + gps_port, "For GPS")
+    logging.info("Using port: " + gps_port, "For GPS")
 except:
         port_number = 0
         ports = list(port_list.comports())
-        print('====> Designated Port not found. Using Port:', ports[port_number].device, "For GPS Connection")
+        logging.info('====> Designated Port not found. Using Port:', ports[port_number].device, "For GPS Connection")
         port = ports[port_number].device
         GPS = gpsRead(port,gps_baudrate)
         while GPS.get_position() == ['error', 'error'] or GPS.get_position() == ["None", "None"]:
-            print("Port not found, going to next port...")
+            logging.info("Port not found, going to next port...")
             port_number += 1
             gps_port = ports[port_number].device
             try:
@@ -50,7 +54,7 @@ except:
 # try:
 #     GPS_map = requests.get(GPS_map_url)
 # except:
-#     print("Could not get GPS map from mission control")
+#     logging.info("Could not get GPS map from mission control")
 #     exit(1)
 
 # GPS_map = json.loads(GPS_map.text)
@@ -59,7 +63,7 @@ except:
 #     GPS_list.append(GPS_map[i])
 
 GPS_list = [[-121.8818685, 37.33699716666666], [-121.881868, 37.33696233333334], [-121.88177050000002, 37.336928833333324]]
-print("GPS List:", GPS_list)
+logging.info("GPS List:", GPS_list)
 
 rover = Autonomy(serial, server, max_speed, max_angle, GPS, GPS_list)
 rover.start_mission()

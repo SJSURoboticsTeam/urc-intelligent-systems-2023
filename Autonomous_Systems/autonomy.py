@@ -16,10 +16,7 @@ class Autonomy:
         self.url = url
         self.IMU = IMU()
         self.GPS = GPS
-
         self.GPS_Nav = GPS_Nav(max_speed, max_steering, self.GPS, self.IMU, GPS_coordinate_map)
-        self.AutoHelp = AutoHelp.AutoHelp()
-
         self.current_GPS = None
         self.GPS_lock = threading.Lock()
 
