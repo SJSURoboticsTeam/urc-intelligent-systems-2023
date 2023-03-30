@@ -4,7 +4,7 @@ import requests
 from Autonomous_Systems import Trajectory
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
-from Autonomous_Systems.GPS_NAV import GPS_Nav
+from Autonomous_Systems.RoverNavigation import RoverNavigation
 from Autonomous_Systems import AutoHelp
 from modules.BN08x import BN08x as IMU
 import time
@@ -17,7 +17,7 @@ class Autonomy:
         self.IMU = IMU()
         self.GPS = GPS
 
-        self.GPS_Nav = GPS_Nav(max_speed, max_steering, self.GPS, self.IMU, GPS_coordinate_map)
+        self.RoverNavigation = RoverNavigation(max_speed, max_steering, self.GPS, self.IMU, GPS_coordinate_map)
         self.AutoHelp = AutoHelp.AutoHelp()
 
         self.current_GPS = None
@@ -33,7 +33,7 @@ class Autonomy:
 
     def get_rover_status(self, bearing, distance):
         try:
-            json_command = {"Bearing":bearing,"Distance":distance,"GPS":[self.current_GPS[0],self.current_GPS[1]],"Target":[self.GPS_Nav.GPS_target[0],self.GPS_Nav.GPS_target[1]]}
+            json_command = {"Bearing":bearing,"Distance":distance,"GPS":[self.current_GPS[0],self.current_GPS[1]],"Target":[self.RoverNavigation.GPS_target[0],self.RoverNavigation.GPS_target[1]]}
             json_command = json.dumps(json_command)
             json_command = json_command.replace(" ", "")
             requests.post(f"{self.url}/autonomy", json=json_command)
@@ -52,14 +52,14 @@ class Autonomy:
                     with self.GPS_lock:
                         current_GPS = self.current_GPS
                     if current_GPS and current_GPS != "Need More Satellite Locks":
-                        # command = self.GPS_Nav.get_steering(current_GPS, self.GPS_Nav.GPS_target)
-                        command = self.GPS_Nav.follow_path(self.GPS_Nav.GPS_target)
-                        bearing = round(self.AutoHelp.get_bearing(current_GPS, self.GPS_Nav.GPS_target), 3)
-                        distance = round(self.AutoHelp.get_distance(current_GPS, self.GPS_Nav.GPS_target)[0]*1000, 3)
+                        # command = self.RoverNavigation.get_steering(current_GPS, self.RoverNavigation.GPS_target)
+                        command = self.RoverNavigation.follow_path(self.RoverNavigation.GPS_target)
+                        bearing = round(self.AutoHelp.get_bearing(current_GPS, self.RoverNavigation.GPS_target), 3)
+                        distance = round(self.AutoHelp.get_distance(current_GPS, self.RoverNavigation.GPS_target)[0]*1000, 3)
                         quat_i, quat_j, quat_k, quat_real = self.IMU.get_rotation()
                         self.heading = self.IMU.get_heading(quat_real, quat_i, quat_j, quat_k)
                         print("Current GPS:", current_GPS)
-                        print("Target GPS:", self.GPS_Nav.GPS_target)
+                        print("Target GPS:", self.RoverNavigation.GPS_target)
                         print("Heading:", self.heading)
                         print("Bearing:", bearing)
                         print("Distance from Target GPS:", distance, "Meters")
