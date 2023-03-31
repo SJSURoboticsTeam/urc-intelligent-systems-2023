@@ -6,7 +6,7 @@ from matplotlib.colors import ListedColormap
 from queue import PriorityQueue
 
 class GridMap:
-    def __init__(self, resolution, map_width, map_height, num_initial_obstacles=20, interval=200):
+    def __init__(self, resolution, map_width, map_height, target_x, target_y, num_initial_obstacles=20, interval=200):
         self.resolution = resolution
         self.map_width = map_width
         self.map_height = map_height
@@ -15,6 +15,8 @@ class GridMap:
         self.interval = interval
         self.ani = None
         self.map = np.zeros((self.map_height, self.map_width))  # use a numpy array to represent the map
+        self.target_x = target_x
+        self.target_y = target_y
         self.obstacles = self.generate_initial_obstacles(num_initial_obstacles)
 
     def generate_initial_obstacles(self, num_obstacles):
@@ -22,10 +24,11 @@ class GridMap:
         while len(obstacles) < num_obstacles:
             x = np.random.randint(0, self.map_width)
             y = np.random.randint(0, self.map_height)
-            if self.map[y, x] != -1:
+            if self.map[y, x] != -1 and (x, y) != (self.target_x, self.target_y):
                 obstacles.append((x, y))
                 self.map[y, x] = -1
         return obstacles
+
 
     def init_visualization(self, target_x, target_y):
         self.fig, self.ax = plt.subplots()
@@ -92,6 +95,11 @@ class GridMap:
 
             for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, 1), (1, -1), (-1, -1)]:
                 neighbor = (current[0] + dx, current[1] + dy)
+
+                # Check for diagonal collisions
+                if (dx != 0 and dy != 0) and (self.map[current[1], current[0] + dx] == -1 or self.map[current[1] + dy, current[0]] == -1):
+                    continue
+
                 if neighbor[0] < 0 or neighbor[0] >= self.map_width or neighbor[1] < 0 or neighbor[1] >= self.map_height or self.map[neighbor[1], neighbor[0]] == -1:
                     continue
                 new_cost = cost_so_far[current] + 1
@@ -105,9 +113,31 @@ class GridMap:
         return None
 
 
+    def detect_obstacle(self):
+        # Simulate the detection of an obstacle in the vicinity of the rover
+        # For simplicity, we randomly generate an obstacle within a square region around the rover
+        region_size = 3
+        x = np.random.randint(self.rover_x - region_size, self.rover_x + region_size + 1)
+        y = np.random.randint(self.rover_y - region_size, self.rover_y + region_size + 1)
+
+        if x < 0 or x >= self.map_width or y < 0 or y >= self.map_height:
+            return
+
+        if self.map[y, x] != -1 and (x, y) != (self.target_x, self.target_y):
+            self.map[y, x] = -1
+            print(f"Obstacle detected at ({x}, {y})")
+            return x, y
+        else:
+            return None
+
 
 
     def move_rover(self, target_x, target_y):
+        # Detect obstacles before moving
+        detected_obstacle = self.detect_obstacle()
+        if detected_obstacle:
+            self.obstacles.append(detected_obstacle)
+
         # Find the optimal path from the current position to the target position using A*
         path = self.find_path(self.rover_x, self.rover_y, target_x, target_y)
         if path is None or len(path) < 2:
@@ -126,16 +156,18 @@ class GridMap:
 # Example usage
 
 def animate(frame, grid_map, target_x, target_y):
+    grid_map.detect_obstacle()
     grid_map.move_rover(target_x, target_y)
     return grid_map.update_visualization(target_x, target_y)
 
+
 resolution = 1
-map_width = 20
-map_height = 20
-target_x, target_y = 5, 15
-obstacles = 35
+map_width = 25
+map_height = 25
+target_x, target_y = 19, 19
+obstacles = 20
 animation_speed = 250
 
-grid_map = GridMap(resolution, map_width, map_height, num_initial_obstacles=obstacles, interval=animation_speed)
+grid_map = GridMap(resolution, map_width, map_height, target_x, target_y, num_initial_obstacles=obstacles, interval=animation_speed)
 grid_map.init_visualization(target_x, target_y)
 plt.show()
