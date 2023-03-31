@@ -6,12 +6,14 @@ from matplotlib.colors import ListedColormap
 from queue import PriorityQueue
 
 class GridMap:
-    def __init__(self, resolution, map_width, map_height, num_initial_obstacles=20):
+    def __init__(self, resolution, map_width, map_height, num_initial_obstacles=20, interval=200):
         self.resolution = resolution
         self.map_width = map_width
         self.map_height = map_height
         self.rover_x = 0
         self.rover_y = 0
+        self.interval = interval
+        self.ani = None
         self.map = np.zeros((self.map_height, self.map_width))  # use a numpy array to represent the map
         self.obstacles = self.generate_initial_obstacles(num_initial_obstacles)
 
@@ -25,12 +27,13 @@ class GridMap:
                 self.map[y, x] = -1
         return obstacles
 
-    def init_visualization(self):
+    def init_visualization(self, target_x, target_y):
         self.fig, self.ax = plt.subplots()
         self.ax.set_title("Grid Map")
         self.path_line, = self.ax.plot([], [], color='green')
         colors = ['black', 'white']  # remove the red color from the colormap
         cmap = ListedColormap(colors)
+        self.ani = FuncAnimation(self.fig, animate, fargs=(self, target_x, target_y), interval=self.interval)
         self.grid_img = self.ax.imshow(self.map, origin='lower', cmap=cmap)
 
         # add the initial position of the rover as a red dot
@@ -53,8 +56,9 @@ class GridMap:
 
         # Check if the rover has reached the target position
         if self.rover_x == target_x and self.rover_y == target_y:
-            print("I have made it!")
+            print("I have made it to the destination!")
             plt.close(self.fig)  # Stop the animation
+            exit(1)
 
         return [self.grid_img, self.rover_dot, self.target_dot]
 
@@ -104,41 +108,19 @@ class GridMap:
 
 
     def move_rover(self, target_x, target_y):
-            # Find the direction towards the target position
-            print("Current position: ({}, {})".format(self.rover_x, self.rover_y))
-            print("Target position: ({}, {})".format(target_x, target_y))
-            dx = int(target_x - self.rover_x)
-            dy = int(target_y - self.rover_y)
+        # Find the optimal path from the current position to the target position using A*
+        path = self.find_path(self.rover_x, self.rover_y, target_x, target_y)
+        if path is None or len(path) < 2:
+            # If there is no path or the path is too short, do not move the rover
+            print("No path found or path too short")
+            return
 
-            # Calculate the Euclidean distance to the target position
-            dist = np.sqrt(dx**2 + dy**2)
+        # Move the rover one step along the optimal path
+        new_x, new_y = path[1]
+        print("Moved to position ({}, {})".format(new_x, new_y))
+        self.map[self.rover_y, self.rover_x] = 0  # Clear the old rover's position
+        self.rover_x, self.rover_y = new_x, new_y
 
-            # Normalize the direction vector if it is non-zero
-            if dist > 0:
-                dx = dx / dist
-                dy = dy / dist
-
-            # Move the rover towards the target position, avoiding obstacles
-            new_x, new_y = int(self.rover_x + dx), int(self.rover_y + dy)
-            if np.isnan(new_x) or np.isnan(new_y):
-                # If the new position is not a number, move randomly
-                new_x = np.random.randint(0, self.map_width)
-                new_y = np.random.randint(0, self.map_height)
-                print("Moved randomly to position ({}, {})".format(new_x, new_y))
-            elif new_x < 0 or new_x >= self.map_width or new_y < 0 or new_y >= self.map_height:
-                # If the new position is out of bounds, move randomly
-                new_x = np.random.randint(0, self.map_width)
-                new_y = np.random.randint(0, self.map_height)
-                print("Moved randomly to position ({}, {})".format(new_x, new_y))
-            elif self.map[new_y, new_x] == -1:
-                # If the new position is occupied by an obstacle, move randomly
-                new_x = np.random.randint(0, self.map_width)
-                new_y = np.random.randint(0, self.map_height)
-                print("Moved randomly to position ({}, {})".format(new_x, new_y))
-            else:
-                print("Moved to position ({}, {})".format(new_x, new_y))
-                self.map[self.rover_y, self.rover_x] = 0  # Clear the old rover's position
-                self.rover_x, self.rover_y = new_x, new_y
 
 
 # Example usage
@@ -150,9 +132,10 @@ def animate(frame, grid_map, target_x, target_y):
 resolution = 1
 map_width = 20
 map_height = 20
-target_x, target_y = 15, 15
-grid_map = GridMap(resolution, map_width, map_height, num_initial_obstacles=20)
-grid_map.init_visualization()
-ani = FuncAnimation(grid_map.fig, animate, fargs=(grid_map, target_x, target_y), interval=100)
+target_x, target_y = 5, 15
+obstacles = 35
+animation_speed = 250
 
+grid_map = GridMap(resolution, map_width, map_height, num_initial_obstacles=obstacles, interval=animation_speed)
+grid_map.init_visualization(target_x, target_y)
 plt.show()
