@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.colors import ListedColormap
 from queue import PriorityQueue
+from matplotlib.patches import Arrow
 
-class GridMap:
+
+class GridMapSimulator:
     def __init__(self, resolution, map_width, map_height, target_x, target_y, num_initial_obstacles=20, interval=200):
         self.resolution = resolution
         self.map_width = map_width
@@ -14,10 +16,13 @@ class GridMap:
         self.rover_y = 0
         self.interval = interval
         self.ani = None
+        self.path_plot = None  # Add an attribute to store the path plot
         self.map = np.zeros((self.map_height, self.map_width))  # use a numpy array to represent the map
         self.target_x = target_x
         self.target_y = target_y
         self.obstacles = self.generate_initial_obstacles(num_initial_obstacles)
+        self.reached_destination = False
+        self.rover_direction = 0
 
     def generate_initial_obstacles(self, num_obstacles):
         obstacles = []
@@ -34,16 +39,23 @@ class GridMap:
         self.fig, self.ax = plt.subplots()
         self.ax.set_title("Grid Map")
         self.path_line, = self.ax.plot([], [], color='green')
-        colors = ['black', 'white']  # remove the red color from the colormap
+        self.path_plot, = self.ax.plot([], [], color='red', linestyle='-')  # Create a line plot for the path
+        colors = ['black', 'white']
         cmap = ListedColormap(colors)
         self.ani = FuncAnimation(self.fig, animate, fargs=(self, target_x, target_y), interval=self.interval)
         self.grid_img = self.ax.imshow(self.map, origin='lower', cmap=cmap)
 
         # add the initial position of the rover as a red dot
-        self.rover_dot = self.ax.scatter(self.rover_x, self.rover_y, c='red')
+        arrow_length = 1
+        arrow_width = 2
+        self.rover_arrow = Arrow(self.rover_x - arrow_length / 2, self.rover_y - arrow_width / 2, arrow_length, arrow_width, color='gray', zorder=2)
+        self.ax.add_patch(self.rover_arrow)
 
-        # add the destination position as a green dot
+
+
+        # add the destination position as a blue dot
         self.target_dot = self.ax.scatter(target_x, target_y, c='blue')
+
 
     def update_visualization(self, target_x, target_y):
         # Find the optimal path from the current position to the target position using A*
@@ -52,7 +64,18 @@ class GridMap:
             path_x, path_y = zip(*path)
             self.path_line.set_data(path_x, path_y)
 
-        self.rover_dot.set_offsets(np.array([[self.rover_x, self.rover_y]]))
+        arrow_length = 1
+        arrow_width = 1
+        self.rover_arrow.remove()
+
+        x_offset, y_offset = 0.5, 0.5
+        self.rover_arrow = Arrow(self.rover_x + 0.5 - x_offset,
+                                 self.rover_y + 0.5 - y_offset,
+                                 arrow_length * np.cos(self.rover_direction),
+                                 arrow_length * np.sin(self.rover_direction),
+                                 color='gray', zorder=2)
+
+        self.ax.add_patch(self.rover_arrow)
 
         self.map[self.rover_y, self.rover_x] = 1
         self.grid_img.set_data(self.map)
@@ -60,10 +83,13 @@ class GridMap:
         # Check if the rover has reached the target position
         if self.rover_x == target_x and self.rover_y == target_y:
             print("I have made it to the destination!")
-            plt.close(self.fig)  # Stop the animation
-            exit(1)
+            # plt.close(self.fig)  # Stop the animation
+            # exit(1)
 
-        return [self.grid_img, self.rover_dot, self.target_dot]
+        return [self.grid_img, self.rover_arrow, self.target_dot, self.path_plot]
+
+
+
 
 
     def find_path(self, start_x, start_y, goal_x, goal_y):
@@ -114,6 +140,8 @@ class GridMap:
 
 
     def detect_obstacle(self):
+        if self.reached_destination:
+            return None
         # Simulate the detection of an obstacle in the vicinity of the rover
         # For simplicity, we randomly generate an obstacle within a square region around the rover
         region_size = 3
@@ -122,6 +150,11 @@ class GridMap:
 
         if x < 0 or x >= self.map_width or y < 0 or y >= self.map_height:
             return
+
+        # Check if the randomly generated coordinates are part of the current path
+        path_x, path_y = self.path_plot.get_data()
+        if (x, y) in zip(path_x, path_y):
+            return None
 
         if self.map[y, x] != -1 and (x, y) != (self.target_x, self.target_y):
             self.map[y, x] = -1
@@ -132,7 +165,10 @@ class GridMap:
 
 
 
+
     def move_rover(self, target_x, target_y):
+        if self.reached_destination:
+            return
         # Detect obstacles before moving
         detected_obstacle = self.detect_obstacle()
         if detected_obstacle:
@@ -144,12 +180,30 @@ class GridMap:
             # If there is no path or the path is too short, do not move the rover
             print("No path found or path too short")
             return
-
+        
         # Move the rover one step along the optimal path
         new_x, new_y = path[1]
+
+        dx, dy = new_x - self.rover_x, new_y - self.rover_y
+        new_direction = np.arctan2(dy, dx)
+        if new_direction != self.rover_direction:
+            self.rover_direction = new_direction
+            print(f"Turned to angle {np.degrees(self.rover_direction)}")
+
         print("Moved to position ({}, {})".format(new_x, new_y))
         self.map[self.rover_y, self.rover_x] = 0  # Clear the old rover's position
         self.rover_x, self.rover_y = new_x, new_y
+
+        # Add the new position to the path plot
+        path_x, path_y = self.path_plot.get_data()
+        path_x = np.append(path_x, self.rover_x)
+        path_y = np.append(path_y, self.rover_y)
+        self.path_plot.set_data(path_x, path_y)
+
+        # Check if the rover has reached the target position
+        if self.rover_x == target_x and self.rover_y == target_y:
+            print("I have made it to the destination!")
+            self.reached_destination = True  # Set the reached_destination attribute to True
 
 
 
@@ -162,12 +216,12 @@ def animate(frame, grid_map, target_x, target_y):
 
 
 resolution = 1
-map_width = 25
-map_height = 25
-target_x, target_y = 19, 19
-obstacles = 20
+map_width = 35
+map_height = 35
+target_x, target_y = 30, 5
+initial_obstacles = 20
 animation_speed = 250
 
-grid_map = GridMap(resolution, map_width, map_height, target_x, target_y, num_initial_obstacles=obstacles, interval=animation_speed)
+grid_map = GridMapSimulator(resolution, map_width, map_height, target_x, target_y, num_initial_obstacles=initial_obstacles, interval=animation_speed)
 grid_map.init_visualization(target_x, target_y)
 plt.show()
