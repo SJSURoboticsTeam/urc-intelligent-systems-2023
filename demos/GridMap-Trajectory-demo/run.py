@@ -6,6 +6,7 @@ from matplotlib.colors import ListedColormap
 from queue import PriorityQueue
 from matplotlib.patches import Arrow
 import random
+import math
 
 
 class GridMapSimulator:
@@ -227,6 +228,38 @@ def generate_random_targets(num_targets, map_width, map_height):
         random_targets.append((x, y))
     return random_targets
 
+import utm
+
+def gps_to_grid_coordinates(lat, lon, min_utm_x, min_utm_y, max_utm_x, max_utm_y):
+    utm_x, utm_y, _, _ = utm.from_latlon(lat, lon)
+    normalized_x = (utm_x - min_utm_x) / (max_utm_x - min_utm_x)
+    normalized_y = (utm_y - min_utm_y) / (max_utm_y - min_utm_y)
+    x = int((normalized_x * (map_width - 1)) + 0.5)
+    y = int((normalized_y * (map_height - 1)) + 0.5)
+    return x, y
+
+GPSList = [
+    [-121.88177050000002, 37.336928833333324],
+    [-121.8818685, 37.33699716666666],
+    [-121.881868, 37.33696233333334],
+]
+
+map_width = 25
+map_height = 25
+coordinate_list = []
+
+# Convert GPS to UTM and find the min and max UTM coordinates
+utm_coords = [utm.from_latlon(lat, lon)[:2] for lon, lat in GPSList]
+min_utm_x, min_utm_y = map(min, zip(*utm_coords))
+max_utm_x, max_utm_y = map(max, zip(*utm_coords))
+
+for i in range(len(GPSList)):
+    lon, lat = GPSList[i]
+    x, y = gps_to_grid_coordinates(lat, lon, min_utm_x, min_utm_y, max_utm_x, max_utm_y)
+    coordinate_list.append((x, y))
+    print("grid point", x, y)
+
+
 
 
 resolution = 1
@@ -240,7 +273,9 @@ num_targets = 3
 random_targets = generate_random_targets(num_targets, map_width, map_height)
 print("Random targets:", random_targets)
 
-grid_map = GridMapSimulator(resolution, map_width, map_height, random_targets, num_initial_obstacles=initial_obstacles, interval=animation_speed)
-target_x, target_y = random_targets[grid_map.current_target_index]
+grid_map = GridMapSimulator(resolution, map_width, map_height, coordinate_list, num_initial_obstacles=initial_obstacles, interval=animation_speed)
+target_x, target_y = coordinate_list[grid_map.current_target_index]
 grid_map.init_visualization()
 plt.show()
+
+
