@@ -6,16 +6,14 @@ from matplotlib.colors import ListedColormap
 from queue import PriorityQueue
 from matplotlib.patches import Arrow
 import random
-import math
+import utm
 
 
 class GridMapSimulator:
-    def __init__(self, resolution, map_width, map_height, targets, num_initial_obstacles=20, interval=200):
+    def __init__(self, resolution, map_width, map_height, targets, init_gps, num_initial_obstacles=20, interval=200):
         self.resolution = resolution
         self.map_width = map_width
         self.map_height = map_height
-        self.rover_x = 0
-        self.rover_y = 0
         self.interval = interval
         self.ani = None
         self.path_plot = None  # Add an attribute to store the path plot
@@ -26,6 +24,10 @@ class GridMapSimulator:
         self.obstacles = self.generate_initial_obstacles(num_initial_obstacles)
         self.reached_destination = False
         self.rover_direction = 0
+
+        # Set the initial position based on the provided GPS coordinate
+        init_lon, init_lat = init_gps
+        self.rover_x, self.rover_y = gps_to_grid_coordinates(init_lat, init_lon, min_utm_x, min_utm_y, max_utm_x, max_utm_y)
 
     def generate_initial_obstacles(self, num_obstacles):
         obstacles = []
@@ -228,7 +230,6 @@ def generate_random_targets(num_targets, map_width, map_height):
         random_targets.append((x, y))
     return random_targets
 
-import utm
 
 def gps_to_grid_coordinates(lat, lon, min_utm_x, min_utm_y, max_utm_x, max_utm_y):
     utm_x, utm_y, _, _ = utm.from_latlon(lat, lon)
@@ -237,6 +238,7 @@ def gps_to_grid_coordinates(lat, lon, min_utm_x, min_utm_y, max_utm_x, max_utm_y
     x = int((normalized_x * (map_width - 1)) + 0.5)
     y = int((normalized_y * (map_height - 1)) + 0.5)
     return x, y
+
 
 GPSList = [
     [-121.88177050000002, 37.336928833333324],
@@ -263,9 +265,9 @@ for i in range(len(GPSList)):
 
 
 resolution = 1
-map_width = 50
-map_height = 50
-target_x, target_y = 30, 5
+map_width = 30
+map_height = 30
+# target_x, target_y = 30, 5
 initial_obstacles = 1
 animation_speed = 100
 num_targets = 3
@@ -273,9 +275,8 @@ num_targets = 3
 random_targets = generate_random_targets(num_targets, map_width, map_height)
 print("Random targets:", random_targets)
 
-grid_map = GridMapSimulator(resolution, map_width, map_height, coordinate_list, num_initial_obstacles=initial_obstacles, interval=animation_speed)
+init_gps = [-121.88177050000002, 37.336928833333324]
+grid_map = GridMapSimulator(resolution, map_width, map_height, coordinate_list, init_gps, num_initial_obstacles=initial_obstacles, interval=animation_speed)
 target_x, target_y = coordinate_list[grid_map.current_target_index]
 grid_map.init_visualization()
 plt.show()
-
-
