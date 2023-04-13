@@ -7,6 +7,7 @@ from queue import PriorityQueue
 from matplotlib.patches import Arrow
 import random
 import utm
+import csv
 
 
 class GridMapSimulator:
@@ -240,11 +241,19 @@ def gps_to_grid_coordinates(lat, lon, min_utm_x, min_utm_y, max_utm_x, max_utm_y
     return x, y
 
 
-GPSList = [
-    [-121.88177050000002, 37.336928833333324],
-    [-121.8818685, 37.33699716666666],
-    [-121.881868, 37.33696233333334],
-]
+GPSList = []
+red = "#ff0000" # 
+green = "#00ff00" 
+with open('gpsloc.txt','r') as gps_locs:
+    reader = csv.reader(gps_locs, delimiter='\t')
+    for row in reader: 
+        if row[0] is "type" :
+            next
+        lat = row[1]
+        long = row[2]
+        color = row[4]
+        if color == green:
+            GPSList.append([float(long),float(lat)])
 
 map_width = 25
 map_height = 25
