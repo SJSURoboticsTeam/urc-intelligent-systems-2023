@@ -290,26 +290,3 @@ grid_map = GridMapSimulator(resolution, map_width, map_height, coordinate_list, 
 target_x, target_y = coordinate_list[grid_map.current_target_index]
 grid_map.init_visualization()
 plt.show()
-
-
-
-# class GridMapRover:
-#     def __init__(self, resolution, map_width, map_height, targets, init_gps, num_initial_obstacles=20, interval=200):
-#         # ...
-#         self.gps = ... # Initialize your GPS device
-#         self.imu = ... # Initialize your IMU device
-
-#     def read_gps_data(self):
-#         # Read GPS data and return latitude and longitude
-#         pass
-
-#     def read_imu_data(self):
-#         # Read IMU data and return orientation
-#         pass
-
-#     def move_rover(self):
-#         # ...
-#         # Read GPS and IMU data
-#         lat, lon = self.read_gps_data()
-#         self.rover_direction = self.read_imu_data()
-#         # ...
