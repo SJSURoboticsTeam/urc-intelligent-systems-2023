@@ -10,7 +10,7 @@ import utm
 
 
 class GridMapSimulator:
-    def __init__(self, resolution, map_width, map_height, targets, init_gps, num_initial_obstacles=20, interval=200):
+    def __init__(self, resolution, map_width, map_height, targets, init_gps, lidar_range=1, num_initial_obstacles=20, obstacle_memory=4, interval=200):
         self.resolution = resolution
         self.map_width = map_width
         self.map_height = map_height
@@ -21,7 +21,7 @@ class GridMapSimulator:
         self.targets = targets
         self.current_target_index = 0
         self.target_x, self.target_y = targets[self.current_target_index]
-        self.obstacles = self.generate_initial_obstacles(num_initial_obstacles)
+
         self.reached_destination = False
         self.rover_direction = 0
 
@@ -29,15 +29,19 @@ class GridMapSimulator:
         init_lon, init_lat = init_gps
         self.rover_x, self.rover_y = gps_to_grid_coordinates(init_lat, init_lon, min_utm_x, min_utm_y, max_utm_x, max_utm_y)
 
+        self.lidar_range = lidar_range
+        self.generate_initial_obstacles(num_initial_obstacles)
+        self.obstacle_memory = obstacle_memory
+        self.detect_obstacle()
+
     def generate_initial_obstacles(self, num_obstacles):
-        obstacles = []
-        while len(obstacles) < num_obstacles:
+        cur_obstacles = 0
+        while cur_obstacles < num_obstacles:
             x = np.random.randint(0, self.map_width)
             y = np.random.randint(0, self.map_height)
-            if self.map[y, x] != -1 and (x, y) != (self.target_x, self.target_y):
-                obstacles.append((x, y))
+            if not self.map[y, x] < -1 and (x, y) not in self.targets:
+                cur_obstacles += 1
                 self.map[y, x] = -1
-        return obstacles
 
 
     def init_visualization(self):
@@ -45,10 +49,15 @@ class GridMapSimulator:
         self.ax.set_title("Grid Map")
         self.path_line, = self.ax.plot([], [], color='lime')
         self.path_plot, = self.ax.plot([], [], color='red', linestyle='-')
-        colors = ['black', 'white']
+
+        colors = ['black', 'gray', 'white']
+        # now we want bounds so that anything below -1 is black, -1 is gray, and anything above -1 is white
+        bounds = [-2 - self.obstacle_memory, -1, 0, 1]
+        print(bounds)
         cmap = ListedColormap(colors)
+        norm = plt.cm.colors.BoundaryNorm(bounds, cmap.N)
         self.ani = FuncAnimation(self.fig, animate, fargs=(self,), interval=self.interval)
-        self.grid_img = self.ax.imshow(self.map, origin='lower', cmap=cmap)
+        self.grid_img = self.ax.imshow(self.map, origin='lower', cmap=cmap, norm=norm)
 
         # Add the initial position of the rover as a red dot
         arrow_length = 1
@@ -126,10 +135,10 @@ class GridMapSimulator:
                 if neighbor[0] < 0 or neighbor[0] >= self.map_width or neighbor[1] < 0 or neighbor[1] >= self.map_height:
                     continue
 
-                if (dx != 0 and dy != 0) and (self.map[current[1], current[0] + dx] == -1 or self.map[current[1] + dy, current[0]] == -1):
+                if (dx != 0 and dy != 0) and (self.map[current[1], current[0] + dx] < -1 or self.map[current[1] + dy, current[0]] < -1):
                     continue
 
-                if self.map[neighbor[1], neighbor[0]] == -1:
+                if self.map[neighbor[1], neighbor[0]] < -1:
                     continue
 
                 new_cost = cost_so_far[current] + 1
@@ -143,29 +152,16 @@ class GridMapSimulator:
 
 
     def detect_obstacle(self):
-        if self.reached_destination:
-            return None
-        # Simulate the detection of an obstacle in the vicinity of the rover
-        # For simplicity, we randomly generate an obstacle within a square region around the rover
-        region_size = 10
-        x = np.random.randint(self.rover_x - region_size, self.rover_x + region_size + 1)
-        y = np.random.randint(self.rover_y - region_size, self.rover_y + region_size + 1)
+        # reduce the memory of all the obstacles currently seen (anything with a counter less than -1)
+        self.map[self.map < -1] += 1
 
-        if x < 0 or x >= self.map_width or y < 0 or y >= self.map_height:
-            return
+        # now, simulate checking for obstacles in the 8 directions around the rover
+        # this line gets a subarray of the map that is 3x3 (when lidar range is 1, 5x5 for lidar range 2, etc)
+        # centered on the rover, using max and min to make sure we don't go out of bounds
 
-        # Check if the randomly generated coordinates are part of the current path
-        path_x, path_y = self.path_plot.get_data()
-        if (x, y) in zip(path_x, path_y):
-            return None
-
-        if self.map[y, x] != -1 and (x, y) != (self.target_x, self.target_y):
-            self.map[y, x] = -1
-            print(f"Obstacle detected at ({x}, {y})")
-            return x, y
-        else:
-            return None
-        
+        nearby_map = self.map[max(self.rover_y - self.lidar_range, 0):min(self.rover_y +  self.lidar_range + 1, self.map_height),
+                                max(self.rover_x - self.lidar_range, 0):min(self.rover_x +  self.lidar_range + 1, self.map_width)]
+        nearby_map[nearby_map <= -1] = -1 - self.obstacle_memory
 
     def expand_map(self, new_width, new_height):
         new_map = np.zeros((new_height, new_width))
@@ -179,9 +175,7 @@ class GridMapSimulator:
         if self.reached_destination:
             return
         # Detect obstacles before moving
-        # detected_obstacle = self.detect_obstacle()
-        # if detected_obstacle:
-        #     self.obstacles.append(detected_obstacle)
+        self.detect_obstacle()
 
         target_x, target_y = self.targets[self.current_target_index]
 
@@ -226,7 +220,6 @@ class GridMapSimulator:
 
 # Example usage
 def animate(frame, grid_map, *args):
-    # grid_map.detect_obstacle()
     grid_map.move_rover()
     target_x, target_y = grid_map.targets[grid_map.current_target_index]
     return grid_map.update_visualization(target_x, target_y)
@@ -279,14 +272,20 @@ for i in range(len(GPSList)):
 
 
 resolution = 1
+lidar_range = 1 # this is how many squares away the rover can see an obstacle
 map_width = 30
 map_height = 30
-initial_obstacles = 1
+initial_obstacles = 100
+obstacle_memory = 12 # this is the number of frames that an obstacle is remembered/included in the astar search after it was detected.
 animation_speed = 100
 num_targets = 3
 
 init_gps = [-121.881935, 37.337250]
-grid_map = GridMapSimulator(resolution, map_width, map_height, coordinate_list, init_gps, num_initial_obstacles=initial_obstacles, interval=animation_speed)
+grid_map = GridMapSimulator(resolution, map_width, map_height, coordinate_list, init_gps,
+                            lidar_range=lidar_range,
+                            num_initial_obstacles=initial_obstacles,
+                            obstacle_memory=obstacle_memory,
+                            interval=animation_speed)
 target_x, target_y = coordinate_list[grid_map.current_target_index]
 grid_map.init_visualization()
 plt.show()
