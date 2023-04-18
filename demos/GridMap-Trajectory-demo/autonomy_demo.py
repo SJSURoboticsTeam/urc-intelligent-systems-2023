@@ -241,31 +241,31 @@ def gps_to_grid_coordinates(lat, lon, min_utm_x, min_utm_y, max_utm_x, max_utm_y
     return x, y
 
 
-GPSList = []
-red = "#ff0000" # 
-green = "#00ff00" 
-with open('gpsloc.txt','r') as gps_locs:
-    reader = csv.reader(gps_locs, delimiter='\t')
-    for row in reader: 
-        if row[0] == "type" :
-            next
-        lat = row[1]
-        lon = row[2]
-        color = row[4]
-        if color == green:
-            GPSList.append([float(lon),float(lat)])
+# GPSList = []
+# red = "#ff0000" # 
+# green = "#00ff00" 
+# with open('gpsloc.txt','r') as gps_locs:
+#     reader = csv.reader(gps_locs, delimiter='\t')
+#     for row in reader: 
+#         lat = row[1]
+#         lon = row[2]
+#         color = row[4]
+#         if color == green:
+#             try:
+#                 GPSList.append([float(lon),float(lat)])
+#             except ValueError as e:
+#                 continue
 
-
-# GPSList = [
-#     [-121.8819474, 37.3372215],
-#     [-121.8819252, 37.3371282],
-#     [-121.8818977, 37.3370621],
-#     [-121.8818334, 37.3370451],
-#     [-121.8818421, 37.3371197],
-#     [-121.8818763, 37.3371991],
-#     [-121.8818998, 37.3372471],
-#     [-121.881935, 37.337250],
-# ]
+GPSList = [
+    [-121.8819474, 37.3372215],
+    [-121.8819252, 37.3371282],
+    [-121.8818977, 37.3370621],
+    [-121.8818334, 37.3370451],
+    [-121.8818421, 37.3371197],
+    [-121.8818763, 37.3371991],
+    [-121.8818998, 37.3372471],
+    [-121.881935, 37.337250],
+]
 map_width = 25
 map_height = 25
 coordinate_list = []
