@@ -247,14 +247,25 @@ green = "#00ff00"
 with open('gpsloc.txt','r') as gps_locs:
     reader = csv.reader(gps_locs, delimiter='\t')
     for row in reader: 
-        if row[0] is "type" :
+        if row[0] == "type" :
             next
         lat = row[1]
-        long = row[2]
+        lon = row[2]
         color = row[4]
         if color == green:
-            GPSList.append([float(long),float(lat)])
+            GPSList.append([float(lon),float(lat)])
 
+
+# GPSList = [
+#     [-121.8819474, 37.3372215],
+#     [-121.8819252, 37.3371282],
+#     [-121.8818977, 37.3370621],
+#     [-121.8818334, 37.3370451],
+#     [-121.8818421, 37.3371197],
+#     [-121.8818763, 37.3371991],
+#     [-121.8818998, 37.3372471],
+#     [-121.881935, 37.337250],
+# ]
 map_width = 25
 map_height = 25
 coordinate_list = []
