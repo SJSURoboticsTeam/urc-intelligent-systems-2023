@@ -153,171 +153,97 @@ class RoverNavigation:
     #     self.rover_nav.get_steering(gps_data, self.rover_nav.GPS_target)
 
 
-    def plan_path(self, start, goal):
-        """Plan a path from start to goal using A* algorithm"""
-
-        # Compute path using A* algorithm
+    def find_path(self, start_x, start_y, goal_x, goal_y):
         def heuristic(a, b):
-            return sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)
+            dx = abs(b[0] - a[0])
+            dy = abs(b[1] - a[1])
+            return (dx + dy) + (np.sqrt(2) - 2) * min(dx, dy)
 
-        def astar(array, start, goal):
-            neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
+        frontier = PriorityQueue()
+        frontier.put((0, (start_x, start_y)))
+        came_from = {}
+        cost_so_far = {}
+        came_from[(start_x, start_y)] = None
+        cost_so_far[(start_x, start_y)] = 0
 
-            close_set = set()
-            came_from = {}
-            gscore = {start: 0}
-            fscore = {start: heuristic(start, goal)}
-            oheap = []
+        while not frontier.empty():
+            current = frontier.get()[1]
 
-            heapq.heappush(oheap, (fscore[start], start))
+            if current == (goal_x, goal_y):
+                path = [current]
+                while current != (start_x, start_y):
+                    current = came_from[current]
+                    path.append(current)
+                return path[::-1]
 
-            while oheap:
-                current = heapq.heappop(oheap)[1]
+            for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, 1), (1, -1), (-1, -1)]:
+                neighbor = (current[0] + dx, current[1] + dy)
 
-                if current == goal:
-                    data = []
-                    while current in came_from:
-                        data.append(current)
-                        current = came_from[current]
-                    return data[::-1]
-
-                close_set.add(current)
-                for i, j in neighbors:
-                    neighbor = current[0] + i, current[1] + j
-                    tentative_g_score = gscore[current] + heuristic(current, neighbor)
-                    if 0 <= neighbor[0] < array.shape[0]:
-                        if 0 <= neighbor[1] < array.shape[1]:
-                            if array[neighbor[0]][neighbor[1]] == 1:
-                                continue
-                        else:
-                            continue
-                    else:
-                        continue
-
-                    if neighbor in close_set and tentative_g_score >= gscore.get(neighbor, 0):
-                        continue
-
-                    if tentative_g_score < gscore.get(neighbor, 0) or neighbor not in [i[1] for i in oheap]:
-                        came_from[neighbor] = current
-                        gscore[neighbor] = tentative_g_score
-                        fscore[neighbor] = tentative_g_score + heuristic(neighbor, goal)
-                        heapq.heappush(oheap, (fscore[neighbor], neighbor))
-
-            return []
-
-        path = astar(self.map.get_map(), start, goal)
-
-        return path
-
-    def follow_path(self, goal):
-        """Follow a path to a goal"""
-
-        # Compute heading to goal
-        goal_x, goal_y = goal
-        dx = goal_x * self.map.resolution - self.position[0]
-        dy = goal_y * self.map.resolution - self.position[1]
-        heading = atan2(dy, dx) * 180.0 / pi
-        if heading > 180.0:
-            heading -= 360.0
-        elif heading < -180.0:
-            heading += 360.0
-
-        # Compute distance to goal
-        dist = sqrt(dx ** 2 + dy ** 2)
-
-        # Kalman filter predict and update
-        self.position = self.filter.predict(self.position)
-        self.position = self.filter.update(self.position, np.array([goal_x, goal_y]))
-
-        # Update the grid map
-        self.map.update(self.position[0], self.position[1])
-
-        # Compute forward and angular velocities
-        k_v = 0.1  # Velocity gain
-        k_w = 0.5  # Heading gain
-        quat_i, quat_j, quat_k, quat_real = self.IMU.get_rotation()
-        rover_heading = self.IMU.get_heading(quat_real, quat_i, quat_j, quat_k)
-        v = k_v * dist
-        w = k_w * (heading - rover_heading)
-
-        # Send commands to Rover to follow path
-        if dist <= 1:
-            self.path.pop(0)  # Remove the current goal from the path
-            if len(self.path) > 0:
-                goal_x, goal_y = self.path[0]  # Set the next goal as the new target
-                dx = goal_x * self.map.resolution - self.position[0]
-                dy = goal_y * self.map.resolution - self.position[1]
-                heading = atan2(dy, dx) * 180.0 / pi
-                if heading > 180.0:
-                    heading -= 360.0
-                elif heading < -180.0:
-                    heading += 360.0
-                dist = sqrt(dx ** 2 + dy ** 2)
-                w = k_w * (heading - rover_heading)  # Recompute angular velocity
-            else:
-                print("No more goals in path")
-                return self.stop_rover(self.commands)
-
-        # Determine whether to turn left or right
-        if w > 0:
-            print("Turning right")
-            turn_direction = 'right'
-        else:
-            print("Turning left")
-            turn_direction = 'left'
-
-        # Convert angular velocity to a steering output
-        steer_output = w / self.max_steering
-
-        # Send steering commands to the Rover
-        return self.PID_steer(self.commands, steer_output, turn_direction)
-        
-    def distance(self, a, b):
-        a = np.array(a)
-        b = np.array(b)
-        return np.linalg.norm(a - b)
-
-    def generate_trajectory(self, start, goal, map):
-        """Generate a trajectory from start to goal using A* algorithm"""
-        queue = PriorityQueue()
-        queue.put((0, start))
-        visited = {tuple(start): None}
-        g_score = {tuple(start): 0}
-        max_queue_size = 9
-        
-        while not queue.empty():
-            if queue.qsize() >= max_queue_size:
-                break  # queue has grown too large, algorithm failed
-            print("Queue:", queue.queue) # Print the current state of the priority queue
-            current = queue.get()[1]
-            print("Current:", current) # Print the current node being evaluated
-            if np.allclose(current, goal):
-                break
-            
-            for direction in [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]:
-                successor = (current[0] + direction[0], current[1] + direction[1])
-                if not map.is_traversable(successor) or successor in visited:
+                if neighbor[0] < 0 or neighbor[0] >= self.map_width or neighbor[1] < 0 or neighbor[1] >= self.map_height:
                     continue
-                
-                tentative_g_score = g_score[tuple(current)] + self.distance(current, successor)
-                if tuple(successor) not in g_score or tentative_g_score < g_score[tuple(successor)]:
-                    g_score[tuple(successor)] = tentative_g_score
-                    f_score = tentative_g_score + self.distance(successor, goal)
-                    queue.put((f_score, successor))
-                    visited[tuple(successor)] = tuple(current)
-                    
-        current = tuple(goal)
-        trajectory = [np.array(current)]
-        while current != tuple(start):
-            if tuple(current) in visited:
-             current = visited[current]
+
+                if (dx != 0 and dy != 0) and (self.map[current[1], current[0] + dx] < -1 or self.map[current[1] + dy, current[0]] < -1):
+                    continue
+
+                if self.map[neighbor[1], neighbor[0]] < -1:
+                    continue
+
+                new_cost = cost_so_far[current] + 1
+                if neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]:
+                    cost_so_far[neighbor] = new_cost
+                    priority = new_cost + heuristic((goal_x, goal_y), neighbor)
+                    frontier.put((priority, neighbor))
+                    came_from[neighbor] = current
+
+        return None
+
+    def move_rover(self):
+        #TODO Needs to implent the compass/IMU and GPS to move the rover towards the proper direction and location
+
+
+        if self.reached_destination:
+            return
+        # Detect obstacles before moving
+        self.detect_obstacle()
+
+        target_x, target_y = self.targets[self.current_target_index]
+
+        # Find the optimal path from the current position to the target position using A*
+        path = self.find_path(self.rover_x, self.rover_y, target_x, target_y)
+        if path is None or len(path) < 2:
+            # If there is no path or the path is too short, do not move the rover
+            print("No path found or path too short")
+            return
+
+        # Move the rover one step along the optimal path
+        new_x, new_y = path[1]
+
+        dx, dy = new_x - self.rover_x, new_y - self.rover_y
+        new_direction = np.arctan2(dy, dx)
+        if new_direction != self.rover_direction:
+            self.rover_direction = new_direction
+            print(f"Turned to angle {np.degrees(self.rover_direction)}") #TODO translate this to our actual rover angles
+
+        print("Moved to position ({}, {})".format(new_x, new_y))
+        self.map[self.rover_y, self.rover_x] = 0  # Clear the old rover's position
+        self.rover_x, self.rover_y = new_x, new_y
+
+        # Add the new position to the path plot
+        path_x, path_y = self.path_plot.get_data()
+        path_x = np.append(path_x, self.rover_x)
+        path_y = np.append(path_y, self.rover_y)
+        self.path_plot.set_data(path_x, path_y)
+
+        # Check if the rover has reached the target position
+        if self.rover_x == target_x and self.rover_y == target_y:
+            print("I have made it to the destination!")
+            self.reached_destination = True
+            if self.current_target_index + 1 < len(self.targets):
+                self.current_target_index += 1
+                self.reached_destination = False
+                print(f"Moving to the next target: {self.targets[self.current_target_index]}")
             else:
-                break
-            trajectory.append(np.array(current))
-        trajectory.reverse()
-        trajectory = np.array(trajectory)
-        
-        return trajectory
+                print("All targets reached!")
         
 
 

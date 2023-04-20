@@ -163,12 +163,6 @@ class GridMapSimulator:
                                 max(self.rover_x - self.lidar_range, 0):min(self.rover_x +  self.lidar_range + 1, self.map_width)]
         nearby_map[nearby_map <= -1] = -1 - self.obstacle_memory
 
-    def expand_map(self, new_width, new_height):
-        new_map = np.zeros((new_height, new_width))
-        new_map[:self.map_height, :self.map_width] = self.map
-        self.map = new_map
-        self.map_width = new_width
-        self.map_height = new_height
 
 
     def move_rover(self):
