@@ -1,3 +1,14 @@
+"""
+Rover Navigation 
+
+
+Returns:
+    _type_: _description_
+"""
+
+
+
+
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 from queue import PriorityQueue
@@ -41,22 +52,49 @@ class KalmanFilter:
 
 class RoverNavigation:
     def __init__(self, max_speed, max_steering, GPS, IMU, GPS_coordinate_map):
+        self._initialize_constants(max_speed,max_steering)
+        self._initialize_sensors(GPS,IMU,GPS_coordinate_map)
+        self._initialize_controllers()
+        self._initialize_mapping()
+
+    def _initialize_constants(self, max_speed, max_steering):
+        """Initialize constants that are tied to Rover Controls
+
+        Args:
+            max_speed (_type_): _description_
+            max_steering (_type_): _description_
+        """
         self.max_speed = max_speed
         self.max_steering = max_steering
         self.commands = [0,1,0,'D',0,0]
-        self.IMU = IMU
-        self.AutoHelp = AutoHelp.AutoHelp()
 
+
+    def _initialize_sensors(self, GPS, IMU, GPS_coordinate_map):
+        """ Initialize sensors and the kalman filter that will tie their readings together
+
+        """
         self.GPS = GPS
         self.GPS_coordinate_map = GPS_coordinate_map
         self.GPS_target = self.GPS_coordinate_map[0]
 
+        self.IMU = IMU
+        self.AutoHelp = AutoHelp.AutoHelp()
         self.filter = KalmanFilter(dt=0.1)
+    
+    def _initialize_mapping(self):
+        """ Initialize the map that will be used to track the rover's current position
+         
+        """
         self.position = np.array([0, 0, 0, 0])  # x, y, vx, vy
         self.map = GridMap(width=100, height=100, resolution=0.5)
         # self.path = [(10, 20), (30, 40), (50, 60)]
         self.path = [(10, 20), (30, 40), (20, 50), (60, 80), (90, 70), (100, 90)]
 
+
+    def _initialize_controllers(self):
+        """
+            Initialize the controls algorithms.
+        """
         # Create a PID controller for steering
         self.steer_controller = PID(Kp=1, Ki=0.5, Kd=0.05, setpoint=0)
         self.steer_controller.sample_time = 0.1

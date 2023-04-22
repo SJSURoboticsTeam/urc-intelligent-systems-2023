@@ -1,3 +1,10 @@
+    """AutoHelp class is used for 
+
+    Returns:
+        _type_: _description_
+    """
+
+
 import math
 from modules.LSM303 import Compass
 import json
@@ -74,6 +81,15 @@ class AutoHelp:
 
 
     def get_bearing(self, current_GPS, target_GPS):
+        """ calculate the bearing to target_gps from current_gps
+
+        Args:
+            current_GPS (float): current GPS coordinates
+            target_GPS (float): target GPS coordinates
+
+        Returns:
+            _type_: float
+        """
         try:
             current_latitude = math.radians(current_GPS[1])
             current_longitude = math.radians(current_GPS[0])
