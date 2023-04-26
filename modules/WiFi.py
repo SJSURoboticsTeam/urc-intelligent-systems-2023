@@ -10,7 +10,7 @@ class WiFi:
     def read_data(self, max_retries=3):
         for retry_count in range(max_retries):
             try:
-                self.response = requests.get(f'{self.web_server_url}drive/status', timeout=5)
+                self.response = requests.get(f'{self.web_server_url}/drive/status', timeout=5)
                 if self.response.status_code == 200:
                     data_received = self.response.json()
                     print('Data received:', data_received)
