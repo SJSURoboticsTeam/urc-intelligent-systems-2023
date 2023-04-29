@@ -272,11 +272,11 @@ for i in range(len(GPSList)):
 
 
 resolution = 1
-lidar_range = 1 # this is how many squares away the rover can see an obstacle
+lidar_range = 2 # this is how many squares away the rover can see an obstacle
 map_width = 30
 map_height = 30
-initial_obstacles = 100
-obstacle_memory = 12 # this is the number of frames that an obstacle is remembered/included in the astar search after it was detected.
+initial_obstacles = 350
+obstacle_memory = 24 # this is the number of frames that an obstacle is remembered/included in the astar search after it was detected.
 animation_speed = 100
 num_targets = 3
 
