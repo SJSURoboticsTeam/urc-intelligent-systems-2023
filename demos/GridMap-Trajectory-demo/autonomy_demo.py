@@ -148,7 +148,7 @@ class GridMapSimulator:
             return None
         # Simulate the detection of an obstacle in the vicinity of the rover
         # For simplicity, we randomly generate an obstacle within a square region around the rover
-        region_size = 3
+        region_size = 10
         x = np.random.randint(self.rover_x - region_size, self.rover_x + region_size + 1)
         y = np.random.randint(self.rover_y - region_size, self.rover_y + region_size + 1)
 
@@ -166,15 +166,23 @@ class GridMapSimulator:
             return x, y
         else:
             return None
+        
+
+    def expand_map(self, new_width, new_height):
+        new_map = np.zeros((new_height, new_width))
+        new_map[:self.map_height, :self.map_width] = self.map
+        self.map = new_map
+        self.map_width = new_width
+        self.map_height = new_height
 
 
     def move_rover(self):
         if self.reached_destination:
             return
         # Detect obstacles before moving
-        detected_obstacle = self.detect_obstacle()
-        if detected_obstacle:
-            self.obstacles.append(detected_obstacle)
+        # detected_obstacle = self.detect_obstacle()
+        # if detected_obstacle:
+        #     self.obstacles.append(detected_obstacle)
 
         target_x, target_y = self.targets[self.current_target_index]
 
@@ -184,7 +192,7 @@ class GridMapSimulator:
             # If there is no path or the path is too short, do not move the rover
             print("No path found or path too short")
             return
-        
+
         # Move the rover one step along the optimal path
         new_x, new_y = path[1]
 
@@ -216,9 +224,10 @@ class GridMapSimulator:
                 print("All targets reached!")
 
 
+
 # Example usage
 def animate(frame, grid_map, *args):
-    grid_map.detect_obstacle()
+    # grid_map.detect_obstacle()
     grid_map.move_rover()
     target_x, target_y = grid_map.targets[grid_map.current_target_index]
     return grid_map.update_visualization(target_x, target_y)
@@ -257,17 +266,7 @@ with open('gpsloc.txt','r') as gps_locs:
             except ValueError as e:
                 continue
 
-# GPSList = [
-#     [-121.8819474, 37.3372215],
-#     [-121.8819252, 37.3371282],
-#     [-121.8818977, 37.3370621],
-#     [-121.8818334, 37.3370451],
-#     [-121.8818421, 37.3371197],
-#     [-121.8818763, 37.3371991],
-#     [-121.8818998, 37.3372471],
-#     [-121.881935, 37.337250],
-#     [-121.8819621, 37.3368782]
-# ]
+
 map_width = 25
 map_height = 25
 coordinate_list = []
@@ -292,13 +291,13 @@ for i in range(len(GPSList)):
 resolution = 1
 map_width = 30
 map_height = 30
-# target_x, target_y = 30, 5
 initial_obstacles = 1
 animation_speed = 100
 num_targets = 3
 
 random_targets = generate_random_targets(num_targets, map_width, map_height)
 print("Random targets:", random_targets)
+
 
 grid_map = GridMapSimulator(resolution, map_width, map_height, coordinate_list, init_gps, num_initial_obstacles=initial_obstacles, interval=animation_speed)
 target_x, target_y = coordinate_list[grid_map.current_target_index]
