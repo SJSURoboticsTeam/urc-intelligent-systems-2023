@@ -5,6 +5,7 @@ from matplotlib.animation import FuncAnimation
 from matplotlib.colors import ListedColormap
 from queue import PriorityQueue
 from matplotlib.patches import Arrow
+import math
 import random
 import utm
 
@@ -77,6 +78,7 @@ class GridMapSimulator:
     def update_visualization(self, target_x, target_y):
         # Find the optimal path from the current position to the target position using A*
         path = self.find_path(self.rover_x, self.rover_y, target_x, target_y)
+        self.follow_path(path)
         if path is not None:
             path_x, path_y = zip(*path)
             self.path_line.set_data(path_x, path_y)
@@ -104,6 +106,39 @@ class GridMapSimulator:
             # exit(1)
 
         return [self.grid_img, self.rover_arrow, *self.target_dots, self.path_plot]
+    
+    def follow_path(self, path):
+        commands = []
+        command = []
+        for i in range(len(path) - 1):
+            start_x, start_y = path[i]
+            end_x, end_y = path[i + 1]
+
+            # Calculate the bearing and distance between the start and end points
+            dx = end_x - start_x
+            dy = end_y - start_y
+            #distance = ((dx ** 2) + (dy ** 2)) ** 0.5
+            angle = (180 / 3.14159) * (3.14159 / 2 - math.atan2(dy, dx))
+
+            # Set the speed and angle to default values
+            speed = 1
+            angle = 0
+
+            # Set the drive mode based on the direction of the movement
+            if angle < 150:
+                mode = 'D'
+            else:
+                mode = 'S'
+
+            # Update the command list with the new values
+            command.append(mode)
+            command.append(speed)
+            command.append(angle)
+            commands.append(command)
+
+        # Send the updated command to the rover
+        print(commands)
+        return commands
 
 
     def find_path(self, start_x, start_y, goal_x, goal_y):

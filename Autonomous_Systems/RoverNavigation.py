@@ -16,6 +16,7 @@ from Autonomous_Systems import AutoHelp
 from simple_pid import PID
 import time
 import numpy as np
+import json
 from math import atan2, sqrt, pi
 from numpy import linalg as la
 from Autonomous_Systems import GridMap
@@ -151,6 +152,38 @@ class RoverNavigation:
         except:
             print("No more GPS coordniates in Mission... Mission Success!")
             exit(1)
+            
+    def follow_path(self, path):
+        commands = []
+        for i in range(len(path) - 1):
+            start_x, start_y = path[i]
+            end_x, end_y = path[i + 1]
+
+            # Calculate the bearing and distance between the start and end points
+            dx = end_x - start_x
+            dy = end_y - start_y
+            #distance = ((dx ** 2) + (dy ** 2)) ** 0.5
+            angle = (180 / 3.14159) * (3.14159 / 2 - atan2(dy, dx))
+
+            # Set the speed and angle to default values
+            speed = 1
+            angle = 0
+
+            # Set the drive mode based on the direction of the movement
+            if angle > 150:
+                mode = 'D'
+            else:
+                mode = 'S'
+
+            # Update the command list with the new values
+            self.commands[3] = mode
+            self.commands[4] = speed
+            self.commands[5] = angle
+            commands.append(self.commands)
+
+        # Send the updated command to the rover
+        return commands
+
 
 
 

@@ -53,7 +53,9 @@ class Autonomy:
                         current_GPS = self.current_GPS
                     if current_GPS and current_GPS != "Need More Satellite Locks":
                         # command = self.RoverNavigation.get_steering(current_GPS, self.RoverNavigation.GPS_target)
-                        command = self.RoverNavigation.follow_path(self.RoverNavigation.GPS_target) ### TODO translate this to the new Rover nav
+                        commands = self.RoverNavigation.follow_path(self.current_GPS[0], self.current_GPS[1], self.RoverNavigation.GPS_target[0], self.RoverNavigation.GPS_target[1]) ### TODO translate this to the new Rover nav
+                        command = commands[0]
+                        commands.pop(0)
                         bearing = round(self.AutoHelp.get_bearing(current_GPS, self.RoverNavigation.GPS_target), 3)
                         distance = round(self.AutoHelp.get_distance(current_GPS, self.RoverNavigation.GPS_target)[0]*1000, 3)
                         quat_i, quat_j, quat_k, quat_real = self.IMU.get_rotation()
