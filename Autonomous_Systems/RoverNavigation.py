@@ -170,7 +170,7 @@ class RoverNavigation:
             angle = 0
 
             # Set the drive mode based on the direction of the movement
-            if angle > 150:
+            if angle < 150:
                 mode = 'D'
             else:
                 mode = 'S'
