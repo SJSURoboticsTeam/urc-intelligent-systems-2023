@@ -109,12 +109,12 @@ class GridMapSimulator:
     
     def follow_path(self, path):
         commands = []
-        command = []
         for i in range(len(path) - 1):
+            command = []
             start_x, start_y = path[i]
             end_x, end_y = path[i + 1]
 
-            # Calculate the bearing and distance between the start and end points
+            # Calculate the angle and distance between the start and end points
             dx = end_x - start_x
             dy = end_y - start_y
             #distance = ((dx ** 2) + (dy ** 2)) ** 0.5

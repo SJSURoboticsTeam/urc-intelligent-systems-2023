@@ -159,7 +159,7 @@ class RoverNavigation:
             start_x, start_y = path[i]
             end_x, end_y = path[i + 1]
 
-            # Calculate the bearing and distance between the start and end points
+            # Calculate the angle and distance between the start and end points
             dx = end_x - start_x
             dy = end_y - start_y
             #distance = ((dx ** 2) + (dy ** 2)) ** 0.5
