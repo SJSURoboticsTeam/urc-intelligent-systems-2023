@@ -167,7 +167,6 @@ class RoverNavigation:
 
             # Set the speed and angle to default values
             speed = 1
-            angle = 0
 
             # Set the drive mode based on the direction of the movement
             if angle < 150:
