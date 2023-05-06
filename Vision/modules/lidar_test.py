@@ -50,8 +50,8 @@ try:
 
 except KeyboardInterrupt:
     print('Stopping.')
-lidar.stop()
-lidar.disconnect()
+    lidar.stop()
+    lidar.disconnect()
 
 # Turn interactive mode off and show plot
 plt.ioff()
