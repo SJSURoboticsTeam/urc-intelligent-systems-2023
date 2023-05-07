@@ -1,56 +1,42 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from rplidar import RPLidar, RPLidarException
+from sklearn.cluster import KMeans
 
 class LiDARModule:
     def __init__(self, port_name):
         self.lidar = RPLidar(port_name)
-        self.fig, self.ax = plt.subplots()
-        # Set up the plot parameters
-        self.ax.set_aspect('equal')
-        self.ax.set_xlim(-5000, 5000)
-        self.ax.set_ylim(-5000, 5000)
-        # Set interactive mode on
-        plt.ion()
-        # Create scatter plot
-        self.points = self.ax.scatter([], [], s=2, c='red')
 
-    def start_device(self):
-        try:
-            for scan in self.lidar.iter_scans():
-                try:
-                    # Get the x and y positions of the points
-                    x = []
-                    y = []
-                    for (_, angle, distance) in scan:
-                        # Convert the polar coordinates to cartesian coordinates
-                        x.append(distance * np.sin(np.radians(angle)))  # Flip x and y
-                        y.append(distance * np.cos(np.radians(angle)))  # Flip x and y
+    def find_closest_cluster(self, X, cluster_centers):
+        closest_cluster = None
+        min_distance = float('inf')
+        for i, center in enumerate(cluster_centers):
+            distance = np.linalg.norm(X - center)
+            if distance < min_distance:
+                min_distance = distance
+                closest_cluster = i
+        return closest_cluster
 
-                    # Add the new points to the scatter plot
-                    self.points.set_offsets(np.c_[x, y])
+    def get_clusters(self, X):
+        # Compute DBSCAN
+        self.dbscan.fit(X)
 
-                    # Redraw the plot
-                    self.fig.canvas.draw()
+        labels = self.dbscan.labels_
+        
+        # Find the closest points in each cluster
+        cluster_distances = {'Left': float('inf'), 'Center': float('inf'), 'Right': float('inf')}
+        for i in range(len(X)):
+            label = labels[i]
+            if label != -1:  # Ignore noise points
+                cluster_label = self.cluster_names[label]
+                point = X[i]
+                distance = np.linalg.norm(point)  # Euclidean distance to the origin
+                if distance < cluster_distances[cluster_label]:
+                    cluster_distances[cluster_label] = distance
+        
+        # Find the cluster with the minimum distance
+        closest_cluster = min(cluster_distances, key=cluster_distances.get)
+        closest_distance = cluster_distances[closest_cluster]
 
-                    # Pause to allow plot to update
-                    plt.pause(0.001)
+        return closest_cluster, closest_distance
 
-                except RPLidarException as e:
-                    # If an incorrect descriptor starting byte exception is caught,
-                    # print the error message and continue with the next iteration
-                    if str(e) == 'Incorrect descriptor starting bytes':
-                        print('Caught Incorrect descriptor starting bytes exception')
-                        continue
-                    else:
-                        raise e
-
-        except KeyboardInterrupt:
-            print('Stopping.')
-            self.lidar.stop()
-            self.lidar.disconnect()
-
-
-    def stop_device(self):
-        self.lidar.stop()
-        self.lidar.disconnect()
