@@ -45,13 +45,16 @@ try:
             if str(e) == 'Incorrect descriptor starting bytes':
                 print('Caught Incorrect descriptor starting bytes exception')
                 continue
+            if str(e) == 'Wrong body size':
+                print('Caught wrong body size exception')
+                continue
             else:
-                raise e
+                raise
 
 except KeyboardInterrupt:
     print('Stopping.')
-lidar.stop()
-lidar.disconnect()
+    lidar.stop()
+    lidar.disconnect()
 
 # Turn interactive mode off and show plot
 plt.ioff()

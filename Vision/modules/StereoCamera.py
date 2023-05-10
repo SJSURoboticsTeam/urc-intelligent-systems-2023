@@ -23,7 +23,7 @@ class StereoCamera:
         x_val = "{:.1f}m".format(spatials['x'] / 1000) if not math.isnan(spatials['x']) else "--"
         y_val = "{:.1f}m".format(spatials['y'] / 1000) if not math.isnan(spatials['y']) else "--"
         z_val = "{:.1f}m".format(spatials['z'] / 1000) if not math.isnan(spatials['z']) else "--"
-        print(f"Box {box_id}: X: {x_val}, Y: {y_val}, Z: {z_val}")
+        return(f"Box {box_id}: X: {x_val}, Y: {y_val}, Z: {z_val}")
 
 
     def pipeline_setup(self):
