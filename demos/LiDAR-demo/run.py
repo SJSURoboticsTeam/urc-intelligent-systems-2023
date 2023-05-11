@@ -1,7 +1,17 @@
 import sys
-sys.path.append( '../../')
+sys.path.append('../../')
 from Vision.modules.LiDARModule import LiDARModule
+import time
 
-if __name__ == "__main__":
-    spatial_visualizer = LiDARModule('/dev/tty.usbserial-0001') # Change this port name to match your device
-    spatial_visualizer.start_device()
+PORT_NAME = '/dev/tty.usbserial-0001'
+
+lidar_plot = LiDARModule(PORT_NAME)
+
+while True:
+    try:
+        lidar_plot.run()
+    except KeyboardInterrupt:
+        lidar_plot.stop()
+        break
+    except:
+        continue
