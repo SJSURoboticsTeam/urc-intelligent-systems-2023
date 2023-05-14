@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../../')
+sys.path.append('../')
 from Vision.modules.StereoCamera import StereoCamera
 from Vision.modules.LiDARModule import LiDARModule
 import numpy as np
@@ -9,16 +9,20 @@ class ObjectDetector:
         self.stereo_camera = StereoCamera()
         self.lidar = LiDARModule(lidar_port)  # Change this port name to match your device
 
-    def calculate_objects(self, camera_boxes=None, lidar_data=None):
+    def calculate_objects(self):
         camera_boxes = self.stereo_camera.run(visualize=True)
+        lidar_data = self.lidar.run()
 
         x = []
         y = []
-        for scan in self.lidar.iter_scans():
-            for (_, angle, distance) in scan:
-                x.append(distance * np.sin(np.radians(angle)))
-                y.append(distance * np.cos(np.radians(angle)))
-            break  # Collect only one set of data
+        for scan in lidar_data:
+            try:
+                for (_, angle, distance) in scan:
+                    x.append(distance * np.sin(np.radians(angle)))
+                    y.append(distance * np.cos(np.radians(angle)))
+                break  # Collect only one set of data
+            except:
+                continue
         X = np.array(list(zip(x, y)))
 
         object_cluster, object_distance = self.lidar.get_clusters(X)
@@ -62,4 +66,3 @@ class ObjectDetector:
                     if min_z_val is None or z_val < min_z_val:
                         min_z_val = z_val
         return min_z_val, obstacle_detected
-
