@@ -3,7 +3,7 @@ sys.path.append('../../')
 from Vision.modules.LiDARModule import LiDARModule
 import time
 
-PORT_NAME = '/dev/tty.usbserial-0001'
+PORT_NAME = '/dev/ttyUSB0'
 
 lidar_plot = LiDARModule(PORT_NAME)
 

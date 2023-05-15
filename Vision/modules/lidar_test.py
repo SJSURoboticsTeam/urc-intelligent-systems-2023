@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from rplidar import RPLidar, RPLidarException
 
-PORT_NAME = '/dev/tty.usbserial-0001'
+PORT_NAME = '/dev/ttyUSB0'
 
 lidar = RPLidar(PORT_NAME)
 
