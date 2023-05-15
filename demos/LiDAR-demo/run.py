@@ -9,7 +9,8 @@ lidar_plot = LiDARModule(PORT_NAME)
 
 while True:
     try:
-        lidar_plot.run()
+        for output in lidar_plot.run():
+            print(output)
     except KeyboardInterrupt:
         lidar_plot.stop()
         break

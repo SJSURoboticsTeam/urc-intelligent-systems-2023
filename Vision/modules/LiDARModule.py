@@ -41,8 +41,8 @@ class LiDARModule:
                         self.cluster_points.set_offsets(xy_class)
                         self.obstacles.append(xy_class)
                     obstacle_coords = self.get_obstacle_coordinates(position)
-                    for obstacle in obstacle_coords:
-                        print(obstacle)
+                    for output in obstacle_coords:
+                        yield output
                     self.points.set_offsets(np.c_[x, y])
                     self.fig.canvas.draw()
                     plt.pause(0.001)
@@ -52,12 +52,15 @@ class LiDARModule:
                     if str(e) == 'Wrong body size':
                         continue
                     else:
-                        raise
+                        continue
 
         except KeyboardInterrupt:
             print('Stopping.')
             self.lidar.stop()
             self.lidar.disconnect()
+        except RPLidarException as e:
+            print(e)
+            self.run()
     
     def get_obstacle_coordinates(self, position):
         obstacle_coords = []
