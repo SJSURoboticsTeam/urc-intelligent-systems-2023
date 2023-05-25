@@ -55,10 +55,16 @@ class StereoCamera:
         self.stereo.disparity.link(xoutDepth.input)
 
 
-    def run(self, visualize=False):
+    def run(self, visualize=False, usbMode="usb3"):
         self.pipeline_setup()
-        # Connect to device and start self.pipeline
-        with dai.Device(self.pipeline) as device:
+        # Connect to device and start pipeline
+
+        if usbMode == "usb3":
+            usb2ModeChoice = False
+        elif usbMode == "usb2":
+            usb2ModeChoice = True
+
+        with dai.Device(self.pipeline, usb2Mode=usb2ModeChoice) as device:
             # Output queue will be used to get the depth frames from the outputs defined above
             depthQueue = device.getOutputQueue(name="depth")
             dispQ = device.getOutputQueue(name="disp")
@@ -75,7 +81,7 @@ class StereoCamera:
             while True:
                 depthData = depthQueue.get()
 
-                centroids = [(x-200,y-50), (x+10,y-50), (x+220,y-50), (x-200,y+150), (x+10,y+150), (x+220,y+150)]
+                centroids = [(x-200, y-50), (x+10, y-50), (x+220, y-50), (x-200, y+150), (x+10, y+150), (x+220, y+150)]
                 spatials_data = [hs.calc_spatials(depthData, centroid) for hs, centroid in zip(host_spatials, centroids)]
 
                 # Get disparity frame for nicer depth visualization
@@ -85,7 +91,8 @@ class StereoCamera:
 
                 for i, (text_helper, spatials, centroid) in enumerate(zip(text_helpers, spatials_data, centroids)):
                     self.display_spatials(text_helper, disp, spatials[0], centroid, delta)
-                    self.print_spatials(spatials[0], i + 1)
+                    output = self.print_spatials(spatials[0], i + 1)
+                    yield output  # Yield the output value
 
                 if visualize:
                     # Show the frame

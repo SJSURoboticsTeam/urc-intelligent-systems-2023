@@ -1,51 +1,54 @@
 import sys
+import numpy as np
+
 sys.path.append('../')
 from Vision.modules.StereoCamera import StereoCamera
 from Vision.modules.LiDARModule import LiDARModule
-import numpy as np
 
 class ObjectDetector:
-    def __init__(self, lidar_port):
+    def __init__(self, lidar_port, VISUALIZE=True, MaxDistance=4.0):
         self.stereo_camera = StereoCamera()
-        self.lidar = LiDARModule(lidar_port)  # Change this port name to match your device
+        self.lidar = LiDARModule(lidar_port)
+        self.VISUALIZE = VISUALIZE
+        self.MaxDistance = MaxDistance
 
     def calculate_objects(self):
-        camera_boxes = self.stereo_camera.run(visualize=True)
-        lidar_data = self.lidar.run()
-
-        x = []
-        y = []
-        for scan in lidar_data:
-            try:
-                for (_, angle, distance) in scan:
+        for camera_boxes, lidar_data in zip(self.stereo_camera.run(visualize=self.VISUALIZE, usbMode='usb2'), self.lidar.run()):
+            x = []
+            y = []
+            for scan in lidar_data:
+                try:
+                    distance, angle = scan
                     x.append(distance * np.sin(np.radians(angle)))
                     y.append(distance * np.cos(np.radians(angle)))
-                break  # Collect only one set of data
-            except:
-                continue
-        X = np.array(list(zip(x, y)))
+                except:
+                    continue
 
-        object_cluster, object_distance = self.lidar.get_clusters(X)
+            X = np.array(list(zip(x, y)))
+            
+            # Identify your object cluster here
+            if np.mean(x) < -0.5:
+                object_cluster = 'Left'
+            elif np.mean(x) > 0.5:
+                object_cluster = 'Right'
+            else:
+                object_cluster = 'Center'
 
-        if object_cluster is None:
-            print('No object detected')
-            return
+            boxes_to_check = self.get_boxes_to_check(object_cluster)
+            z_val, box_detected = self.get_z_value_and_box(camera_boxes.split('\n'), boxes_to_check)
 
-        boxes_to_check = self.get_boxes_to_check(object_cluster)
-        z_val, box_detected = self.get_z_value_and_box(camera_boxes, boxes_to_check)
-
-        if z_val is not None:
-            print(f"LiDAR detected object in cluster '{object_cluster}'")
-            return object_cluster, z_val
-        elif box_detected:
-            print(f"Camera detected object in cluster '{object_cluster}'")
-            return object_cluster, None
-        else:
-            print(f"No matching box found for cluster '{object_cluster}'")
+            if z_val is not None:
+                print(f"Detected object in cluster '{object_cluster}'")
+                yield object_cluster, z_val
+            elif box_detected:
+                print(f"Camera only detected object in cluster '{object_cluster}'")
+                yield object_cluster, None
+            else:
+                print(f"No matching box found for cluster '{object_cluster}'")
 
     def get_boxes_to_check(self, object_cluster):
         if object_cluster == 'Center':
-            return ['Box 2', 'Box 5']
+            return ['Box 5', 'Box 2']
         elif object_cluster == 'Left':
             return ['Box 1', 'Box 4']
         elif object_cluster == 'Right':
@@ -54,15 +57,19 @@ class ObjectDetector:
     def get_z_value_and_box(self, camera_boxes, boxes_to_check):
         obstacle_detected = False
         min_z_val = None
-        depth_threshold = 1.0  # Consider obstacles within 1 meter
+        if boxes_to_check is None:
+            boxes_to_check = []
         for box_name in boxes_to_check:
-            if box_name in camera_boxes:
-                box_data_start = camera_boxes.find(box_name)
-                box_data = camera_boxes[box_data_start:]
-                z_index = box_data.find("Z:")
-                z_val = float(box_data[z_index + 2:].split(',')[0].strip())
-                if z_val <= depth_threshold:
-                    obstacle_detected = True
-                    if min_z_val is None or z_val < min_z_val:
-                        min_z_val = z_val
+            for box_data in camera_boxes:
+                if box_name in box_data:
+                    try:
+                        z_index = box_data.find("Z:")
+                        z_val_str = box_data[z_index + 3:box_data.find("m", z_index)].strip()
+                        z_val = float(z_val_str)
+                        if z_val <= self.MaxDistance:
+                            obstacle_detected = True
+                            if min_z_val is None or z_val < min_z_val:
+                                min_z_val = z_val
+                    except ValueError:
+                        print(f"Cannot convert Z value to float: '{z_val_str}' in box_data: {box_data}")
         return min_z_val, obstacle_detected
