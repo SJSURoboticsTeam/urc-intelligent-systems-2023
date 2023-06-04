@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from rplidar import RPLidar, RPLidarException
 
-PORT_NAME = '/dev/ttyUSB0'
+PORT_NAME = '/dev/ttyUSB2'
 
 lidar = RPLidar(PORT_NAME)
 
@@ -44,9 +44,13 @@ try:
             # print the error message and continue with the next iteration
             if str(e) == 'Incorrect descriptor starting bytes':
                 print('Caught Incorrect descriptor starting bytes exception')
+                lidar.stop()
+                lidar.disconnect()
                 continue
             if str(e) == 'Wrong body size':
                 print('Caught wrong body size exception')
+                lidar.stop()
+                lidar.disconnect()
                 continue
             else:
                 raise

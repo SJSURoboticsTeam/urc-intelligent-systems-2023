@@ -1,5 +1,7 @@
 import sys
 import numpy as np
+import threading
+import queue
 
 sys.path.append('../')
 from Vision.modules.StereoCamera import StereoCamera
@@ -11,9 +13,25 @@ class ObjectDetector:
         self.lidar = LiDARModule(lidar_port)
         self.VISUALIZE = VISUALIZE
         self.MaxDistance = MaxDistance
+        self.camera_queue = queue.Queue()
+        self.lidar_queue = queue.Queue()
+
+    def lidar_thread(self):
+        for lidar_data in self.lidar.run():
+            self.lidar_queue.put(lidar_data)
+
+    def camera_thread(self):
+        for camera_boxes in self.stereo_camera.run(visualize=self.VISUALIZE, usbMode='usb2'):
+            self.camera_queue.put(camera_boxes)
 
     def calculate_objects(self):
-        for camera_boxes, lidar_data in zip(self.stereo_camera.run(visualize=self.VISUALIZE, usbMode='usb2'), self.lidar.run()):
+        threading.Thread(target=self.lidar_thread).start()
+        threading.Thread(target=self.camera_thread).start()
+
+        while True:
+            camera_boxes = self.camera_queue.get()
+            lidar_data = self.lidar_queue.get()
+
             x = []
             y = []
             for scan in lidar_data:

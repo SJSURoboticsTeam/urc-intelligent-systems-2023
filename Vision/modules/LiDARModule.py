@@ -13,6 +13,7 @@ class LiDARModule:
         self.port_name = port_name
         self.lidar = RPLidar(self.port_name)
         self.fig, self.ax = plt.subplots()
+        self.is_connected = False
         self.ax.set_aspect('equal')
         self.ax.set_xlim(-5000, 5000)
         self.ax.set_ylim(-5000, 5000)
@@ -22,10 +23,10 @@ class LiDARModule:
         self.obstacles = []
         
     def run(self):
-        position = 0 # current position of device on x-axis
         while True:
+            position = 0 # current position of device on x-axis
             try:
-                self.lidar = RPLidar(self.port_name)  # Try to connect to the Lidar
+                self.is_connected = True
                 for scan in self.lidar.iter_scans():
                     try:
                         x = []
@@ -34,25 +35,28 @@ class LiDARModule:
                             x.append(distance * np.sin(np.radians(angle)))
                             y.append(distance * np.cos(np.radians(angle)))
                         xy = np.array(list(zip(x, y)))
-                        xy_scaled = StandardScaler().fit_transform(xy)
-                        db = DBSCAN(eps=0.3, min_samples=10).fit(xy_scaled)
-                        labels = db.labels_
-                        unique_labels = set(labels)
-                        colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(unique_labels))]
-                        for k, col in zip(unique_labels, colors):
-                            if k == -1:
-                                col = [0, 0, 0, 1]
-                            class_member_mask = (labels == k)
-                            xy_class = xy[class_member_mask]
-                            self.cluster_points.set_offsets(xy_class)
-                            self.obstacles.append(xy_class)
-                        obstacle_coords = self.get_obstacle_coordinates(position)
-                        for output in obstacle_coords:
-                            yield output
-                        self.points.set_offsets(np.c_[x, y])
-                        if "DISPLAY" in os.environ:
-                            self.fig.canvas.draw()
-                            plt.pause(0.001)
+                        if len(xy) > 0:  # Check if not empty
+                            xy_scaled = StandardScaler().fit_transform(xy)
+                            db = DBSCAN(eps=0.3, min_samples=10).fit(xy_scaled)
+                            labels = db.labels_
+                            unique_labels = set(labels)
+                            colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(unique_labels))]
+                            for k, col in zip(unique_labels, colors):
+                                if k == -1:
+                                    col = [0, 0, 0, 1]
+                                class_member_mask = (labels == k)
+                                xy_class = xy[class_member_mask]
+                                if len(xy_class) > 0:  # Check if not empty
+                                    self.cluster_points.set_offsets(xy_class)
+                                    self.obstacles.append(xy_class)
+                            if len(self.obstacles) > 0:  # Check if not empty
+                                obstacle_coords = self.get_obstacle_coordinates(position)
+                                for output in obstacle_coords:
+                                    yield output
+                            self.points.set_offsets(np.c_[x, y])
+                            if "DISPLAY" in os.environ:
+                                self.fig.canvas.draw()
+                                plt.pause(0.001)
                     except RPLidarException as e:
                         if str(e) == 'Incorrect descriptor starting bytes':
                             continue
@@ -63,13 +67,12 @@ class LiDARModule:
             except KeyboardInterrupt:
                 print('Stopping.')
                 self.lidar.stop()
+                self.is_connected = False
                 self.lidar.disconnect()
                 break
             except RPLidarException as e:
                 print(e)
-                self.lidar.stop()
-                self.lidar.disconnect()
-                continue  # If an error occurred, disconnect and then try to reconnect
+
 
     
     def get_obstacle_coordinates(self, position):
@@ -85,7 +88,9 @@ class LiDARModule:
         return obstacle_coords
 
     def stop(self):
-        self.lidar.stop()
-        self.lidar.disconnect()
+        if self.is_connected:
+            self.lidar.stop()
+            self.lidar.disconnect()
+            self.is_connected = False
 
 
