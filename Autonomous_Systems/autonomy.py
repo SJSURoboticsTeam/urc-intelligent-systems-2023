@@ -1,7 +1,6 @@
 import math
 import json
 import requests
-from Autonomous_Systems import Trajectory
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 from Autonomous_Systems.RoverNavigation import RoverNavigation
@@ -11,17 +10,20 @@ import time
 import threading
 
 class Autonomy:
-    def __init__(self, rover_comms, url, max_speed, max_steering, GPS, GPS_coordinate_map):
+    def __init__(self, rover_comms, url, max_speed, max_steering, GPS, GPS_coordinate_map, object_detector):
         self.rover_comms = rover_comms
         self.url = url
         self.IMU = IMU()
         self.GPS = GPS
+        self.object_detector = object_detector
 
         self.RoverNavigation = RoverNavigation(max_speed, max_steering, self.GPS, self.IMU, GPS_coordinate_map)
         self.AutoHelp = AutoHelp.AutoHelp()
 
         self.current_GPS = None
         self.GPS_lock = threading.Lock()
+        self.current_object_data = None
+        self.object_data_lock = threading.Lock()
 
     def update_gps(self):
         while True:
@@ -29,6 +31,11 @@ class Autonomy:
             with self.GPS_lock:
                 if new_GPS is not None:
                     self.current_GPS = new_GPS
+
+    def update_object_data(self):
+        for camera_boxes, lidar_data in self.object_detector.calculate_objects():
+            with self.object_data_lock:
+                self.current_object_data = (camera_boxes, lidar_data)
 
 
     def get_rover_status(self, bearing, distance):
@@ -44,6 +51,9 @@ class Autonomy:
         gps_thread = threading.Thread(target=self.update_gps)
         gps_thread.start()
 
+        object_detector_thread = threading.Thread(target=self.update_object_data)
+        object_detector_thread.start()
+
         homing_end = {"HB":0,"IO":1,"WO":0,"DM":"D","CMD":[0,0]}
         while True:
             response = self.rover_comms.read_data()
@@ -51,9 +61,11 @@ class Autonomy:
                 while True:
                     with self.GPS_lock:
                         current_GPS = self.current_GPS
+                    with self.object_data_lock:
+                        current_object_data = self.current_object_data
                     if current_GPS and current_GPS != "Need More Satellite Locks":
                         # command = self.RoverNavigation.get_steering(current_GPS, self.RoverNavigation.GPS_target)
-                        command = self.RoverNavigation.follow_path(self.RoverNavigation.GPS_target)
+                        command = self.RoverNavigation.follow_path(self.RoverNavigation.GPS_target, current_object_data)
                         bearing = round(self.AutoHelp.get_bearing(current_GPS, self.RoverNavigation.GPS_target), 3)
                         distance = round(self.AutoHelp.get_distance(current_GPS, self.RoverNavigation.GPS_target)[0]*1000, 3)
                         quat_i, quat_j, quat_k, quat_real = self.IMU.get_rotation()

@@ -209,7 +209,7 @@ class RoverNavigation:
 
         return path
 
-    def follow_path(self, goal):
+    def follow_path(self, goal, obstacles):
         """Follow a path to a goal"""
 
         # Compute heading to goal
