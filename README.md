@@ -9,4 +9,4 @@ To get started, you will need to install the following dependencies, you can do 
 pip install -r requirements.txt
 ```
 
-![Current Autonomy UML Generated 04/19/2023](https://github.com/SJSURoboticsTeam/urc-intelligent_systems-2023/blob/gpslist_list_demo_read_from_file/classes.png?raw=true)
+![classes](https://github.com/SJSURoboticsTeam/urc-intelligent-systems-2023/assets/50222631/3d47c3d4-b21a-463e-9739-bc99b61f450f)
