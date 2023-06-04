@@ -61,9 +61,11 @@ class Autonomy:
                 while True:
                     with self.GPS_lock:
                         current_GPS = self.current_GPS
+                    with self.object_data_lock:
+                        current_object_data = self.current_object_data
                     if current_GPS and current_GPS != "Need More Satellite Locks":
                         # command = self.RoverNavigation.get_steering(current_GPS, self.RoverNavigation.GPS_target)
-                        command = self.RoverNavigation.follow_path(self.RoverNavigation.GPS_target)
+                        command = self.RoverNavigation.follow_path(self.RoverNavigation.GPS_target, current_object_data)
                         bearing = round(self.AutoHelp.get_bearing(current_GPS, self.RoverNavigation.GPS_target), 3)
                         distance = round(self.AutoHelp.get_distance(current_GPS, self.RoverNavigation.GPS_target)[0]*1000, 3)
                         quat_i, quat_j, quat_k, quat_real = self.IMU.get_rotation()
