@@ -1,6 +1,6 @@
 import sys
 import cv2
-sys.path.append( '../../')
+sys.path.append( '/Users/mymac/Developer/Robotics/intelligent_systems/urc-intelligent_systems-2022')
 from modules.ArucoTagDetector import ArucoTagDetector
 
 
