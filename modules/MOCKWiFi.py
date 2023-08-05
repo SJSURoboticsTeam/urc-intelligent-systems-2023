@@ -28,10 +28,7 @@ class MockWiFi:
 
     def _generate_random_data(self):
         """Generate random data as if it's received from the server."""
-        # Need to look into how data sent from actual server look like
-        return {
-
-        }
+        return {"HB": random.randint(0,10),"IO":random.randint(0,1),"WO":0,"DM":random.choice(["D","S","R","T"]),"CMD":[0,0]}
 
     def _simulate_data_sent(self, data):
         """Simulate sending data to the server."""

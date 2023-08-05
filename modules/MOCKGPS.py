@@ -3,8 +3,8 @@ import requests
 import math
 
 class MockGPSRead:
-    def __init__(self):
-        # No need to open a serial port in the mock class
+    def __init__(self, port, baudrate):
+        # port and baudrate are not actually needed, but just want it to match the real class
         pass
 
     def send_request(self, LonLat):
