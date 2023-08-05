@@ -8,6 +8,12 @@ class WiFi:
         self.response = None
 
     def read_data(self, max_retries=3):
+        """Gets data from mission control. Expected response: {"HB":int, "IO":int, "WO":int, "DM":char, "CMD":list}
+        PARAMS:
+            max_retries [int]: max number of requests we send to web server before giving up 
+        RETURNS:
+            JSON data from mission control (if successful. Otherwise None).
+        """
         for retry_count in range(max_retries):
             try:
                 self.response = requests.get(f'{self.web_server_url}/drive/status', timeout=5)
@@ -24,6 +30,12 @@ class WiFi:
 
 
     def write_data(self, data):
+        """Sends data to mission control using an http post request
+        PARAMS:
+            data [dict]: something
+        RETURNS:
+            None. Just prints out whether or not data was successfully sent or not
+        """
         try:
             self.response = requests.post(f'{self.web_server_url}/drive', json=data, timeout=5)
             if self.response.status_code == 200:
