@@ -5,7 +5,8 @@ import os
 import glob
 import depthai
 import sys
-sys.path.append('/Users/mymac/Developer/Robotics/intelligent_systems/urc-intelligent_systems-2022')
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+sys.path.append(parent_dir)
 from modules.OAKD import OakD
 
 # load the 4x4_50 aruco tag dictionary
