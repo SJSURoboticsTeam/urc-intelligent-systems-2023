@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.abspath(".."))
 from CommandScripts.GPS_NAV import GPS_Nav
 from CommandScripts import AutoHelp
 from modules.LSM303 import Compass
+from modules.WiFi import WiFi
 import time
 import threading
 
@@ -46,7 +47,7 @@ class Autonomy:
 
         homing_end = "Starting control loop..."
         while True:
-            response = self.rover_comms.read_rover_comms()
+            response = self.rover_comms
             if homing_end in response:
                 while True:
                     with self.GPS_lock:
@@ -61,10 +62,10 @@ class Autonomy:
                         print("Bearing:", bearing)
                         print("Distance from Target GPS:", distance, "Meters")
                         print("Sending Command:", command)
-                        response = self.rover_comms.read_rover_comms()
+                        response = WiFi.read_data()
                         self.get_rover_status(bearing, distance)
                         if response != "No data received" and command != None:
-                            self.rover_comms.write_rover_comms(command)
+                            WiFi.write_data(command)
                     else:
                         print("GPS Error. Current GPS:", current_GPS)
                         time.sleep(1)
