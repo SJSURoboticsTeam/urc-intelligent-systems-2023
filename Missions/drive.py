@@ -2,7 +2,7 @@ import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 import requests
 import serial.tools.list_ports as port_list
-from modules.Serial import SerialSystem
+from modules.WiFi import WiFi
 from CommandScripts.autonomy import Autonomy
 from modules.GPS import gpsRead
 import json
@@ -15,15 +15,7 @@ max_speed = 50
 max_angle = 12
 server = 'http://10.251.253.243:5002'
 GPS_list = []
-
-try:
-    serial = SerialSystem(serial_port, serial_baudrate)
-    print("Using port: " + serial_port, "For Serial Comms")
-except:
-    ports = list(port_list.comports())
-    print('====> Designated Port not found. Using Port:', ports[0].device, "For Serial Connection")
-    serial_port = ports[0].device
-    serial = SerialSystem(serial_port, serial_baudrate)
+rover_comms = WiFi(server)
 
 
 try:
@@ -61,5 +53,5 @@ except:
 GPS_list = [[-121.8818685, 37.33699716666666], [-121.881868, 37.33696233333334], [-121.88177050000002, 37.336928833333324]]
 print("GPS List:", GPS_list)
 
-rover = Autonomy(serial, server, max_speed, max_angle, GPS, GPS_list)
+rover = Autonomy(rover_comms, server, max_speed, max_angle, GPS, GPS_list)
 rover.start_mission()

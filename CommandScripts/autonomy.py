@@ -11,8 +11,8 @@ import time
 import threading
 
 class Autonomy:
-    def __init__(self, serial, url, max_speed, max_steering, GPS, GPS_coordinate_map):
-        self.serial = serial
+    def __init__(self, rover_comms, url, max_speed, max_steering, GPS, GPS_coordinate_map):
+        self.rover_comms = rover_comms
         self.url = url
         self.compass = Compass()
         self.GPS = GPS
@@ -46,7 +46,7 @@ class Autonomy:
 
         homing_end = "Starting control loop..."
         while True:
-            response = self.serial.read_serial()
+            response = self.rover_comms.read_rover_comms()
             if homing_end in response:
                 while True:
                     with self.GPS_lock:
@@ -61,10 +61,10 @@ class Autonomy:
                         print("Bearing:", bearing)
                         print("Distance from Target GPS:", distance, "Meters")
                         print("Sending Command:", command)
-                        response = self.serial.read_serial()
+                        response = self.rover_comms.read_rover_comms()
                         self.get_rover_status(bearing, distance)
                         if response != "No data received" and command != None:
-                            self.serial.write_serial(command)
+                            self.rover_comms.write_rover_comms(command)
                     else:
                         print("GPS Error. Current GPS:", current_GPS)
                         time.sleep(1)
