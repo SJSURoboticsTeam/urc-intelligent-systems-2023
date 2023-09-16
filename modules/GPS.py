@@ -10,11 +10,21 @@ class gpsRead:
         LonLat = list(LonLat)
         requests.post(url, json={"longitude": LonLat["longitude"], "latitude": LonLat["latitude"]})
 
+    def readbyline(self,serial_port):
+        line = bytearray()
+        while True:
+            c = serial_port.read(1)  # Read a single byte
+            if c:
+                line += c
+                if line[-2:] == b'\r\n':
+                    return line.decode('utf-8').strip()
+
+
     def get_position(self, url=None):
         LonLat = {"longitude":0,
                   "latitude":0}
         try:
-            line = self.gps_port.readline().decode('utf-8').strip()
+            line = self.readbyline(self.gps_port)
             if line.startswith('$GNRMC'):
                 parts = line.split(',')
                 if parts[2] == 'A':
