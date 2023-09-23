@@ -1,17 +1,14 @@
-from time import sleep
-import board
-import adafruit_lsm303dlh_mag
+import random 
 import math
 
 class Compass:
     def __init__(self):
-        self.i2c = board.I2C()
-        self.mag = adafruit_lsm303dlh_mag.LSM303DLH_Mag(self.i2c)
+            self.heading_range = (0.0, 360.0)
+
+    def get_random_value(self, value_range):
+        return random.uniform(value_range[0], value_range[1])
 
     def get_heading(self):
-        x = round(self.mag.magnetic[0], 3)
-        y = round(self.mag.magnetic[1], 3)
-        heading = math.atan2(y,x)*(180/math.pi)
-        if heading < 0:
-            heading += 360
+        """Get random compass heading in degrees."""
+        heading = self.get_random_value(self.heading_range)
         return round(heading, 3)

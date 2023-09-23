@@ -1,4 +1,5 @@
 import math
+#from modules.LSM303 import Compass
 from modules.LSM303 import Compass
 import json
 
