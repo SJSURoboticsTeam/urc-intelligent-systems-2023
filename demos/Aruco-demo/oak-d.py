@@ -5,8 +5,7 @@ import os
 import glob
 import depthai
 import sys
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
-sys.path.append(parent_dir)
+sys.path.append( '../../')
 from modules.OAKD import OakD
 
 # load the 4x4_50 aruco tag dictionary
