@@ -1,7 +1,7 @@
 import sys
 import time
 import serial.tools.list_ports as port_list
-sys.path.append( '/Users/mymac/Developer/Robotics/urc-intelligent-systems-2023/')
+sys.path.append( '../../')
 from modules.GPS import gpsRead
 
 if __name__ == '__main__':
