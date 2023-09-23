@@ -10,23 +10,18 @@ class gpsRead:
         LonLat = list(LonLat)
         requests.post(url, json={"longitude": LonLat["longitude"], "latitude": LonLat["latitude"]})
 
-    def readbyline(self,serial_port):
-        line = bytearray()
-        while True:
-            c = serial_port.read(1)  # Read a single byte
-            if c:
-                line += c
-                if line[-2:] == b'\r\n':
-                    return line.decode('utf-8').strip()
-
-
     def get_position(self, url=None):
         LonLat = {"longitude":0,
                   "latitude":0}
         try:
-            line = self.readbyline(self.gps_port)
-            if line.startswith('$GNRMC'):
-                parts = line.split(',')
+            gps_serial = self.gps_port.read(2048).decode('utf-8').strip()
+            # print(gps_serial)
+            if '$GNRMC' in gps_serial:
+                gps_line = ""
+                start = gps_serial.find('$GNRMC')
+                if start != -1:
+                    gps_line = gps_serial[start:]
+                parts = gps_line.split(',')
                 if parts[2] == 'A':
                     latitude = float(parts[3][:2]) + float(parts[3][2:]) / 60
                     if parts[4] == 'S':

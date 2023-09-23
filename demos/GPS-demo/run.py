@@ -1,12 +1,12 @@
 import sys
 import time
 import serial.tools.list_ports as port_list
-sys.path.append( '../../')
-from modules.old_GPS import gpsRead
+sys.path.append( '/Users/mymac/Developer/Robotics/urc-intelligent-systems-2023/')
+from modules.GPS import gpsRead
 
 if __name__ == '__main__':
     try:
-        data = gpsRead("/dev/ttyUSB0",57600)
+        data = gpsRead("/dev/tty.usbmodem141101", 57600)
         print("GPS Port found")
         url = "http://192.168.1.133:5000/gps"
     except:
@@ -24,8 +24,8 @@ if __name__ == '__main__':
                     break
                 except:
                     continue
-    GPS_Coordinates = data.get_position() # You can add the url as an argument if you want to post the gps coordinates
+    #GPS_Coordinates = data.get_position() # You can add the url as an argument if you want to post the gps coordinates
 
     while True:
-        print(GPS_Coordinates)
+        print(data.get_position())
         time.sleep(1)
