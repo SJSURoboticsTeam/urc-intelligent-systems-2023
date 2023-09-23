@@ -1,0 +1,7 @@
+board==1.0
+matplotlib==3.8.*
+numpy==1.26.*
+pyserial==3.5.*
+Requests==2.31.*
+rplidar==0.9.2
+smbus==1.1.post2; sys_platform == 'linux'
