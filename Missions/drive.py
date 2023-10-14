@@ -1,6 +1,5 @@
 import os, sys
 sys.path.insert(0, os.path.abspath(".."))
-import requests
 import serial.tools.list_ports as port_list
 from modules.Serial import SerialSystem
 from Autonomous_Systems.autonomy import Autonomy

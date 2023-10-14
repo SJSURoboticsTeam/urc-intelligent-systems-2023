@@ -2,7 +2,6 @@ import time
 import sys, os
 sys.path.insert(0, os.path.abspath(".."))
 from CommandScripts.GPS_NAV import GPS_Nav
-
 # Define a list of GPS coordinates for the rover to navigate to
 gps_coordinates = [
     (37.33, -121.88),  # Example coordinates, replace with actual waypoints
