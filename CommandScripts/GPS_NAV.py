@@ -5,6 +5,62 @@ from modules.LSM303 import Compass
 from CommandScripts import AutoHelp
 from simple_pid import PID
 import time
+import numpy as np
+import math
+
+class VFH_obstacle_avoidance:
+    def __init__(self, distance_threshold):
+        self.distance_threshold = distance_threshold # any obstacle greater than threshold is considered too far away and won't be taken into account
+
+    def get_target_angle(self, lidar_data, rover_angle, current_longlat, target_longlat):
+        """Obstacle avoidance logic that uses vector field histogram (VFH)
+        PARAMS:
+            lidar_data (list):      array of 360 elements. each index is an angle
+            rover_angle (int):      the angle that the rover is currently facing      
+            current_longlat(tuple): (longitude, latitude) of rover's current position
+            target_longlat (tuple): (longitude, latitude) of rover's target position
+        RETURNS:
+            integer. The angle we want to turn to
+        """
+
+        '''
+        TODO:
+            * add a parameter that has the general angle that we're trying to move to
+                - we should always be trying to move towards this angle
+            * somewhere, use get_bearing() method to get target angle
+            * rename file to RoverNavigation
+        '''
+        # Parameters
+        sector_size = 45 # Angular sector size in degrees
+
+        # Initialize histogram bins
+        num_bins = int(360 / sector_size)  
+        histogram = np.zeros(num_bins, dtype=int)
+        
+        # Populate histogram with obstacle data
+        for angle, distance in enumerate(lidar_data):
+            bin_index = int(angle / sector_size)
+            histogram[bin_index] += 0 if distance < self.distance_threshold else 1
+        
+        # print(f"{histogram=}")
+        # Find the direction with the least obstacle density (peak)
+        smoothed_histogram = np.convolve(histogram, np.ones(3), mode='same')  # Smooth histogram
+        # print(f"{smoothed_histogram=}")
+        target_direction = np.argmax(smoothed_histogram) # returns the index of the element with the highest value
+        
+        # Calculate the target angle (angle of the selected direction)
+        target_angle = target_direction * sector_size
+        # print(f"Product of target_direction and sector_size: {target_angle=}")
+        
+        # Calculate the rotation needed based on compass and lidar data
+        lidar_angle_start = 0  # Assume lidar starts at the first angle in data
+        angle_difference = (rover_angle - lidar_angle_start) % 360  # Adjust angle difference to be within 0-360
+        rotation_angle = (target_angle - angle_difference) % 360  # Adjust rotation angle to be within 0-360
+        # print(f"{rotation_angle=}")
+        
+        # return rotation_angle
+        # Return the rotation angle for the robot to align with the clear direction
+        return lidar_data.index(max(lidar_data[rotation_angle:rotation_angle+sector_size+1]))
 
 class GPS_Nav:
     def __init__(self, max_speed, max_steering, GPS, compass, GPS_coordinate_map):
