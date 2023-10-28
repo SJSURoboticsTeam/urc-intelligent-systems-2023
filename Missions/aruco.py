@@ -1,7 +1,7 @@
 import time
 import sys, os
 sys.path.insert(0, os.path.abspath(".."))
-from CommandScripts.GPS_NAV import GPS_Nav
+from Autonomous_Systems.RoverNavigation import RoverNaviagtion
 # Define a list of GPS coordinates for the rover to navigate to
 gps_coordinates = [
     (37.33, -121.88),  # Example coordinates, replace with actual waypoints
@@ -10,7 +10,7 @@ gps_coordinates = [
 ]
 
 # Create an instance of the GPS_Nav class
-rover = GPS_Nav(max_speed=5, max_steering=30, GPS=None, compass=None, GPS_coordinate_map=gps_coordinates)
+rover = RoverNaviagtion(max_speed=5, max_steering=30, GPS=None, compass=None, GPS_coordinate_map=gps_coordinates)
 
 # Iterate through the GPS coordinates
 for target_gps in gps_coordinates:
