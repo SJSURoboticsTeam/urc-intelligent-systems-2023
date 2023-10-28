@@ -178,7 +178,6 @@ class RoverNaviagtion:
             self.change_modes('D')
             return self.forward_drive(self.commands)
         
-
     def reset_aruco_variables(self, update_target_tag=False):
         if update_target_tag:
             self.aruco_autonomy.update_target_tag()
