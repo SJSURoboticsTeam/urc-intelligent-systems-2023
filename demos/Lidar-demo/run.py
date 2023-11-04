@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as anim
 from matplotlib.axes import Axes
 
-PORT_NAME = 'COM6'
+PORT_NAME = 'COM5'
 lidar = RPLidar(PORT_NAME)
 lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000))
 
