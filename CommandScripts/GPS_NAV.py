@@ -9,9 +9,10 @@ import numpy as np
 import math
 
 class VFH_obstacle_avoidance:
-    def __init__(self, distance_threshold):
+    def __init__(self, distance_threshold, general_angle):
         self.distance_threshold = distance_threshold # any obstacle greater than threshold is considered too far away and won't be taken into account
-
+        self.general_angle = general_angle
+        
     def get_target_angle(self, lidar_data, rover_angle, current_longlat, target_longlat):
         """Obstacle avoidance logic that uses vector field histogram (VFH)
         PARAMS:
@@ -24,12 +25,14 @@ class VFH_obstacle_avoidance:
         """
 
         '''
-        TODO:
-            * add a parameter that has the general angle that we're trying to move to
+        changes:
+            * added a parameter that has the general angle that we're trying to move to
                 - we should always be trying to move towards this angle
-            * somewhere, use get_bearing() method to get target angle
+            * uses get_bearing() method to get target angle
+        TODO:
             * rename file to RoverNavigation
         '''
+
         # Parameters
         sector_size = 45 # Angular sector size in degrees
 
@@ -52,6 +55,16 @@ class VFH_obstacle_avoidance:
         target_angle = target_direction * sector_size
         # print(f"Product of target_direction and sector_size: {target_angle=}")
         
+        # Incorporate the general target angle (placeholder)
+        general_angle = self.get_bearing(current_longlat, target_longlat)
+        
+        if general_angle is not None:
+            # Blend the obstacle avoidance direction with the general target angle
+            target_angle = 0.7 * target_angle + 0.3 * general_angle
+            
+        # Ensure that target_angle is within 0-360 degrees
+        target_angle %= 360
+        
         # Calculate the rotation needed based on compass and lidar data
         lidar_angle_start = 0  # Assume lidar starts at the first angle in data
         angle_difference = (rover_angle - lidar_angle_start) % 360  # Adjust angle difference to be within 0-360
@@ -61,6 +74,23 @@ class VFH_obstacle_avoidance:
         # return rotation_angle
         # Return the rotation angle for the robot to align with the clear direction
         return lidar_data.index(max(lidar_data[rotation_angle:rotation_angle+sector_size+1]))
+    
+    def get_bearing(self, current_longlat, target_longlat):
+        # Calculate the bearing from current position to target position
+        lat1, lon1 = current_longlat
+        lat2, lon2 = target_longlat
+
+        delta_lon = lon2 - lon1 #angular distance between both positions
+
+        #uses Haversine formula to calculate bearing angle from one pos to target
+        y = math.sin(delta_lon) * math.cos(lat2)
+        x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(delta_lon)
+
+        bearing = math.degrees(math.atan2(y, x))
+        
+        # Normalize the bearing to the range 0-360 degrees
+        bearing = (bearing + 360) % 360
+        return bearing 
 
 class GPS_Nav:
     def __init__(self, max_speed, max_steering, GPS, compass, GPS_coordinate_map):
