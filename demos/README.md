@@ -32,3 +32,5 @@ def process_data(data):
 ```
 
 run [run.py](run.py)
+
+![](pics/lidar-demo.gif)
