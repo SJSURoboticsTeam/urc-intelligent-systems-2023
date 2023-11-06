@@ -75,6 +75,13 @@ class AutoHelp:
 
 
     def get_bearing(self, current_GPS, target_GPS):
+        """Returns the angle between two GPS coordinates
+        PARAMS:
+            current_GPS (tuple): (latitude, longitude)
+            target_GPS (tuple):  (latitude, longitude)
+        RETURNS:
+            float. angle between the two coordinates
+        """
         try:
             current_latitude = math.radians(current_GPS[1])
             current_longitude = math.radians(current_GPS[0])
