@@ -2,12 +2,12 @@ import sys
 import os
 import time
 import serial.tools.list_ports as port_list
-sys.path.append("/Users/mymac/Developer/Robotics/urc-intelligent-systems-2023")
+sys.path.append("../../")
 from modules.GPS import gpsRead
 
 if __name__ == '__main__':
     try:
-        data = gpsRead("/dev/tty.usbmodem14301", 57600)
+        data = gpsRead("/dev/ttyACM0", 57600)
         print("GPS Port found")
         url = "http://192.168.1.133:5000/gps"
     except:

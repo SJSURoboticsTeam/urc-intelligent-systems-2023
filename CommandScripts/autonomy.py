@@ -46,26 +46,26 @@ class Autonomy:
         gps_thread.start()
 
         homing_end = "Starting control loop..."
+        self.rover_comms = WiFi("http://192.168.0.211:5000")
+        response = self.rover_comms.read_data()
+
         while True:
-            response = self.rover_comms
-            if homing_end in response:
-                while True:
-                    with self.GPS_lock:
-                        current_GPS = self.current_GPS
-                    if current_GPS and current_GPS != "Need More Satellite Locks":
-                        command = self.GPS_Nav.get_steering(current_GPS, self.GPS_Nav.GPS_target)
-                        bearing = round(self.AutoHelp.get_bearing(current_GPS, self.GPS_Nav.GPS_target), 3)
-                        distance = round(self.AutoHelp.get_distance(current_GPS, self.GPS_Nav.GPS_target)[0]*1000, 3)
-                        print("Current GPS:", current_GPS)
-                        print("Target GPS:", self.GPS_Nav.GPS_target)
-                        print("Heading:", self.compass.get_heading())
-                        print("Bearing:", bearing)
-                        print("Distance from Target GPS:", distance, "Meters")
-                        print("Sending Command:", command)
-                        response = WiFi.read_data()
-                        self.get_rover_status(bearing, distance)
-                        if response != "No data received" and command != None:
-                            WiFi.write_data(command)
-                    else:
-                        print("GPS Error. Current GPS:", current_GPS)
-                        time.sleep(1)
+            with self.GPS_lock:
+                current_GPS = self.current_GPS
+            if current_GPS and current_GPS != "Need More Satellite Locks":
+                command = self.GPS_Nav.get_steering(current_GPS, self.GPS_Nav.GPS_target)
+                bearing = round(self.AutoHelp.get_bearing(current_GPS, self.GPS_Nav.GPS_target), 3)
+                distance = round(self.AutoHelp.get_distance(current_GPS, self.GPS_Nav.GPS_target)[0]*1000, 3)
+                print("Current GPS:", current_GPS)
+                print("Target GPS:", self.GPS_Nav.GPS_target)
+                print("Heading:", self.compass.get_heading())
+                print("Bearing:", bearing)
+                print("Distance from Target GPS:", distance, "Meters")
+                print("Sending Command:", command)
+                response = self.rover_comms.read_data()
+                self.get_rover_status(bearing, distance)
+                if response != "No data received" and command != None:
+                    self.rover_comms.write_data(command)
+            else:
+                print("GPS Error. Current GPS:", current_GPS)
+                time.sleep(1)

@@ -8,12 +8,12 @@ from modules.GPS import gpsRead
 import json
 
 serial_port = "/dev/ttyACM2"
-gps_port = "/dev/ttyUSB2"
+gps_port = "/dev/ttyACM0"
 serial_baudrate = 38400
 gps_baudrate = 57600
 max_speed = 50
 max_angle = 12
-server = 'http://10.251.253.243:5002'
+server = 'http://192.168.0.211:5000'
 GPS_list = []
 rover_comms = WiFi(server)
 
