@@ -13,7 +13,7 @@ serial_baudrate = 38400
 gps_baudrate = 57600
 max_speed = 50
 max_angle = 12
-server = 'http://192.168.0.211:5000'
+server = 'http://192.168.0.101:5001'
 GPS_list = []
 rover_comms = WiFi(server)
 

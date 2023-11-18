@@ -35,8 +35,8 @@ class Autonomy:
     def get_rover_status(self, bearing, distance):
         try:
             json_command = {"Bearing":bearing,"Distance":distance,"GPS":[self.current_GPS[0],self.current_GPS[1]],"Target":[self.GPS_Nav.GPS_target[0],self.GPS_Nav.GPS_target[1]]}
-            json_command = json.dumps(json_command)
-            json_command = json_command.replace(" ", "")
+            # json_command = json.dumps(json_command)
+            # json_command = json_command.replace(" ", "")
             requests.post(f"{self.url}/autonomy", json=json_command)
         except:
             print("Could not send rover status to mission control")
@@ -46,7 +46,7 @@ class Autonomy:
         gps_thread.start()
 
         homing_end = "Starting control loop..."
-        self.rover_comms = WiFi("http://192.168.0.211:5000")
+        self.rover_comms = WiFi("http://192.168.0.101:5001")
         response = self.rover_comms.read_data()
 
         while True:
