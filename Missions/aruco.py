@@ -2,6 +2,11 @@ import time
 import sys, os
 sys.path.insert(0, os.path.abspath(".."))
 from Autonomous_Systems.RoverNavigation import RoverNaviagtion
+from Autonomous_Systems.AutoHelp import AutoHelp
+from modules.GPS import gpsRead
+from modules.WiFi import WiFi
+from modules.LSM303 import Compass
+
 # Define a list of GPS coordinates for the rover to navigate to
 gps_coordinates = [
     (37.33, -121.88),  # Example coordinates, replace with actual waypoints
@@ -23,20 +28,27 @@ for target_gps in gps_coordinates:
 
     while not aruco_detected and attempts < max_attempts:
         # Get current GPS coordinates and update steering behavior
-        current_gps = rover.get_current_gps_coordinates()
+        current_gps = gpsRead.get_position()
 
         # Calculate bearing and steering to the target GPS coordinates
         rover_commands = rover.get_steering(current_gps, target_gps)
+        
+        #WIFI PROCEDURE
+        print("Current GPS:", current_gps)
+        print("Target GPS:", target_gps)
+        print("Bearing:", round(AutoHelp.get_bearing(current_gps, target_gps), 3))
+        print("distance:", round(AutoHelp.get_distance(current_gps, target_gps)[0]*1000, 3))
+        print("Sending Command:", rover_commands)
 
         # Execute the rover's movement based on the computed commands
-        rover.execute_commands(rover_commands)
+        WiFi.write_data(rover_commands)
 
         # Check if an Aruco tag has been detected
         aruco_detected = rover.check_aruco_detection()
 
         if not aruco_detected:
             print("Aruco tag not detected. Spinning to search...")
-            rover.spin_in_place()
+            rover.spin_and_search(gpsRead.get_position(), Compass.get_heading())
 
         attempts += 1
 
