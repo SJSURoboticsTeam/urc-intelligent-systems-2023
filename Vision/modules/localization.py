@@ -196,6 +196,14 @@ with dai.Device(pipeline) as device:
             else:
                 dep = 1e-6  # epsilon to avoid division by 0
 
+            # DFOV / HFOV / VFOV = 120° / 95° / 70°
+            # FOV = 2 x working distance x tan (AFOV/2) - somehow this gives 2* what we need, so ignore 2x
+            dist = detection.spatialCoordinates.z  # in mm
+            deg2rad = np.pi / 180
+            vfov = np.tan(70 * deg2rad) * dist  # in mm
+            hPercent = (ymax - ymin) / frame.shape[1]  # px / px = percent
+            h = hPercent * vfov
+
             # H is the horizontal angle (angle from center of camera to object's horizontal position)
             # V is the vertical angle (angle from center of camera to object's vertical position)
             putTexts(
@@ -205,8 +213,9 @@ with dai.Device(pipeline) as device:
                     f"X: {int(detection.spatialCoordinates.x)} mm",
                     f"Y: {int(detection.spatialCoordinates.y)} mm",
                     f"Z: {int(detection.spatialCoordinates.z)} mm",
-                    f"H*: {int(np.arctan(detection.spatialCoordinates.x / dep) * 180 / np.pi)} deg",
-                    f"V*: {int(np.arctan(detection.spatialCoordinates.y / dep) * 180 / np.pi)} deg",
+                    f"H*: {int(np.arctan2(detection.spatialCoordinates.x, dep) * 180 / np.pi)} deg",
+                    f"V*: {int(np.arctan2(detection.spatialCoordinates.y, dep) * 180 / np.pi)} deg",
+                    f"HE: {int(h)} mm",  # height in mm; max we can roll over is ~130mm
                 ]
             )
 
