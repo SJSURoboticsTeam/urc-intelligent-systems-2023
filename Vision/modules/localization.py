@@ -1,12 +1,12 @@
 from pathlib import Path
-import sys
+from typing import List
 import cv2
 import depthai as dai
 import numpy as np
 import time
 
 """
-Spatial Tiny-yolo example
+Spatial yolo example
   Performs inference on RGB camera and retrieves spatial location coordinates: x,y,z relative to the center of depth map.
   Can be used for tiny-yolo-v3 or tiny-yolo-v4 networks
 """
@@ -15,44 +15,14 @@ Spatial Tiny-yolo example
 nnBlobPath = str(
     (
         Path(__file__).parent
-        / Path("../models/yolo-v4-tiny-tf_openvino_2021.4_6shave.blob")
+        / Path("./trained_models/rockdetection/best-simplified5s.blob")
     )
     .resolve()
     .absolute()
 )
-if 1 < len(sys.argv):
-    arg = sys.argv[1]
-    if arg == "yolo3":
-        nnBlobPath = str(
-            (
-                Path(__file__).parent
-                / Path("../models/yolo-v3-tiny-tf_openvino_2021.4_6shave.blob")
-            )
-            .resolve()
-            .absolute()
-        )
-    elif arg == "yolo4":
-        nnBlobPath = str(
-            (
-                Path(__file__).parent
-                / Path("../models/yolo-v4-tiny-tf_openvino_2021.4_6shave.blob")
-            )
-            .resolve()
-            .absolute()
-        )
-    else:
-        nnBlobPath = arg
-else:
-    print(
-        "Using Tiny YoloV4 model. If you wish to use Tiny YOLOv3, call 'tiny_yolo.py yolo3'"
-    )
 
 if not Path(nnBlobPath).exists():
-    import sys
-
-    raise FileNotFoundError(
-        f'Required file/s not found, please run "{sys.executable} install_requirements.py"'
-    )
+    raise FileNotFoundError(f'Blob path not found"')
 
 syncNN = True
 
@@ -98,7 +68,7 @@ stereo.setOutputSize(monoLeft.getResolutionWidth(), monoLeft.getResolutionHeight
 stereo.setSubpixel(True)
 
 spatialDetectionNetwork.setBlobPath(nnBlobPath)
-spatialDetectionNetwork.setConfidenceThreshold(0.85)
+spatialDetectionNetwork.setConfidenceThreshold(0.8)
 spatialDetectionNetwork.input.setBlocking(False)
 spatialDetectionNetwork.setBoundingBoxScaleFactor(0.5)
 spatialDetectionNetwork.setDepthLowerThreshold(100)
@@ -206,45 +176,38 @@ with dai.Device(pipeline) as device:
             y1 = int(detection.ymin * height)
             y2 = int(detection.ymax * height)
             label = detection.label
-            cv2.putText(
-                frame,
-                "rock",
-                (x1 + 10, y1 + 20),
-                cv2.FONT_HERSHEY_TRIPLEX,
-                0.5,
-                fontColor,
-            )
-            cv2.putText(
-                frame,
-                "{:.2f}".format(detection.confidence * 100),
-                (x1 + 10, y1 + 35),
-                cv2.FONT_HERSHEY_TRIPLEX,
-                0.5,
-                fontColor,
-            )
-            cv2.putText(
-                frame,
-                f"X: {int(detection.spatialCoordinates.x)} mm",
-                (x1 + 10, y1 + 50),
-                cv2.FONT_HERSHEY_TRIPLEX,
-                0.5,
-                fontColor,
-            )
-            cv2.putText(
-                frame,
-                f"Y: {int(detection.spatialCoordinates.y)} mm",
-                (x1 + 10, y1 + 65),
-                cv2.FONT_HERSHEY_TRIPLEX,
-                0.5,
-                fontColor,
-            )
-            cv2.putText(
-                frame,
-                f"Z: {int(detection.spatialCoordinates.z)} mm",
-                (x1 + 10, y1 + 80),
-                cv2.FONT_HERSHEY_TRIPLEX,
-                0.5,
-                fontColor,
+
+            increment = 15
+            start = y1 + 20
+
+            def putTexts(texts: List[str]):
+                for idx, text in enumerate(texts):
+                    cv2.putText(
+                        frame,
+                        text,
+                        (x1 + 10, start + increment * idx),
+                        cv2.FONT_HERSHEY_TRIPLEX,
+                        0.5,
+                        fontColor,
+                    )
+
+            if detection.spatialCoordinates.z != 0:
+                dep = detection.spatialCoordinates.z
+            else:
+                dep = 1e-6  # epsilon to avoid division by 0
+
+            # H is the horizontal angle (angle from center of camera to object's horizontal position)
+            # V is the vertical angle (angle from center of camera to object's vertical position)
+            putTexts(
+                [
+                    "rock",
+                    "{:.2f}".format(detection.confidence * 100),
+                    f"X: {int(detection.spatialCoordinates.x)} mm",
+                    f"Y: {int(detection.spatialCoordinates.y)} mm",
+                    f"Z: {int(detection.spatialCoordinates.z)} mm",
+                    f"H*: {int(np.arctan(detection.spatialCoordinates.x / dep) * 180 / np.pi)} deg",
+                    f"V*: {int(np.arctan(detection.spatialCoordinates.y / dep) * 180 / np.pi)} deg",
+                ]
             )
 
             cv2.rectangle(frame, (x1, y1), (x2, y2), color, cv2.FONT_HERSHEY_SIMPLEX)
