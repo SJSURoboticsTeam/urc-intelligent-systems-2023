@@ -12,6 +12,7 @@ from dataclasses import dataclass
 class CameraLocalizerDetection:
     angle: float
     height: float
+    distance: float
 
 
 class CameraLocalizer:
@@ -313,11 +314,15 @@ class CameraLocalizer:
 
                     else:  # running in bg
                         with self.lock:
+                            # we only want the distance using the x and z, not using y
+                            # so we just use pythagorean theorem
+                            xz_dist = np.sqrt(detection.spatialCoordinates.x**2 + detection.spatialCoordinates.z**2)
                             dec = CameraLocalizerDetection(
                                 np.arctan2(detection.spatialCoordinates.x, dep)
                                 * 180
                                 / np.pi,
                                 h,
+                                distance=xz_dist
                             )
                             self._current_detections.append(dec)
                             if dec.height > CameraLocalizer.MAX_HEIGHT:

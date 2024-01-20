@@ -1,9 +1,14 @@
+import sys
+
+sys.path.append("../../")
 from Vision.modules.localization import CameraLocalizer
 from datetime import datetime
 import time
 
 if __name__ == "__main__":
-    cam = CameraLocalizer("./trained_models/rockdetection/best-simplified5s.blob")
+    cam = CameraLocalizer(
+        "../../Vision/modules/trained_models/rockdetection/best-simplified5s.blob"
+    )
 
     block = False
     cam.start(blocking=block)
