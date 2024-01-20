@@ -24,7 +24,7 @@ nnBlobPath = str(
 if not Path(nnBlobPath).exists():
     raise FileNotFoundError(f'Blob path not found"')
 
-syncNN = True
+syncNN = False  # True
 
 # Create pipeline
 pipeline = dai.Pipeline()
@@ -49,7 +49,6 @@ nnNetworkOut.setStreamName("nnNetwork")
 
 # Properties
 camRgb.setPreviewSize(640, 640)
-# camRgb.setPreviewSize(416, 416)
 camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_1080_P)
 camRgb.setInterleaved(False)
 camRgb.setColorOrder(dai.ColorCameraProperties.ColorOrder.BGR)
