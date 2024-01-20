@@ -83,10 +83,11 @@ class RoverNaviagtion:
         """
 
         if self.camera_stabilized: # we can only search for aruco tags when the rover is stopped
-            tvec = self.aruco_autonomy.search_for_post()
+            tvec = ArucoTagAutonomy.search_for_post()
 
             if tvec is not None: # if we've found a post, we can set the GPS target to the post's GPS coordinates
-                print(f"!!!Found Aruco Post {self.aruco_autonomy.target_tags}!!!")
+                target = ArucoTagAutonomy.calculate_target_translation()
+                print(f"!!!Found Aruco Post {target}!!!")
                 self.GPS_target = ArucoTagAutonomy.translate_lat_lon(lat=current_GPS[1], lon=current_GPS[0], tvec=tvec, heading=rover_heading)
                 # also need to stop spinning and searching and start navigating to the aruco tag
                 self.spinning_and_searching = False
@@ -107,8 +108,10 @@ class RoverNaviagtion:
 
         else:
             # compute the difference between the current angle and the heading taking into account the wrap around
+            #TODO implement starting_heading or eliminate it
             angle_diff = (rover_heading - self.starting_heading + 180) % 360 - 180  # https://stackoverflow.com/a/7869457
 
+            # Create search_angle variable to equal 30
             if abs(angle_diff) >= self.SEARCH_ANGLE * self.num_failed_searches: # if we've rotated at least 30 degrees, we can stop and search for the aruco tag
                 self.camera_stabilized = True
                 self.change_modes('D')

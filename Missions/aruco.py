@@ -6,11 +6,12 @@ from Autonomous_Systems.AutoHelp import AutoHelp
 from modules.GPS import gpsRead
 from modules.WiFi import WiFi
 from modules.LSM303 import Compass
+from modules.ArucoTagDetector import ArucoTagAutonomy
 
 # Define a list of GPS coordinates for the rover to navigate to
 gps_coordinates = [
-    (37.33, -121.88),  # Example coordinates, replace with actual waypoints
-    (37.34, -121.89),
+    (37.336924389574556, -121.88181061869382),  # Example coordinates, replace with actual waypoints
+    (37.33685774647711, -121.88176166838032),
     # Add more coordinates as needed
 ]
 
@@ -43,8 +44,8 @@ for target_gps in gps_coordinates:
         # Execute the rover's movement based on the computed commands
         WiFi.write_data(rover_commands)
 
-        # Check if an Aruco tag has been detected
-        aruco_detected = rover.check_aruco_detection()
+        # Check if an Aruco tag has been detected   IN BOOLEAN
+        aruco_detected = (ArucoTagAutonomy.search_for_tags() == [], [])
 
         if not aruco_detected:
             print("Aruco tag not detected. Spinning to search...")

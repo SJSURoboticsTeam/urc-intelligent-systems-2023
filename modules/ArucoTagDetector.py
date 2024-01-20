@@ -78,6 +78,7 @@ class ArucoTagAutonomy():
                 return corners, ids
 
         return [], [] # if we don't find the tags we're looking for in any of the frames, return two empty lists so we can check len(corners) to determine if the tags were found
+        #return False
 
     def search_for_post(self):
         """
