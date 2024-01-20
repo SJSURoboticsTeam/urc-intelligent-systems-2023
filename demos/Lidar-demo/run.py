@@ -1,67 +1,40 @@
-from math import floor, pi
+#!/usr/bin/env python3
+# credit to https://github.com/SkoltechRobotics/rplidar/blob/master/rplidar.py for the example
+"""Animates distances and measurment quality"""
 from rplidar import RPLidar
 import matplotlib.pyplot as plt
-import matplotlib.animation as anim
-from matplotlib.axes import Axes
+import numpy as np
+import matplotlib.animation as animation
 
-PORT_NAME = 'COM5'
-lidar = RPLidar(PORT_NAME)
-lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000))
+PORT_NAME = "/dev/ttyUSB0"
+DMAX = 4000
+IMIN = 0
+IMAX = 50
 
 
-def process_data(data):
-    # for angle in range(360):
-    #     distance = data[angle]
-    #     print(distance)
-    print()
-    print(data)
-    print()
-    data = [x for x in data if x != 0]
-    min_distance = min(data)
-    max_distance = max(data)
-    print("Minimum distance: ", min_distance)
-    print("Maximum distance: ", max_distance)
+def update_line(num, iterator, line):
+    scan = next(iterator)
+    offsets = np.array([(np.radians(meas[1]), meas[2]) for meas in scan])
+    line.set_offsets(offsets)
+    intens = np.array([meas[0] for meas in scan])
+    line.set_array(intens)
+    return (line,)
 
-scan_data = [0]*360
 
-fig, axs = plt.subplots(ncols=2, subplot_kw={'projection': 'polar'})
-axl: Axes = axs[0]
-axl.set_title('Upside_down_lidar')
-axr: Axes = axs[1]
-axr.set_title('Upside_up_lidar')
-def update(_):
-    global lidar, lidar_iter
-    try:
-        scan = next(lidar_iter) 
-    except Exception as e:
-        lidar.disconnect()
-        lidar = RPLidar(PORT_NAME)
-        lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000))
-        print(e)
-        return
-    scan = list(reversed(scan))
-    for (_, angle, distance) in scan:
-        scan_data[min([359, floor(angle)])] = distance
-    # process_data(scan_data)
-    axl.clear()
-    axl.plot([2*pi/360*i for i in range(0,360)], scan_data, ".")
-    scan_data_rev = list(reversed(scan_data))
-    axl.set_title('Upside_down_lidar')
-    axr.clear()
-    axr.plot([2*pi/360*i for i in range(0,360)], scan_data_rev, ".")
-    axr.set_title('Upside_up_lidar')
-    fig.tight_layout()
+def run():
+    lidar = RPLidar(PORT_NAME)
+    fig = plt.figure()
+    ax = plt.subplot(111, projection="polar")
+    line = ax.scatter([0, 0], [0, 0], s=5, c=[IMIN, IMAX], cmap=plt.cm.Greys_r, lw=0)
+    ax.set_rmax(DMAX)
+    ax.grid(True)
 
-    return
+    iterator = lidar.iter_scans()
+    ani = animation.FuncAnimation(fig, update_line, fargs=(iterator, line), interval=50)
+    plt.show()
+    lidar.stop()
+    lidar.disconnect()
 
-anime = anim.FuncAnimation(
-    fig,
-    update,
-    1,
-    interval=1,
-    # blit=True
-)
-plt.show()
-lidar.stop()
-lidar.stop_motor()
-lidar.disconnect()
+
+if __name__ == "__main__":
+    run()
