@@ -5,8 +5,6 @@ from pathlib import Path
 import threading
 import time
 import cv2
-import time
-from datetime import datetime
 from dataclasses import dataclass
 
 
@@ -379,17 +377,3 @@ class CameraLocalizer:
             raise Exception(
                 "You appear to have called stop when it was never running in the background :<"
             )
-
-
-if __name__ == "__main__":
-    cam = CameraLocalizer("./trained_models/rockdetection/best-simplified5s.blob")
-
-    block = False
-    cam.start(blocking=block)
-    if not block:
-        startTime = datetime.now()
-        seconds = 30
-        while (datetime.now() - startTime).total_seconds() < seconds:
-            print(cam.getDetections())
-            time.sleep(1)
-        cam.stop()
