@@ -108,8 +108,7 @@ class RoverNaviagtion:
 
         else:
             # compute the difference between the current angle and the heading taking into account the wrap around
-            #TODO implement starting_heading or eliminate it
-            angle_diff = (rover_heading - self.starting_heading + 180) % 360 - 180  # https://stackoverflow.com/a/7869457
+            angle_diff = (rover_heading + 180) % 360 - 180  # https://stackoverflow.com/a/7869457
 
             # Create search_angle variable to equal 30
             if abs(angle_diff) >= self.SEARCH_ANGLE * self.num_failed_searches: # if we've rotated at least 30 degrees, we can stop and search for the aruco tag
