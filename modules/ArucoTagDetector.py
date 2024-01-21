@@ -71,7 +71,10 @@ class ArucoTagAutonomy():
         # the detector doesn't always find the tags, even when standing still, so search for the tag in a few frames first
 
         for _ in range(self.num_frames):
-            _, frame = self.cap.read()  # TODO: add error handling
+            _, frame = self.cap.read()  
+            if not frame:
+                print('No frame, moving to next one')
+                continue
 
             corners, ids = self.detector.detect(frame, tag_ids=self.target_tags)
             if len(corners) > 0:
