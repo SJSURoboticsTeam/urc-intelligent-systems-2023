@@ -10,6 +10,8 @@ if __name__ == "__main__":
         "../../Vision/modules/trained_models/rockdetection/best-simplified5s.blob"
     )
 
+    # if blocking is True, will show preview window of camera output/detections
+    # else, will get detections in the bg
     block = False
     cam.start(blocking=block)
     if not block:
