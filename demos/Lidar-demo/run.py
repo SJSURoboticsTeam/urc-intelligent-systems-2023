@@ -7,7 +7,7 @@ from matplotlib.collections import LineCollection
 from threading import Thread
 import time
 
-PORT_NAME = 'COM6'
+PORT_NAME = 'COM10'
 lidar = None
 lidar_iter = None
 while True:
@@ -58,6 +58,7 @@ try:
     scatR = axr.scatter([], [], marker='o', c='orange')
     obs_collectionR = LineCollection([])
     axr.add_collection(obs_collectionR)
+    axr.set_visible(False)
     def join_near_points(points, flipped = False, thresh=0.2):
         """Given points in polar coordinates,
         Returns a 2D List of obstacles, 
