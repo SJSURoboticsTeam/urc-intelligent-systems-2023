@@ -62,5 +62,5 @@ for target_gps in gps_coordinates:
 
     # Wait for a moment before moving to the next GPS coordinate (adjust as needed)
     time.sleep(2)
-
+ 
 print("Mission completed.")
