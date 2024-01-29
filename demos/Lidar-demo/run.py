@@ -7,37 +7,43 @@ from matplotlib.collections import LineCollection
 from threading import Thread
 import time
 
+#==================================
+# Initial connect and set up Lidar
+#----------------------------------
 PORT_NAME = 'COM10'
 lidar = None
 lidar_iter = None
 while True:
-    try:
+    try: # Try and try again until Lambs become lions and 
         lidar = RPLidar(PORT_NAME)
         lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000))
-        next(lidar_iter)
+        next(lidar_iter) # and until the Lidar is able to yield stuff without errors
     except Exception as e:
         lidar.disconnect()
         print(e)
         continue
     break
+#====================================
 
-scan_data = [0]*360
-
+#====================================
+# Running the Lidar
+#------------------------------------
+scan_data = [0]*360 # buffer to hold distance data
 def look(verbose=True):
+    """Fetch new distance data and update the buffer"""
     global scan_data
     scan = list(reversed(next(lidar_iter)))
     for (_, angle, distance) in scan:
         scan_data[floor(angle)%360] = distance
-    # print()
-    # print(scan_data)
-    # print()
 def spin(stop_check, verbose=True):
+    """Keep fetching and updating buffer with distance data"""
     while not stop_check():
         look()
-
 stop_spinning=False
 t = Thread(target=spin, args=(lambda: stop_spinning, ))
 t.start()
+#====================================
+
 
 try:
     fig, axs = plt.subplots(ncols=2, subplot_kw={'projection': 'polar'})
@@ -49,6 +55,7 @@ try:
     scatL = axl.scatter([], [], marker='o', c='orange')
     obs_collectionL = LineCollection([])
     axl.add_collection(obs_collectionL)
+    axl.set_visible(False)
 
     axr: Axes = axs[1]
     # axr.axis('off')
@@ -58,7 +65,6 @@ try:
     scatR = axr.scatter([], [], marker='o', c='orange')
     obs_collectionR = LineCollection([])
     axr.add_collection(obs_collectionR)
-    axr.set_visible(False)
     def join_near_points(points, flipped = False, thresh=0.2):
         """Given points in polar coordinates,
         Returns a 2D List of obstacles, 
@@ -92,8 +98,9 @@ try:
         # axl.set_rmax(RMAX)
         # scatL.set_offsets([(2*pi/360*i, scan_data[i]) for i in range(0,360)])
         # modded.append(scatL)
-        obs_collectionL.set_segments(join_near_points(scaled_data))
-        modded.append(obs_collectionL)
+
+        # obs_collectionL.set_segments(join_near_points(scaled_data))
+        # modded.append(obs_collectionL)
 
         return modded
 
