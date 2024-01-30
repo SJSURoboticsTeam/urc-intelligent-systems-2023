@@ -40,8 +40,8 @@ def spin(stop_check, verbose=True):
     while not stop_check():
         look()
 stop_spinning=False
-t = Thread(target=spin, args=(lambda: stop_spinning, ))
-t.start()
+lidar_thread = Thread(target=spin, args=(lambda: stop_spinning, ))
+lidar_thread.start()
 #====================================
 
 
@@ -76,7 +76,7 @@ try:
             angle  = 2*pi/360*(i+1) if not flipped else 2*pi/360*(360-i+1)
             obstacles[-1].append((angle,p))
         # check if first and last obstacles are actually the same obstacles
-        if (obstacles[-1][-1][1]-obstacles[0][0][1]):
+        if (obstacles[-1][-1][1]-obstacles[0][0][1] <= thresh):
             obstacles[0] = obstacles[-1] + obstacles[0]
             obstacles.pop()
         print()
@@ -120,7 +120,7 @@ except Exception as e:
 
 
 stop_spinning=True
-t.join()
+lidar_thread.join()
 lidar.stop()
 lidar.stop_motor()
 lidar.disconnect()
