@@ -51,20 +51,20 @@ while True:
 #====================================
 # Running the Lidar
 #------------------------------------
-scan_data = list() # buffer to hold distance data # use same ters scan/measures/
-def fill_measures(distances):
+scanned_data = list() # buffer to hold distance data # use same ters scan/measures/
+def set_scan(distances):
     "Sets and array of (signal quality, angle (rad), distance (m))"
-    global scan_data
-    scan_data = distances
-def get_measures(flipped=True):
+    global scanned_data
+    scanned_data = distances
+def get_scan(flipped=True):
     "Gets and array of (signal quality, angle (rad), distance (m))"
     sign = -1 if flipped else 1
-    distances = [(quality, sign*2*pi*angle/360, distance/1000.0) for quality, angle, distance in scan_data]
+    distances = [(quality, sign*2*pi*angle_deg/360, distance_mm/1000.0) for quality, angle_deg, distance_mm in scanned_data]
     return distances
 
 def look():
     """Fetch new distance data and update the buffer"""
-    fill_measures(next(lidar_iter))
+    set_scan(next(lidar_iter))
 def spin(stop_check):
     """Keep fetching and updating buffer with distance data"""
     while not stop_check(): # You will notice there is no sleep to rest between loops.
@@ -74,16 +74,17 @@ def spin(stop_check):
 stop_spinning=False
 lidar_thread = Thread(target=spin, args=(lambda: stop_spinning, ), name="Lidar_consumption_thread")
 lidar_thread.start()
+print("started Lidar Scanning Thread")
 #====================================
 
 #======================================
 # Maintaining Measurements with History
 #--------------------------------------
-history_size = 10 # Hold 2 measurements in history
-measurement_history = [[]]*history_size 
+history_size = 10
+measurement_history = [[]]*history_size # A list of history_size empty lists
 def update_measurement():
     global measurement_history
-    measurement_history = [get_measures(),*measurement_history[:-1]]
+    measurement_history = [get_scan(),*measurement_history[:-1]]
 
 #-------------------------------------------
 # Joining Neighboring points into obstacles
@@ -93,7 +94,7 @@ thresh = 1 # In meters
 obstacles = None    # List of obstacles
                     # Each obstacle is a list of points
                     # None if not initialized
-def point_distance(p1, p2):
+def calc_polar_distance(p1, p2):
     d1 = sqrt(abs(p1[1]**2 + p2[1]**2 - 2*p1[1]*p2[1]*cos(p1[0]-p2[0])))
     return d1
 def join_points(points):
@@ -103,10 +104,10 @@ def join_points(points):
     except StopIteration:
         return None
     for p in piter:
-        if point_distance(groups[-1][-1], p) > thresh: # last group's last point
+        if calc_polar_distance(groups[-1][-1], p) > thresh: # last group's last point
             groups.append([])
         groups[-1].append(p)
-    if point_distance(groups[0][0], groups[-1][-1]) < thresh and len(groups) > 1:
+    if calc_polar_distance(groups[0][0], groups[-1][-1]) < thresh and len(groups) > 1:
         groups[0] = groups[0] + groups[-1]
         groups.pop()
     return groups
@@ -121,7 +122,7 @@ def keep_updating_obstacles(stop_updating):
         update_measurement()
         measures = sum(measurement_history, [])
         measures = sorted(measures, key=lambda i: i[1])
-        obstacles = join_points(((a,d) for q,a,d in measures)) 
+        obstacles = join_points(((a,d) for q,a,d in measures))  #quality, angle, distance
 stop_updating_obstacles = False
 obstacle_thread = Thread(target=keep_updating_obstacles, args=(lambda: stop_updating_obstacles, ), name="Obstacle_maintaining_thread")
 obstacle_thread.start()
