@@ -19,7 +19,7 @@ Here are the tasks that will each get its own thread.
 
 """
 
-from math import floor, pi, sqrt, cos
+from math import floor, pi, sqrt, cos, sin
 from rplidar import RPLidar
 import matplotlib.pyplot as plt
 import matplotlib.animation as anim
@@ -126,6 +126,27 @@ def keep_updating_obstacles(stop_updating):
 stop_updating_obstacles = False
 obstacle_thread = Thread(target=keep_updating_obstacles, args=(lambda: stop_updating_obstacles, ), name="Obstacle_maintaining_thread")
 obstacle_thread.start()
+
+#===================================================
+# Navigation Thread
+# Thread to route the navigation (Doing this in cartesian coordinates)
+# Current point is always (0,0)
+#-------------------------
+dest = (0, 5) # 5 meter in front of where we are
+def find_path():
+    obs = [[(r*cos(a), r*sin(a)) for r,a in ob] for ob in obstacles]
+    neighbour_vectors = np.array([
+        [ 1, 0],
+        [ 0, 1],
+        [-1, 0],
+        [ 0,-1]
+    ])
+    def get_neighbours(p):
+        return [p+n for n in neighbour_vectors]
+    # Simple breadth first search
+    q = [(0,0)]
+    
+
 
 
 
