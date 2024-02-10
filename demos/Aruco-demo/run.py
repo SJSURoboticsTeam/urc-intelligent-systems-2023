@@ -1,10 +1,12 @@
 import sys
 import cv2
-sys.path.append( '/Users/mymac/Developer/Robotics/intelligent_systems/urc-intelligent_systems-2022')
+import numpy as np
+
+sys.path.append("../../")
 from modules.ArucoTagDetector import ArucoTagDetector
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Create a new ArucoTagDetector
     arucoTagDetector = ArucoTagDetector()
 
@@ -15,7 +17,7 @@ if __name__ == '__main__':
 
     # check if the camera is open
     if not camera.isOpened():
-        raise ValueError(f'Could not open camera {camera}')
+        raise ValueError(f"Could not open camera {camera}")
 
     # loop until the user presses q
     while True:
@@ -27,17 +29,27 @@ if __name__ == '__main__':
         # loop through the tags and draw them using opencv
         for markerCorner, id in zip(corners, ids):
             # polyLine takes an iterable of points, and markerCorner is a 2d array of top-left, top-right, bottom-right, bottom-left points
-            cv2.polylines(image, [markerCorner], True, (0, 255, 0), 2)
+            cv2.polylines(
+                image,
+                [np.array(markerCorner, dtype=np.int32).reshape(-1, 1, 2)],
+                True,
+                (0, 255, 0),
+                2,
+            )
             # draw the marker id
-            cv2.putText(image, str(id), (markerCorner[0][0], markerCorner[0][1]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(
+                image,
+                str(id),
+                (int(markerCorner[0][0]), int(markerCorner[0][1])),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                (0, 255, 0),
+                2,
+            )
 
         # show the image
-        cv2.imshow('aruco tag detector', image)
+        cv2.imshow("aruco tag detector", image)
 
         # if the user presses q, then exit
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
-
-
-
-

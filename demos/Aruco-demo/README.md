@@ -12,6 +12,10 @@ First, you have to print out the Aruco tag. You can just print `aruco_0.png` on 
 It may be a bit distorted, but it should be good enough for testing. The tag should be 15x15cm, which will take up most
 of the width of the page. If it's a little large or a little small, that's okay too.
 
+add ls as the key for the last bit
+1 red - default
+2 blue
+3 flashing green
 ### Setting up the Camera
 
 For a normal USB camera, you can just plug it in and use the `arugo-tag-detection.ipynb` notebook.

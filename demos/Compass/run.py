@@ -1,12 +1,15 @@
 import sys
 import time
-sys.path.append( '../../')
+
+sys.path.append("../../")
 from modules.LSM303 import Compass
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         compass = Compass()
-        print("Compass initialized, try to keep it away from other electronics that might interfere with the magnetic field")
+        print(
+            "Compass initialized, try to keep it away from other electronics that might interfere with the magnetic field"
+        )
     except:
         print("Make sure your LSM303 is plugged in!")
         exit(1)
