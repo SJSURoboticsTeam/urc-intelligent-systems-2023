@@ -161,7 +161,7 @@ try:
     obstacle_groups = LineCollection([], color=(0,0,0,0.5), linewidths=5)
     ax.add_collection(obstacle_groups)
 
-    rmax=5
+    rmax=10
     rmax_=0.01
     ax.set_rmax(rmax)
     def update_plot(_):
