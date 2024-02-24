@@ -11,10 +11,14 @@ config = {
     "service_file": "lidar.txt",
     "update_frequency": 20, # Hz
     "history_size": 10,
+        "service_event_verbose":True,
+    "verbose_lidar_exceptions":False
 }
 _point_clouds = None # This will be the raw point cloud
 _obstacles = None # This will be the points clustered into obstacles
 def run_lidar(service_is_active):
+    if config["service_event_verbose"]:
+        print("Starting Lidar Service")
     #==================================
     # Initial connect and set up Lidar
     #----------------------------------
@@ -27,9 +31,9 @@ def run_lidar(service_is_active):
             lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000))
             next(lidar_iter) # and until the Lidar is able to yield stuff without errors
         except RPLidarException as e:
-            print("======================RPLidarException================================")
-            # print(traceback.format_exc())
-            print(e)
+            if config['verbose_lidar_exceptions']:
+                print("======================RPLidarException================================")
+                print(e)
             lidar.disconnect()
             continue
         except:
@@ -65,7 +69,8 @@ def run_lidar(service_is_active):
     _stop_spinning=False
     lidar_thread = Thread(target=spin, args=(lambda: _stop_spinning, ), name="Lidar_consumption_thread")
     lidar_thread.start()
-    print("started Lidar Scanning Thread")
+    if config['service_event_verbose']:
+        print("started Lidar Scanning Thread")
     #====================================
 
     #======================================
@@ -137,14 +142,18 @@ def run_lidar(service_is_active):
 
 
     stop_updating_obstacles=True
-    print("waiting for obstacle thread to join")
+    if config['service_event_verbose']:
+        print("waiting for obstacle thread to join")
     obstacle_thread.join()
     _stop_spinning=True
-    print("waiting for lidar thread to join")
+    if config['service_event_verbose']:
+        print("waiting for lidar thread to join")
     lidar_thread.join()
     lidar.stop()
     lidar.stop_motor()
     lidar.disconnect()
+    if config["service_event_verbose"]:
+        print("Stopping Lidar Service")
 
 def get_point_clouds():
     """
@@ -165,6 +174,8 @@ def get_obstacles():
 _thread = None
 _running = False
 def start_lidar_service():
+    if config['service_event_verbose']:
+        print("Called start_lidar_service")
     global _thread, _running
     if _running:
         raise Exception("Tried to Start Lidar Service but it was already running.")
@@ -173,6 +184,8 @@ def start_lidar_service():
     _thread.start()
 
 def stop_lidar_service():
+    if config['service_event_verbose']:
+        print("Called stop_lidar_service")
     global _running, _thread
     _running = False
     _thread.join()
