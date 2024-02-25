@@ -12,7 +12,7 @@ from shapely import LineString, intersects
 import heapq
 
 config = {
-    "step_meters": 1,
+    "step_meters": 0.5,
     "neighbors": 4,
     "initial_radians": pi/4,
     "update_frequency": 20, #Hz
@@ -58,16 +58,28 @@ def chart_route(goal, obstacles):
         np.random.shuffle(neighbors)
         return neighbors
     
+    def heuristic_cost(pos):
+        return np.linalg.norm(goal-pos)*5
+    def step_cost(pos, nxt):
+        if pos is None:
+            return 0
+        return np.linalg.norm(np.array(nxt)-pos)
     backlinks = { }
-    q = [(cur, None)]
-    while q:
+    arival_cost = { None:0 }
+    q = [(heuristic_cost(cur),cur, None)]
+    iter_lim = 50
+    while q and iter_lim > 0:
+        iter_lim -= 1
         # print()
         # print(q)
-        cur, prev = q.pop(0)
+        _, cur, prev = heapq.heappop(q)
         if cur in backlinks:
             continue
         backlinks[cur] = prev
-        q.extend([(tuple(n), cur) for n in get_neighbors(cur)])
+        arival_cost[cur] = arival_cost[prev] + step_cost(prev, cur)
+        # q.extend([(tuple(n), cur) for n in get_neighbors(cur)])
+        for n in get_neighbors(cur):
+            heapq.heappush(q, (heuristic_cost(n)+arival_cost[cur]+step_cost(cur, n), tuple(n), cur))
     global _tree
     def cart2polar(coord):
         x, y = coord
