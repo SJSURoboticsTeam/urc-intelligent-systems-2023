@@ -44,3 +44,35 @@ class WiFi:
                 print('Failed to send data: status code', self.response.status_code)
         except requests.exceptions.RequestException as e:
             print('Error sending data:', e)
+
+class Modes:
+    DRIVE="D"
+    SPIN="S"
+    TRANSLATE="T"
+def make_command(mode=None, speed_percent=None, angle_degrees=None):
+    """
+    Create a command to be written to the rover
+
+    Parameters
+    ----------
+    mode: Specify the mode in which to interpret command
+            D: Drive, S: Spin, T: Translate
+            Default to "D"
+    speed_percent: Specify the speed as a % of max speed. Can be +-
+    angle_degree: Specify angle the rover should deviate by
+            Look forward to this parameter being modified in the future
+    """
+    command = {
+        "HB": 0,        # Heart Beat
+        "IO": 1,        # Is Operational
+        "WO": 0,        # Wheel Orientation
+        "DM": "D",      # Drive mode {D: Drive, S: Spin, T: Translate}
+        "CMD": [0,0]    # Command [Speed, Angle in Degrees]
+    }
+    if mode is not None:
+        command["DM"] = mode
+    if speed_percent is not None:
+        command['CMD'][0] = speed_percent
+    if angle_degrees is not None:
+        command["CMD"][1] = angle_degrees
+    return command
