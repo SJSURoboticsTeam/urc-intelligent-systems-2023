@@ -10,7 +10,7 @@ import json
 config = {
     "service_file": "lidar.txt",
     "update_frequency": 20, # Hz
-    "history_size": 5,
+    "history_size": 7,
     "service_event_verbose":True,
     "verbose_lidar_exceptions":False
 }

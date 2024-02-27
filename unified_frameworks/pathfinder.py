@@ -30,6 +30,7 @@ config = {
     "update_frequency": 20, #Hz How frequently to update the shared path and exploration tree
     "explore_frequency": float("inf"), #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
+    "idx_sectors": 11,
     "shuffle_neighbors": True,
     "verbose_service_events": True,
     "time_analysis": True
@@ -93,29 +94,12 @@ def get_neighbors(polar_pos):
     np.random.shuffle(polar_neighbors) if config['shuffle_neighbors'] else None
     return polar_neighbors
 @track_time
-def get_collision_potential2(polar_pos, obstacles: list[LineString]):
-    if not obstacles: return 0
-    pos = polar_to_cart(polar_pos)
-    col_points = sum([list(obs.coords) for obs in obstacles], [])
-    min_dis = min([np.linalg.norm(pos-col_p) for col_p in col_points])
-    return (0.5/min_dis)
-@track_time
-def get_collision_potential3(polar_pos, obstacle_points):
-    """freq ~ 600Hz"""
-    if not obstacle_points: return 0
-    min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
-    return 1/min_dis if min_dis!=0 else float('inf')
-@track_time
 def get_collision_potential(polar_pos, get_near_points):
-    """freq ~ 1845Hz"""
-    # print("hello")
     obstacle_points = get_near_points(polar_pos)
     if not obstacle_points: 
-        # print("No near obstacles")
         return 0
     min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
     pot = 1/min_dis**2 if min_dis!=0 else float('inf')
-    # print(pot)
     return pot
 @track_time
 def check_collision(polar_step, obstacles: list[LineString]):
@@ -160,7 +144,7 @@ def run_pathfinder(is_pathfinder_running):
         obstacles = worldview.get_obstacles()
         obstacles = [LineString([polar_to_cart(p) for p in obs]) for obs in obstacles if len(obs)>1] if obstacles is not None else []
         points = worldview.get_points()
-        sectors = [i*2*pi/10 for i in range(10)]
+        sectors = [i*2*pi/config['idx_sectors'] for i in range(config['idx_sectors'])]
         idx = {s:[] for s in sectors}
         for p in ([] if points is None else points):
             # print(p)
@@ -169,20 +153,12 @@ def run_pathfinder(is_pathfinder_running):
         def get_near_points(polar_pos):
             pts = near_pts(polar_pos)
             i = 0
-            while not pts:
-                if i == 5: break
+            while not pts and i < config['idx_sectors']//2:
                 i+=1
                 pts = near_pts(polar_pos+(i*2*pi/10,0)) + near_pts(polar_pos+(-i*2*pi/10,0))
             if not pts:
-                print()
-                print(polar_pos)
-                print(json.dumps(idx, indent=2))
-                print(points)
                 pass
             return pts
-
-
-
 
         while time.time() - ts < 1/config['update_frequency']:
         # for i in range(20):
