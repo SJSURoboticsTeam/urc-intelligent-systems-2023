@@ -28,7 +28,6 @@ def run_lidar(service_is_active):
     ts = time.time()
     while service_is_active():
         if config['service_event_verbose'] and time.time()-ts > 1:
-            print(".")
             ts = time.time()
         try: # Try and try again until Lambs become lions and 
             lidar = RPLidar(PORT_NAME)
