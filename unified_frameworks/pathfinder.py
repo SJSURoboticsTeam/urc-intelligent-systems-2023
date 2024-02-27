@@ -26,37 +26,42 @@ config = {
     "step_meters": 0.5,
     "neighbors": 6,
     "initial_radians": pi/2,
-    "update_frequency": 20, #Hz
+    "update_frequency": 5, #Hz How frequently to update the shared path and exploration tree
+    "explore_frequency": 600, #Hz How frequently to expand on the exploration tree
+    "decimal_precision":5,
+    "shuffle_neighbors": False,
     "verbose_service_events": True,
 }
 
 _goal = (pi/2, 8) # 8 meters at 90 degrees
-_path = [(0,0)] # Path to the point closest to the goal
+_path = [] # Path to the point closest to the goal
 _tree = [] # Tree of explored area
 _prev = None
 
 def polar_dis(p1, p2):
     """Distance between polar coordinates p1 and p2"""
     return sqrt(abs(p1[1]**2 + p2[1]**2 - 2*p1[1]*p2[1]*cos(p1[0]-p2[0])))
-def polar_to_cart(p):
-    return
+def polar_to_cart(p) -> np.ndarray:
+    return np.round(p[1]*np.array([cos(p[0]), sin(p[0])]), config['decimal_precision'])
+def cart_to_polar(coord):
+    x, y = coord
+    return np.round((atan2(y, x), np.linalg.norm(coord)),config['decimal_precision'])
 def polar_addition(p1, p2):
     _p1 = p1[1]*np.array(cos(p1[0]), sin(p1[0]))
     _p2 = p2[1]*np.array(cos(p2[0]), sin(p2[0]))
     res = _p1+_p2
     return (atan2(res[1], res[0]), np.linalg.norm(res))
-
-_backlinks = {}
-_arivalcosts = { None: 0 }
-_cur = (0,0)
 def heuristic_cost(pos_polar):
-    return 0
-    # return polar_dis(pos_polar, _goal)
+    # return 0
+    return polar_dis(pos_polar, _goal)
 def step_cost(cur, prev):
     if prev is None or cur is None:
             return 0
     return polar_dis(prev, cur)
 
+_backlinks = {}
+_arivalcosts = { None: 0 }
+_cur = (0,0)
 _q = [(heuristic_cost(_cur), _cur, None)]
 def reset():
     global _backlinks, _arivalcosts, _cur, _q
@@ -64,37 +69,61 @@ def reset():
     _arivalcosts = { None: 0 }
     _cur = (0,0)
     _q = [(heuristic_cost(_cur), _cur, None)]
+def get_neighbors(polar_pos):
+    cart_pos = polar_to_cart(polar_pos)
+    polar_vectors = [(i*(2*pi/config['neighbors'])+config['initial_radians'], config['step_meters']) for i in range(config['neighbors'])]
+    cart_neighbors = [polar_to_cart(p) + cart_pos for p in polar_vectors]
+    cart_neighbors = np.round(cart_neighbors,config['decimal_precision'])
+    polar_neighbors = [cart_to_polar(p) for p in cart_neighbors]
+    polar_neighbors = np.round(polar_neighbors,config['decimal_precision'])
+    # neighbors = cart_vectors + cart_pos
+    # neighbors = [n for n in neighbors if np.linalg.norm(n) < 10] # Only points upto 5m for center
+    # neighbors = [n for n in neighbors if not any(
+    #     [intersects(so, LineString([pos, n])) for so in shapely_obstacles]
+    # )]
+    np.random.shuffle(polar_neighbors) if config['shuffle_neighbors'] else None
+    return polar_neighbors
+def has_obstacle_collision(step_polar, obstacles_polar):
+    """Checks if the step (pos A -> pos B) tuple will intersect any obstacle in the obstacle list.
+    Inputs are in polar coordinates"""
+    if any([i is None for i in step_polar]): return False
+    step = LineString([polar_to_cart(p) for p in step_polar])
+    obstacles = [
+        LineString([polar_to_cart(p) for p in obs])
+        for obs in obstacles_polar
+    ]
+    return any([intersects(step, obs)] for obs in obstacles)
+def get_collision_potential(polar_pos, obstacles: list[LineString]):
+    # return 0
+    if not obstacles: return 0
+    pos = polar_to_cart(polar_pos)
+    col_points = sum([list(obs.coords) for obs in obstacles], [])
+    min_dis = min([np.linalg.norm(pos-col_p) for col_p in col_points])
+    return (0.5/min_dis)
 
-def exploration_step(obstacles):
-    _, _cur, prev = heapq.heappop(_q)
-    if _cur in _backlinks:
-        return
-    _backlinks[_cur]=prev
-    _arivalcosts[_cur]=_arivalcosts[prev] + step_cost(prev, _cur)
-    neighbor_vectors = np.array([
-        ( i*(2*pi/config["neighbors"]), config['step_meters'] ) 
-        for i in range(config['neighbors'])
-    ])
-    neighbors = np.round([_cur + n for n in neighbor_vectors],2)
-    shapely_obstacles = []
-    for o in obstacles if obstacles is not None else []:
-        # o = [d*np.array([cos(a), sin(a)]) for a,d in o]
-        o = polar_to_cart(o)
-        if o is None: continue
-        if len(o) <= 1: continue
-        shapely_obstacles.append(LineString(o))
-    neighbors = [ n for n in neighbors if not any(
-        [intersects(so, LineString(polar_to_cart(_cur), polar_to_cart(n))) for so in shapely_obstacles]
-    )]
-    np.random.shuffle(neighbors)
-    for n in neighbors:
-        heapq.heappush(_q, (_arivalcosts[_cur]+step_cost(_cur, n)+heuristic_cost(n), tuple(n), _cur))
+def make_tree():
     global _tree
     _tree = [[k, _backlinks[k]] for k in _backlinks if _backlinks[k] is not None]
-
-
-
+def make_path():
+    global _path
     
+def exploration_step(obstacles:list[LineString]):
+    global _cur
+    if not _q: return
+    _, _cur, prev = heapq.heappop(_q)
+    # if _cur in _backlinks: return
+    if any([polar_dis(_cur, k) < 0.01 for k in _backlinks]): return
+    collision = True
+    if prev is None:
+        collision = False
+    if collision:
+        step = LineString([polar_to_cart(prev),polar_to_cart(_cur)])
+        collision = any([intersects(step, obs) for obs in obstacles])
+    if collision:
+        return
+    _backlinks[_cur] = prev
+    for n in get_neighbors(_cur):
+        heapq.heappush(_q,(heuristic_cost(n)+get_collision_potential(n, obstacles), tuple(n), _cur))
 
 def chart_route(goal, obstacles):
     """Internally using cartesian coordinates, externally everything is polar"""
@@ -159,15 +188,15 @@ def run_pathfinder(is_pathfinder_running):
     
     worldview.start_worldview_service()
     while is_pathfinder_running():
-        # chart_route(_goal, worldview.get_obstacles())
-        # time.sleep(1/config["update_frequency"])
         reset()
         ts = time.time()
+        obstacles = worldview.get_obstacles()
+        obstacles = [LineString([polar_to_cart(p) for p in obs]) for obs in obstacles if len(obs)>1] if obstacles is not None else []
         while time.time() - ts < 1/config['update_frequency']:
-            exploration_step(worldview.get_obstacles())
-            time.sleep(0.001/config['update_frequency'])
-            pass
-
+        # for i in range(20):
+            exploration_step(obstacles)
+            time.sleep(1/config['explore_frequency'])
+        make_tree()
 
     worldview.stop_worldview_service()
 

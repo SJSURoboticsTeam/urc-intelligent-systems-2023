@@ -2,6 +2,7 @@
 from threading import Thread
 import time
 
+
 class Service():
     def __init__(self, service_func, name) -> None:
         """

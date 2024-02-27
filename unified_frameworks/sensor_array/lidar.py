@@ -10,7 +10,7 @@ import json
 config = {
     "service_file": "lidar.txt",
     "update_frequency": 20, # Hz
-    "history_size": 10,
+    "history_size": 1,
         "service_event_verbose":True,
     "verbose_lidar_exceptions":False
 }
@@ -25,7 +25,11 @@ def run_lidar(service_is_active):
     PORT_NAME = 'COM10'
     lidar = None
     lidar_iter = None
+    ts = time.time()
     while service_is_active():
+        if config['service_event_verbose'] and time.time()-ts > 1:
+            print(".")
+            ts = time.time()
         try: # Try and try again until Lambs become lions and 
             lidar = RPLidar(PORT_NAME)
             lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000))
@@ -40,6 +44,7 @@ def run_lidar(service_is_active):
             print("Lidar Service Failed before lidar could start")
             print(traceback.format_exc())
             sys.exit(1)
+        print()
         break
     #====================================
 
@@ -196,7 +201,7 @@ def lidar_service_is_running():
 if __name__=='__main__':
     start_lidar_service()
     # time.sleep(30)
-    for _ in range(15):
-        print(get_point_clouds())
+    for _ in range(7):
+        # print(get_point_clouds())
         time.sleep(1)
     stop_lidar_service()
