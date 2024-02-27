@@ -107,12 +107,16 @@ def get_collision_potential3(polar_pos, obstacle_points):
     return 1/min_dis if min_dis!=0 else float('inf')
 @track_time
 def get_collision_potential(polar_pos, get_near_points):
-    """freq ~ Hz"""
+    """freq ~ 1845Hz"""
     # print("hello")
     obstacle_points = get_near_points(polar_pos)
-    if not obstacle_points: return 0
+    if not obstacle_points: 
+        # print("No near obstacles")
+        return 0
     min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
-    return 1/min_dis**2 if min_dis!=0 else float('inf')
+    pot = 1/min_dis**2 if min_dis!=0 else float('inf')
+    # print(pot)
+    return pot
 @track_time
 def check_collision(polar_step, obstacles: list[LineString]):
     if any([i is None for i in polar_step]): return False
@@ -140,6 +144,7 @@ def exploration_step(obstacles:list[LineString], points):
     _arivalcosts[_cur] = _arivalcosts[prev] + step_cost(prev, _cur)
     for n in get_neighbors(_cur):
         pot = get_collision_potential(n, points)
+        # print(pot)
         heapq.heappush(_q,((0*_arivalcosts[_cur]+0*step_cost(_cur, n) + heuristic_cost(n)+ pot,np.random.rand()), tuple(n), _cur))
 
 
@@ -157,10 +162,27 @@ def run_pathfinder(is_pathfinder_running):
         points = worldview.get_points()
         sectors = [i*2*pi/10 for i in range(10)]
         idx = {s:[] for s in sectors}
-        for p in [] if points is None else points:
-            idx[min(sectors, key=lambda s: abs(s-p[0]))].append(p)
+        for p in ([] if points is None else points):
+            # print(p)
+            idx[min(sectors, key=lambda s: abs(s-(p[0]%(2*pi))))].append(p)
+        near_pts = lambda p: idx[min(sectors, key=lambda s: abs(s-(p[0]%(2*pi))))]
         def get_near_points(polar_pos):
-            return idx[min(sectors, key=lambda s: abs(s-(polar_pos[0]%(2*pi))))]
+            pts = near_pts(polar_pos)
+            i = 0
+            while not pts:
+                if i == 5: break
+                i+=1
+                pts = near_pts(polar_pos+(i*2*pi/10,0)) + near_pts(polar_pos+(-i*2*pi/10,0))
+            if not pts:
+                print()
+                print(polar_pos)
+                print(json.dumps(idx, indent=2))
+                print(points)
+                pass
+            return pts
+
+
+
 
         while time.time() - ts < 1/config['update_frequency']:
         # for i in range(20):
