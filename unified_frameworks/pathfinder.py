@@ -27,7 +27,7 @@ config = {
     "step_meters": 0.25,
     "neighbors": 6,
     "initial_radians": pi/2,
-    "update_frequency": 20, #Hz How frequently to update the shared path and exploration tree
+    "update_frequency": 30, #Hz How frequently to update the shared path and exploration tree
     "explore_frequency": float("inf"), #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
     "idx_sectors": 11,
@@ -65,7 +65,7 @@ def cart_to_polar(coord):
     return np.round((atan2(y, x), np.linalg.norm(coord)),config['decimal_precision'])
 @track_time
 def heuristic_cost(pos_polar):
-    return 0 if _goal is None else polar_dis(pos_polar, _goal)*0
+    return 0 if _goal is None else polar_dis(pos_polar, _goal)
 @track_time
 def step_cost(cur, prev):
     if prev is None or cur is None:
@@ -99,7 +99,7 @@ def get_collision_potential(polar_pos, get_near_points):
     if not obstacle_points: 
         return 0
     min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
-    pot = 1/min_dis**2 if min_dis!=0 else float('inf')
+    pot = 0.1/min_dis**2 if min_dis!=0 else float('inf')
     return pot
 @track_time
 def check_collision(polar_step, obstacles: list[LineString]):
@@ -113,7 +113,14 @@ def make_tree():
     _tree = [[k, _backlinks[k]] for k in _backlinks if _backlinks[k] is not None]
 @track_time
 def make_path():
+    if not _backlinks.keys(): return
+    near_point = min(_backlinks, key=lambda k: polar_dis(k, _goal))
+    path = [near_point]
+    while path[-1] is not None:
+        path.append(_backlinks[path[-1]])
+    path.pop()
     global _path
+    _path = path
     
 @track_time
 def exploration_step(obstacles:list[LineString], points):
@@ -122,14 +129,14 @@ def exploration_step(obstacles:list[LineString], points):
     _, _cur, prev = heapq.heappop(_q)
     # if _cur in _backlinks: return
     if any([polar_dis(_cur, k) < 0.01 for k in _backlinks]): return
-    if check_collision((prev, _cur), obstacles):
-        return
+    # if check_collision((prev, _cur), obstacles):
+    #     return # Kinda sorta handled by avoiding high collision potential
     _backlinks[_cur] = prev
     _arivalcosts[_cur] = _arivalcosts[prev] + step_cost(prev, _cur)
     for n in get_neighbors(_cur):
         pot = get_collision_potential(n, points)
-        # print(pot)
-        heapq.heappush(_q,((0*_arivalcosts[_cur]+0*step_cost(_cur, n) + heuristic_cost(n)+ pot,np.random.rand()), tuple(n), _cur))
+        cost = _arivalcosts[_cur]+step_cost(_cur, n)+heuristic_cost(n)
+        heapq.heappush(_q,((cost+pot), tuple(n), _cur))
 
 
 def run_pathfinder(is_pathfinder_running):
@@ -171,6 +178,7 @@ def run_pathfinder(is_pathfinder_running):
             with(open("frequency analysis", "w")) as f:
                 f.write(json.dumps({"time":time_anal, "freq":freq_anal}, indent=4))
         make_tree()
+        make_path()
     print()
 
     worldview.stop_worldview_service()
@@ -191,6 +199,7 @@ def stop_pathfinder_service():
     _service.stop_service()
 
 def get_path():
+    # print(_path)
     return _path
 def get_tree_links():
     return _tree

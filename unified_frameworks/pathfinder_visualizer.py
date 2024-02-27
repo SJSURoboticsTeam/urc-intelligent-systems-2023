@@ -8,7 +8,7 @@ import pathfinder
 import time
 
 config = {
-    "blit": False
+    "blit": True
 }
 # worldview.config['']
 pathfinder.start_pathfinder_service()
