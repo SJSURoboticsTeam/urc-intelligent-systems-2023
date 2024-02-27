@@ -109,7 +109,7 @@ def run_lidar(service_is_active):
                 groups.append([])
             groups[-1].append(p)
         if calc_polar_distance(groups[0][0], groups[-1][-1]) < thresh and len(groups) > 1:
-            groups[0] = groups[0] + groups[-1]
+            groups[0] = groups[-1] + groups[0]
             groups.pop()
         return groups
 
