@@ -11,7 +11,7 @@ config = {
     "service_file": "lidar.txt",
     "update_frequency": 20, # Hz
     "history_size": 5,
-        "service_event_verbose":True,
+    "service_event_verbose":True,
     "verbose_lidar_exceptions":False
 }
 _point_clouds = None # This will be the raw point cloud

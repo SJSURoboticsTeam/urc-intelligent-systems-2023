@@ -24,13 +24,13 @@ import heapq
 import json
 
 config = {
-    "step_meters": 0.3,
+    "step_meters": 0.25,
     "neighbors": 6,
     "initial_radians": pi/2,
-    "update_frequency": 40, #Hz How frequently to update the shared path and exploration tree
+    "update_frequency": 20, #Hz How frequently to update the shared path and exploration tree
     "explore_frequency": float("inf"), #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
-    "shuffle_neighbors": False,
+    "shuffle_neighbors": True,
     "verbose_service_events": True,
     "time_analysis": True
 }
@@ -64,7 +64,7 @@ def cart_to_polar(coord):
     return np.round((atan2(y, x), np.linalg.norm(coord)),config['decimal_precision'])
 @track_time
 def heuristic_cost(pos_polar):
-    return 0 if _goal is None else polar_dis(pos_polar, _goal)
+    return 0 if _goal is None else polar_dis(pos_polar, _goal)*0
 @track_time
 def step_cost(cur, prev):
     if prev is None or cur is None:
@@ -100,13 +100,19 @@ def get_collision_potential2(polar_pos, obstacles: list[LineString]):
     min_dis = min([np.linalg.norm(pos-col_p) for col_p in col_points])
     return (0.5/min_dis)
 @track_time
-def get_collision_potential(polar_pos, obstacle_points):
+def get_collision_potential3(polar_pos, obstacle_points):
+    """freq ~ 600Hz"""
     if not obstacle_points: return 0
     min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
-    # pos = polar_to_cart(polar_pos)
-    # col_points = sum([list(obs.coords) for obs in obstacle_points], [])
-    # min_dis = min([np.linalg.norm(pos-col_p) for col_p in col_points])
-    return (0.5/min_dis)
+    return 1/min_dis if min_dis!=0 else float('inf')
+@track_time
+def get_collision_potential(polar_pos, get_near_points):
+    """freq ~ Hz"""
+    # print("hello")
+    obstacle_points = get_near_points(polar_pos)
+    if not obstacle_points: return 0
+    min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
+    return 1/min_dis**2 if min_dis!=0 else float('inf')
 @track_time
 def check_collision(polar_step, obstacles: list[LineString]):
     if any([i is None for i in polar_step]): return False
@@ -128,17 +134,13 @@ def exploration_step(obstacles:list[LineString], points):
     _, _cur, prev = heapq.heappop(_q)
     # if _cur in _backlinks: return
     if any([polar_dis(_cur, k) < 0.01 for k in _backlinks]): return
-    # collision = True
-    # if prev is None:
-    #     collision = False
-    # if collision:
-    #     step = LineString([polar_to_cart(prev),polar_to_cart(_cur)])
-    #     collision = any([intersects(step, obs) for obs in obstacles])
     if check_collision((prev, _cur), obstacles):
         return
     _backlinks[_cur] = prev
+    _arivalcosts[_cur] = _arivalcosts[prev] + step_cost(prev, _cur)
     for n in get_neighbors(_cur):
-        heapq.heappush(_q,(heuristic_cost(n)+get_collision_potential(n, points), tuple(n), _cur))
+        pot = get_collision_potential(n, points)
+        heapq.heappush(_q,((0*_arivalcosts[_cur]+0*step_cost(_cur, n) + heuristic_cost(n)+ pot,np.random.rand()), tuple(n), _cur))
 
 
 def run_pathfinder(is_pathfinder_running):
@@ -153,9 +155,16 @@ def run_pathfinder(is_pathfinder_running):
         obstacles = worldview.get_obstacles()
         obstacles = [LineString([polar_to_cart(p) for p in obs]) for obs in obstacles if len(obs)>1] if obstacles is not None else []
         points = worldview.get_points()
+        sectors = [i*2*pi/10 for i in range(10)]
+        idx = {s:[] for s in sectors}
+        for p in [] if points is None else points:
+            idx[min(sectors, key=lambda s: abs(s-p[0]))].append(p)
+        def get_near_points(polar_pos):
+            return idx[min(sectors, key=lambda s: abs(s-(polar_pos[0]%(2*pi))))]
+
         while time.time() - ts < 1/config['update_frequency']:
         # for i in range(20):
-            exploration_step(obstacles, points)
+            exploration_step(obstacles, get_near_points)
             # time.sleep(1/config['explore_frequency'])
         if config['time_analysis']:
             n=10
