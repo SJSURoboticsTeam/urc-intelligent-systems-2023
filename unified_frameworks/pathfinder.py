@@ -15,7 +15,7 @@ Thoughts on further development
 """
 
 import worldview
-from math import pi, cos, sin, atan2
+from math import pi, cos, sin, atan2, sqrt
 from unified_utils import Service
 import time
 import numpy as np
@@ -24,8 +24,8 @@ import heapq
 
 config = {
     "step_meters": 0.5,
-    "neighbors": 4,
-    "initial_radians": pi/4,
+    "neighbors": 6,
+    "initial_radians": pi/2,
     "update_frequency": 20, #Hz
     "verbose_service_events": True,
 }
@@ -35,8 +35,66 @@ _path = [(0,0)] # Path to the point closest to the goal
 _tree = [] # Tree of explored area
 _prev = None
 
-# worldview.get_obstacles = lambda: [[(3*pi/4, 5), (1*pi/4, 5)]]
-# worldview.get_obstacles = lambda: []
+def polar_dis(p1, p2):
+    """Distance between polar coordinates p1 and p2"""
+    return sqrt(abs(p1[1]**2 + p2[1]**2 - 2*p1[1]*p2[1]*cos(p1[0]-p2[0])))
+def polar_to_cart(p):
+    return
+def polar_addition(p1, p2):
+    _p1 = p1[1]*np.array(cos(p1[0]), sin(p1[0]))
+    _p2 = p2[1]*np.array(cos(p2[0]), sin(p2[0]))
+    res = _p1+_p2
+    return (atan2(res[1], res[0]), np.linalg.norm(res))
+
+_backlinks = {}
+_arivalcosts = { None: 0 }
+_cur = (0,0)
+def heuristic_cost(pos_polar):
+    return 0
+    # return polar_dis(pos_polar, _goal)
+def step_cost(cur, prev):
+    if prev is None or cur is None:
+            return 0
+    return polar_dis(prev, cur)
+
+_q = [(heuristic_cost(_cur), _cur, None)]
+def reset():
+    global _backlinks, _arivalcosts, _cur, _q
+    _backlinks = {}
+    _arivalcosts = { None: 0 }
+    _cur = (0,0)
+    _q = [(heuristic_cost(_cur), _cur, None)]
+
+def exploration_step(obstacles):
+    _, _cur, prev = heapq.heappop(_q)
+    if _cur in _backlinks:
+        return
+    _backlinks[_cur]=prev
+    _arivalcosts[_cur]=_arivalcosts[prev] + step_cost(prev, _cur)
+    neighbor_vectors = np.array([
+        ( i*(2*pi/config["neighbors"]), config['step_meters'] ) 
+        for i in range(config['neighbors'])
+    ])
+    neighbors = np.round([_cur + n for n in neighbor_vectors],2)
+    shapely_obstacles = []
+    for o in obstacles if obstacles is not None else []:
+        # o = [d*np.array([cos(a), sin(a)]) for a,d in o]
+        o = polar_to_cart(o)
+        if o is None: continue
+        if len(o) <= 1: continue
+        shapely_obstacles.append(LineString(o))
+    neighbors = [ n for n in neighbors if not any(
+        [intersects(so, LineString(polar_to_cart(_cur), polar_to_cart(n))) for so in shapely_obstacles]
+    )]
+    np.random.shuffle(neighbors)
+    for n in neighbors:
+        heapq.heappush(_q, (_arivalcosts[_cur]+step_cost(_cur, n)+heuristic_cost(n), tuple(n), _cur))
+    global _tree
+    _tree = [[k, _backlinks[k]] for k in _backlinks if _backlinks[k] is not None]
+
+
+
+    
 
 def chart_route(goal, obstacles):
     """Internally using cartesian coordinates, externally everything is polar"""
@@ -46,19 +104,11 @@ def chart_route(goal, obstacles):
     angles = [i * (2*pi/config["neighbors"]) + config["initial_radians"] for i in range(config["neighbors"])]
     vectors = np.array([config["step_meters"]*np.array([cos(a), sin(a)]) for a in angles])
     vectors = np.round(vectors, 2)
-
-
-    
     shapely_obstacles = []
     for o in obstacles if obstacles is not None else []:
-        # print()
-        # print(o)
         o = [d*np.array([cos(a), sin(a)]) for a,d in o]
         if len(o) <= 1: continue
-        # print()
-        # print(o)
         shapely_obstacles.append(LineString(o))
-    # shapely_obstacles = [LineString(o) for o in obstacles] if obstacles is not None else []
 
     def get_neighbors(pos):
         neighbors = np.round((vectors + pos),2)
@@ -81,14 +131,11 @@ def chart_route(goal, obstacles):
     iter_lim = 50
     while q and iter_lim > 0:
         iter_lim -= 1
-        # print()
-        # print(q)
         _, cur, prev = heapq.heappop(q)
         if cur in backlinks:
             continue
         backlinks[cur] = prev
         arival_cost[cur] = arival_cost[prev] + step_cost(prev, cur)
-        # q.extend([(tuple(n), cur) for n in get_neighbors(cur)])
         for n in get_neighbors(cur):
             heapq.heappush(q, (heuristic_cost(n)+arival_cost[cur]+step_cost(cur, n), tuple(n), cur))
     global _tree
@@ -104,22 +151,6 @@ def chart_route(goal, obstacles):
     global _path
     _path = [cart2polar(p) for p in path]
 
-    # print()
-    # print(path)
-    # print(np.array(_tree))
-    
-    
-    
-
-
-
-
-    
-    
-
-
-        
-
     pass
 
 def run_pathfinder(is_pathfinder_running):
@@ -128,9 +159,15 @@ def run_pathfinder(is_pathfinder_running):
     
     worldview.start_worldview_service()
     while is_pathfinder_running():
-        chart_route(_goal, worldview.get_obstacles())
-        # print("Still pathfinding")
-        time.sleep(1/config["update_frequency"])
+        # chart_route(_goal, worldview.get_obstacles())
+        # time.sleep(1/config["update_frequency"])
+        reset()
+        ts = time.time()
+        while time.time() - ts < 1/config['update_frequency']:
+            exploration_step(worldview.get_obstacles())
+            time.sleep(0.001/config['update_frequency'])
+            pass
+
 
     worldview.stop_worldview_service()
 
@@ -155,7 +192,4 @@ def get_tree_links():
     return _tree
 
 if __name__=='__main__':
-    # start_pathfinder_service()
-    # time.sleep(10)
-    # stop_pathfinder_service()
     chart_route(None, None)
