@@ -190,7 +190,6 @@ class GPS_Nav:
         if distance <= 3:
             print("Arrived at target!")
             self.goto_next_coordinate()
-            time.sleep(3)
             return self.stop_rover(self.commands)
 
         if abs(direction) > 15:
