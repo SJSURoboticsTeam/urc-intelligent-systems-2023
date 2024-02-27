@@ -21,33 +21,51 @@ import time
 import numpy as np
 from shapely import LineString, intersects
 import heapq
+import json
 
 config = {
     "step_meters": 0.3,
     "neighbors": 6,
     "initial_radians": pi/2,
-    "update_frequency": 5, #Hz How frequently to update the shared path and exploration tree
+    "update_frequency": 40, #Hz How frequently to update the shared path and exploration tree
     "explore_frequency": float("inf"), #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
     "shuffle_neighbors": False,
     "verbose_service_events": True,
+    "time_analysis": True
 }
+
+exe_times = {}
+def track_time(func):
+    def inner(*args, **kwargs):
+        begin = time.time()
+        res = func(*args, **kwargs)
+        exe_times.setdefault(func.__name__, []).append(time.time()-begin)
+        return res
+    return inner if config['time_analysis'] else func
+
+
 
 _goal = (pi/2, 8) # 8 meters at 90 degrees
 _path = [] # Path to the point closest to the goal
 _tree = [] # Tree of explored area
 _prev = None
 
+@track_time
 def polar_dis(p1, p2):
     """Distance between polar coordinates p1 and p2"""
     return sqrt(abs(p1[1]**2 + p2[1]**2 - 2*p1[1]*p2[1]*cos(p1[0]-p2[0])))
+@track_time
 def polar_to_cart(p) -> np.ndarray:
     return np.round(p[1]*np.array([cos(p[0]), sin(p[0])]), config['decimal_precision'])
+@track_time
 def cart_to_polar(coord):
     x, y = coord
     return np.round((atan2(y, x), np.linalg.norm(coord)),config['decimal_precision'])
+@track_time
 def heuristic_cost(pos_polar):
     return 0 if _goal is None else polar_dis(pos_polar, _goal)
+@track_time
 def step_cost(cur, prev):
     if prev is None or cur is None:
             return 0
@@ -57,12 +75,14 @@ _backlinks = {}
 _arivalcosts = { None: 0 }
 _cur = (0,0)
 _q = [(heuristic_cost(_cur), _cur, None)]
+@track_time
 def reset():
     global _backlinks, _arivalcosts, _cur, _q
     _backlinks = {}
     _arivalcosts = { None: 0 }
     _cur = (0,0)
     _q = [(heuristic_cost(_cur), _cur, None)]
+@track_time
 def get_neighbors(polar_pos):
     cart_pos = polar_to_cart(polar_pos)
     polar_vectors = [(i*(2*pi/config['neighbors'])+config['initial_radians'], config['step_meters']) for i in range(config['neighbors'])]
@@ -72,36 +92,53 @@ def get_neighbors(polar_pos):
     polar_neighbors = np.round(polar_neighbors,config['decimal_precision'])
     np.random.shuffle(polar_neighbors) if config['shuffle_neighbors'] else None
     return polar_neighbors
-def get_collision_potential(polar_pos, obstacles: list[LineString]):
+@track_time
+def get_collision_potential2(polar_pos, obstacles: list[LineString]):
     if not obstacles: return 0
     pos = polar_to_cart(polar_pos)
     col_points = sum([list(obs.coords) for obs in obstacles], [])
     min_dis = min([np.linalg.norm(pos-col_p) for col_p in col_points])
     return (0.5/min_dis)
+@track_time
+def get_collision_potential(polar_pos, obstacle_points):
+    if not obstacle_points: return 0
+    min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
+    # pos = polar_to_cart(polar_pos)
+    # col_points = sum([list(obs.coords) for obs in obstacle_points], [])
+    # min_dis = min([np.linalg.norm(pos-col_p) for col_p in col_points])
+    return (0.5/min_dis)
+@track_time
+def check_collision(polar_step, obstacles: list[LineString]):
+    if any([i is None for i in polar_step]): return False
+    step_string = LineString([polar_to_cart(i) for i in polar_step])
+    return any([intersects(step_string, obs) for obs in obstacles])
 
+@track_time
 def make_tree():
     global _tree
     _tree = [[k, _backlinks[k]] for k in _backlinks if _backlinks[k] is not None]
+@track_time
 def make_path():
     global _path
     
-def exploration_step(obstacles:list[LineString]):
+@track_time
+def exploration_step(obstacles:list[LineString], points):
     global _cur
     if not _q: return
     _, _cur, prev = heapq.heappop(_q)
     # if _cur in _backlinks: return
     if any([polar_dis(_cur, k) < 0.01 for k in _backlinks]): return
-    collision = True
-    if prev is None:
-        collision = False
-    if collision:
-        step = LineString([polar_to_cart(prev),polar_to_cart(_cur)])
-        collision = any([intersects(step, obs) for obs in obstacles])
-    if collision:
+    # collision = True
+    # if prev is None:
+    #     collision = False
+    # if collision:
+    #     step = LineString([polar_to_cart(prev),polar_to_cart(_cur)])
+    #     collision = any([intersects(step, obs) for obs in obstacles])
+    if check_collision((prev, _cur), obstacles):
         return
     _backlinks[_cur] = prev
     for n in get_neighbors(_cur):
-        heapq.heappush(_q,(heuristic_cost(n)+get_collision_potential(n, obstacles), tuple(n), _cur))
+        heapq.heappush(_q,(heuristic_cost(n)+get_collision_potential(n, points), tuple(n), _cur))
 
 
 def run_pathfinder(is_pathfinder_running):
@@ -110,20 +147,22 @@ def run_pathfinder(is_pathfinder_running):
 
     # worldview.get_obstacles = lambda: []
     worldview.start_worldview_service()
-    step_times = []
-    steps_measured = 5
     while is_pathfinder_running():
         reset()
         ts = time.time()
         obstacles = worldview.get_obstacles()
         obstacles = [LineString([polar_to_cart(p) for p in obs]) for obs in obstacles if len(obs)>1] if obstacles is not None else []
+        points = worldview.get_points()
         while time.time() - ts < 1/config['update_frequency']:
         # for i in range(20):
-            t = time.time()
-            exploration_step(obstacles)
-            time.sleep(1/config['explore_frequency'])
-            step_times.append(time.time()-t)
-        print(f"Average exploration frequency: {1/sum(step_times[-5:])/5:>5}", end="\r")
+            exploration_step(obstacles, points)
+            # time.sleep(1/config['explore_frequency'])
+        if config['time_analysis']:
+            n=10
+            time_anal = {i: sum(exe_times[i][-n:])/n for i in exe_times}
+            freq_anal = {i: 1/time_anal[i] if time_anal[i]!=0 else float("inf") for i in time_anal}
+            with(open("frequency analysis", "w")) as f:
+                f.write(json.dumps({"time":time_anal, "freq":freq_anal}, indent=4))
         make_tree()
     print()
 

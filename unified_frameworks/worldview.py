@@ -12,6 +12,7 @@ config = {
     "service_event_verbose": True,
 }
 _obstacles = None # List of points clustered into obstacles (radians,meters)
+_points = None # List of points (radians, meters)
 def run_worldview(service_is_active):
     if config["service_event_verbose"]:
         print("Starting Worldview Service")
@@ -19,6 +20,7 @@ def run_worldview(service_is_active):
     global _obstacles
     while service_is_active():
         _obstacles = lidar.get_obstacles()
+        _points = lidar.get_point_clouds()
         time.sleep(1/config['update_frequency'])
     lidar.stop_lidar_service()
     if config["service_event_verbose"]:
@@ -26,6 +28,8 @@ def run_worldview(service_is_active):
 
 def get_obstacles():
     return _obstacles
+def get_points():
+    return _points
 
 _thread = None
 _running = False

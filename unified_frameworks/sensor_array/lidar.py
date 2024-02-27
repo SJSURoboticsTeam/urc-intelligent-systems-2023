@@ -10,7 +10,7 @@ import json
 config = {
     "service_file": "lidar.txt",
     "update_frequency": 20, # Hz
-    "history_size": 1,
+    "history_size": 5,
         "service_event_verbose":True,
     "verbose_lidar_exceptions":False
 }
@@ -31,7 +31,8 @@ def run_lidar(service_is_active):
             ts = time.time()
         try: # Try and try again until Lambs become lions and 
             lidar = RPLidar(PORT_NAME)
-            lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000))
+            # lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000)) # Large buffer is able to hold on to data for longer before yielding it. This means the data received can older (Therefore laggier)
+            lidar_iter = iter(lidar.iter_scans()) # Stick to the default buffer size
             next(lidar_iter) # and until the Lidar is able to yield stuff without errors
         except RPLidarException as e:
             if config['verbose_lidar_exceptions']:
