@@ -24,8 +24,8 @@ import heapq
 import json
 
 config = {
-    "step_meters": 0.25,
-    "neighbors": 6,
+    "step_meters": 1,
+    "neighbors": 16,
     "initial_radians": pi/2,
     "update_frequency": 30, #Hz How frequently to update the shared path and exploration tree
     "explore_frequency": float("inf"), #Hz How frequently to expand on the exploration tree
@@ -120,7 +120,7 @@ def make_path():
         path.append(_backlinks[path[-1]])
     path.pop()
     global _path
-    _path = path
+    _path = list(reversed(path))
     
 @track_time
 def exploration_step(obstacles:list[LineString], points):

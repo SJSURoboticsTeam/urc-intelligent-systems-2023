@@ -18,6 +18,8 @@ class Service():
     def stop_service(self):
         self._running=False
         self._thread.join()
+    def is_running(self):
+        return self._running
 
 def printLog(TAG, log):
     print(f"{TAG}: {log}")
