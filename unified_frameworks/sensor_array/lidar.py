@@ -11,6 +11,7 @@ config = {
     "service_file": "lidar.txt",
     "update_frequency": 20, # Hz
     "history_size": 7,
+    "rover_radius": 0.7,
     "service_event_verbose":True,
     "verbose_lidar_exceptions":False
 }
@@ -55,11 +56,12 @@ def run_lidar(service_is_active):
     def set_scan(distances):
         "Sets and array of (signal quality, angle (rad), distance (m))"
         nonlocal scanned_data
-        scanned_data = distances
+        scanned_data = distances #[(sq, a, m) for sq, a, m in distances if m > config['rover_radius']]
     def get_scan(flipped=True):
         "Gets and array of (signal quality, angle (rad), distance (m))"
         sign = -1 if flipped else 1
         distances = [(quality, sign*2*pi*angle_deg/360, distance_mm/1000.0) for quality, angle_deg, distance_mm in scanned_data]
+        distances = [(q,a,m) for q,a,m in distances if m > config['rover_radius']]
         return distances
 
     def look():

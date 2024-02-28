@@ -1,0 +1,32 @@
+{
+    "time": {
+        "polar_dis": 0.0,
+        "heuristic_cost": 0.0,
+        "reset": 0.0,
+        "check_collision": 0.0007450103759765625,
+        "step_cost": 8.702278137207031e-06,
+        "polar_to_cart": 0.000168609619140625,
+        "get_step_angle": 0.0,
+        "cart_to_polar": 2.8848648071289062e-05,
+        "get_neighbors": 0.0005487203598022461,
+        "get_collision_potential": 0.0,
+        "exploration_step": 0.0013024330139160157,
+        "make_tree": 0.0,
+        "make_path": 0.0
+    },
+    "freq": {
+        "polar_dis": Infinity,
+        "heuristic_cost": Infinity,
+        "reset": Infinity,
+        "check_collision": 1342.26318484383,
+        "step_cost": 114912.43835616438,
+        "polar_to_cart": 5930.859728506787,
+        "get_step_angle": Infinity,
+        "cart_to_polar": 34663.669421487604,
+        "get_neighbors": 1822.421898761677,
+        "get_collision_potential": Infinity,
+        "exploration_step": 767.7938053745332,
+        "make_tree": Infinity,
+        "make_path": Infinity
+    }
+}

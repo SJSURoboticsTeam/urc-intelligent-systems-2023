@@ -24,9 +24,10 @@ import heapq
 import json
 
 config = {
-    "step_meters": 1,
-    "neighbors": 16,
+    "step_meters": 0.5,
     "initial_radians": pi/2,
+    "neighbor_sector": np.array([-1,1])*(45/360)*(2*pi),
+    "neighbors": 5,
     "update_frequency": 30, #Hz How frequently to update the shared path and exploration tree
     "explore_frequency": float("inf"), #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
@@ -55,6 +56,7 @@ _prev = None
 @track_time
 def polar_dis(p1, p2):
     """Distance between polar coordinates p1 and p2"""
+    if p1 is None or p2 is None: return float('inf')
     return sqrt(abs(p1[1]**2 + p2[1]**2 - 2*p1[1]*p2[1]*cos(p1[0]-p2[0])))
 @track_time
 def polar_to_cart(p) -> np.ndarray:
@@ -72,7 +74,7 @@ def step_cost(cur, prev):
             return 0
     return polar_dis(prev, cur)
 
-_backlinks = {}
+_backlinks = {None:None}
 _arivalcosts = { None: 0 }
 _cur = (0,0)
 _q = [(heuristic_cost(_cur), _cur, None)]
@@ -84,9 +86,17 @@ def reset():
     _cur = (0,0)
     _q = [(heuristic_cost(_cur), _cur, None)]
 @track_time
+def get_step_angle(a_polar, b_polar):
+    if a_polar is None: return config['initial_radians']
+    return cart_to_polar(polar_to_cart(b_polar)-polar_to_cart(a_polar))[0]
+@track_time
 def get_neighbors(polar_pos):
     cart_pos = polar_to_cart(polar_pos)
-    polar_vectors = [(i*(2*pi/config['neighbors'])+config['initial_radians'], config['step_meters']) for i in range(config['neighbors'])]
+    sector_lims = config["neighbor_sector"] + get_step_angle(_backlinks[polar_pos], polar_pos)
+    sector_unit = abs(sum(sector_lims*(-1,1)))/config['neighbors']
+    angles = [round((sector_lims[0]+i*sector_unit)%(2*pi),2) for i in range(config['neighbors']+1)]
+    if angles[0]==angles[-1]: angles.pop()
+    polar_vectors = [(a, config['step_meters']) for a in angles]
     cart_neighbors = [polar_to_cart(p) + cart_pos for p in polar_vectors]
     cart_neighbors = np.round(cart_neighbors,config['decimal_precision'])
     polar_neighbors = [cart_to_polar(p) for p in cart_neighbors]
@@ -128,9 +138,9 @@ def exploration_step(obstacles:list[LineString], points):
     if not _q: return
     _, _cur, prev = heapq.heappop(_q)
     # if _cur in _backlinks: return
-    if any([polar_dis(_cur, k) < 0.01 for k in _backlinks]): return
-    # if check_collision((prev, _cur), obstacles):
-    #     return # Kinda sorta handled by avoiding high collision potential
+    if any([ (polar_dis(_cur, k) < 0.01) and (polar_dis(prev, _backlinks[k])) for k in _backlinks]): return
+    if check_collision((prev, _cur), obstacles):
+        return # Kinda sorta handled by avoiding high collision potential
     _backlinks[_cur] = prev
     _arivalcosts[_cur] = _arivalcosts[prev] + step_cost(prev, _cur)
     for n in get_neighbors(_cur):
@@ -203,6 +213,9 @@ def get_path():
     return _path
 def get_tree_links():
     return _tree
+def set_goal(point_polar):
+    global _goal
+    _goal = point_polar
 
 if __name__=='__main__':
     pass

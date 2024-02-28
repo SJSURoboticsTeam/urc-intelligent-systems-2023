@@ -3,18 +3,12 @@ from matplotlib.collections import LineCollection
 import matplotlib.animation as anim
 import json
 import sys
-# print(sys.path)
-# import pathfinder
 import time
 
 config = {
     "blit": True
 }
-# worldview.config['']
-def run_visualizer(pathfinder):
-# if True:
-    # pathfinder.start_pathfinder_service()
-    # time.sleep(20)
+def run_visualizer(pathfinder, on_hover_mouse=lambda p:None):
     try:
         fig = plt.figure()
         ax = plt.subplot(111, projection='polar')
@@ -60,22 +54,21 @@ def run_visualizer(pathfinder):
 
             return modded
 
-        # anime = anim.FuncAnimation(fig, update_plot, 1, interval=50, blit=config['blit'])
-        # plt.show()
-        # return anim
+        def on_mouse_move(event):
+            point_polar = (event.xdata, event.ydata)
+            on_hover_mouse(None if any([i is None for i in point_polar]) else point_polar)
+        fig.canvas.mpl_connect("motion_notify_event", on_mouse_move)
         return fig, update_plot
 
     except:
         pass
-    # pathfinder.stop_pathfinder_service()
-
-# anime = run_visualizer()
-# plt.show()
 
 if __name__=='__main__':
     import pathfinder
     pathfinder.start_pathfinder_service()
     fig, update_func = run_visualizer(pathfinder)
+    def on_mouse_move(event):
+        print(event.xdata, event.ydata)
     anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=True)
     plt.show()
     pathfinder.stop_pathfinder_service()
