@@ -16,7 +16,8 @@ config = {
     "point_buffer_meters": 1,
     "point_buffer_count": 0,
     "service_event_verbose":True,
-    "verbose_lidar_exceptions":False
+    "verbose_lidar_exceptions":False,
+    "lidar_port": "COM10"
 }
 _point_clouds = None # This will be the raw point cloud
 _obstacles = None # This will be the points clustered into obstacles
@@ -26,7 +27,7 @@ def run_lidar(service_is_active):
     #==================================
     # Initial connect and set up Lidar
     #----------------------------------
-    PORT_NAME = 'COM10'
+    PORT_NAME = config['lidar_port']
     lidar = None
     lidar_iter = None
     ts = time.time()
