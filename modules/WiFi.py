@@ -71,7 +71,7 @@ class Modes:
     DRIVE="D"
     SPIN="S"
     TRANSLATE="T"
-def make_command(mode=None, speed_percent=None, angle_degrees=None):
+def make_drive_command(mode=None, speed_percent=None, angle_degrees=None):
     """
     Create a command to be written to the rover
 
