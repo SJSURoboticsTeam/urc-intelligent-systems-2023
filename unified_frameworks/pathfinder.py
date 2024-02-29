@@ -31,12 +31,12 @@ config = {
     "neighbor_sector": np.array([-1,1])*(45/360)*(2*pi),
     "neighbors": 5,
     "update_frequency": 30, #Hz How frequently to update the shared path and exploration tree
-    "explore_frequency": float("inf"), #Hz How frequently to expand on the exploration tree
+    "explore_frequency": 1000, #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
     "idx_sectors": 11,
     "shuffle_neighbors": True,
     "verbose_service_events": True,
-    "time_analysis": False
+    "time_analysis": True
 }
 
 exe_times = {}
@@ -111,7 +111,7 @@ def get_collision_potential(polar_pos, get_near_points):
     if not obstacle_points: 
         return 0
     min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
-    pot = 10/min_dis**2 if min_dis!=0 else float('inf')
+    pot = 1/min_dis**2 if min_dis!=0 else float('inf')
     return pot
 @track_time
 def check_collision(polar_step, obstacles: list[LineString]):
@@ -147,7 +147,7 @@ def exploration_step(obstacles:list[LineString], points):
     _arivalcosts[_cur] = _arivalcosts[prev] + step_cost(prev, _cur)
     for n in get_neighbors(_cur):
         pot = get_collision_potential(n, points)
-        cost = _arivalcosts[_cur]+step_cost(_cur, n)+heuristic_cost(n)
+        cost = _arivalcosts[_cur]+step_cost(_cur, n)+heuristic_cost(n)*10
         heapq.heappush(_q,((cost+pot), tuple(n), _cur))
 
 
@@ -182,7 +182,7 @@ def run_pathfinder(is_pathfinder_running):
         while time.time() - ts < 1/config['update_frequency']:
         # for i in range(20):
             exploration_step(obstacles, get_near_points)
-            # time.sleep(1/config['explore_frequency'])
+            time.sleep(1/config['explore_frequency'])
         if config['time_analysis']:
             n=10
             time_anal = {i: sum(exe_times[i][-n:])/n for i in exe_times}

@@ -10,11 +10,11 @@ import json
 config = {
     "service_file": "lidar.txt",
     "update_frequency": 20, # Hz
-    "history_size": 1,
+    "history_size": 10,
     "rover_radius": 0.7,
     "open_sector": [pi/4, 3*pi/4],
-    "point_buffer_meters": 0.25,
-    "point_buffer_count": 3,
+    "point_buffer_meters": 1,
+    "point_buffer_count": 0,
     "service_event_verbose":True,
     "verbose_lidar_exceptions":False
 }
