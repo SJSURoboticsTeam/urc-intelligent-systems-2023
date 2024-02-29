@@ -6,3 +6,5 @@ shapely
 requests
 ipympl
 numpy
+jupyterlab
+voila
