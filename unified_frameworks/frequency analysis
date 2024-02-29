@@ -1,0 +1,32 @@
+{
+    "time": {
+        "polar_dis": 2.384185791015625e-06,
+        "heuristic_cost": 2.9087066650390623e-06,
+        "reset": 2.2721290588378906e-05,
+        "check_collision": 0.00022580623626708985,
+        "step_cost": 2.9087066650390623e-06,
+        "polar_to_cart": 1.277923583984375e-05,
+        "get_step_angle": 0.0002155303955078125,
+        "cart_to_polar": 0.00018067359924316405,
+        "get_neighbors": 0.000539088249206543,
+        "get_collision_potential": 0.00044906139373779297,
+        "exploration_step": 0.002219891548156738,
+        "make_tree": 1.3780593872070312e-05,
+        "make_path": 3.533363342285156e-05
+    },
+    "freq": {
+        "polar_dis": 419430.4,
+        "heuristic_cost": 343795.4098360656,
+        "reset": 44011.58447009444,
+        "check_collision": 4428.575651990286,
+        "step_cost": 343795.4098360656,
+        "polar_to_cart": 78251.94029850746,
+        "get_step_angle": 4639.716814159292,
+        "cart_to_polar": 5534.842966481921,
+        "get_neighbors": 1854.9838574145328,
+        "get_collision_potential": 2226.8670029200957,
+        "exploration_step": 450.4724570127485,
+        "make_tree": 72565.81314878893,
+        "make_path": 28301.64642375169
+    }
+}

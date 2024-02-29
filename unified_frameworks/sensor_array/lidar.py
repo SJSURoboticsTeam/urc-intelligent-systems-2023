@@ -6,6 +6,17 @@ from math import pi, cos, sin, sqrt, atan2
 import time
 import os
 import json
+import serial.tools.list_ports
+import serial
+
+def getDevicePort():
+    ports = serial.tools.list_ports.comports()
+
+    if len(ports) > 0:
+        for port, desc, hwid in sorted(ports):
+            if hwid != "n/a":
+                return port
+    return None
 
 config = {
     "service_file": "lidar.txt",
@@ -17,11 +28,15 @@ config = {
     "point_buffer_count": 0,
     "service_event_verbose":True,
     "verbose_lidar_exceptions":False,
-    "lidar_port": "COM10"
+    "lidar_port": getDevicePort()
 }
 _point_clouds = None # This will be the raw point cloud
 _obstacles = None # This will be the points clustered into obstacles
 def run_lidar(service_is_active):
+    if config["lidar_port"] is None:
+        print("Port not found!")
+        return
+
     if config["service_event_verbose"]:
         print("Starting Lidar Service")
     #==================================

@@ -26,7 +26,7 @@ import heapq
 import json
 
 config = {
-    "step_meters": 0.5,
+    "step_meters": 0.2,
     "initial_radians": pi/2,
     "neighbor_sector": np.array([-1,1])*(60/360)*(2*pi),
     "neighbors": 5,
@@ -36,7 +36,8 @@ config = {
     "idx_sectors": 11,
     "shuffle_neighbors": True,
     "verbose_service_events": True,
-    "time_analysis": True
+    "time_analysis": True,
+    "heurstic_weight": 3
 }
 
 exe_times = {}
@@ -111,7 +112,7 @@ def get_collision_potential(polar_pos, get_near_points):
     if not obstacle_points: 
         return 0
     min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
-    pot = 1/min_dis**2 if min_dis!=0 else float('inf')
+    pot = 0.1/min_dis**2 if min_dis!=0 else float('inf')
     return pot
 @track_time
 def check_collision(polar_step, obstacles: list[LineString]):
