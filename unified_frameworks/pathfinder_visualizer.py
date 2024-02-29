@@ -60,6 +60,14 @@ def run_visualizer(pathfinder, on_hover_mouse=lambda p:None,):
         fig.canvas.mpl_connect("motion_notify_event", on_mouse_move)
         return fig, update_plot
 
+def show_visual(pathfinder):
+    def on_hover_point(point_polar):
+        pathfinder.set_goal(point_polar) if not point_polar is None else None
+    fig, update_func = run_visualizer(pathfinder, on_hover_point)
+    anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=True)
+    plt.show()
+    return anime
+
 if __name__=='__main__':
     import pathfinder
     import matplotlib
