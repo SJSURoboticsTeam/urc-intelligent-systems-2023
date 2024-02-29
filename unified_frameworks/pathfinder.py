@@ -188,7 +188,7 @@ def run_pathfinder(is_pathfinder_running):
             n=10
             time_anal = {i: sum(exe_times[i][-n:])/n for i in exe_times}
             freq_anal = {i: 1/time_anal[i] if time_anal[i]!=0 else float("inf") for i in time_anal}
-            with(open("frequency analysis", "w")) as f:
+            with(open("frequency_analysis.freq", "w")) as f:
                 f.write(json.dumps({"time":time_anal, "freq":freq_anal}, indent=4))
         make_tree()
         make_path()
