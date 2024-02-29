@@ -12,7 +12,7 @@ config = {
     "update_frequency": 20, # Hz
     "history_size": 10,
     "rover_radius": 0.7,
-    "open_sector": [pi/4, 3*pi/4],
+    "open_sector": [pi/20, pi-pi/20],
     "point_buffer_meters": 1,
     "point_buffer_count": 0,
     "service_event_verbose":True,
@@ -61,6 +61,14 @@ def run_lidar(service_is_active):
         "Sets and array of (signal quality, angle (rad), distance (m))"
         nonlocal scanned_data
         scanned_data = distances #[(sq, a, m) for sq, a, m in distances if m > config['rover_radius']]
+    # def get_buffers(polar_point):
+    #     angles = [i*2*pi/config["point_buffer_count"] for i in range(config['point_buffer_count'])]
+    #     cart_b = [(config['point_buffer_meters']*cos(a), config['point_buffer_meters']*sin(a)) for a in angles]
+    #     point_cart = (polar_point[1]*cos(polar_point[0]), polar_point[1]*sin(polar_point[0]))
+    #     buffs_cart = [(point_cart[0]+b[0], point_cart[1]+b[1]) for b in cart_b]
+    #     buff_polar = [(atan2(b[1],b[0])%(2*pi), sqrt(b[0]**2+b[1]**2)) for b in buffs_cart]
+    #     return buff_polar
+
     def get_buffers(polar_point):
         angles = [i*2*pi/config["point_buffer_count"] for i in range(config['point_buffer_count'])]
         cart_b = [(config['point_buffer_meters']*cos(a), config['point_buffer_meters']*sin(a)) for a in angles]

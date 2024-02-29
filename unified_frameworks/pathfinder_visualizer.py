@@ -20,7 +20,7 @@ def run_visualizer(pathfinder, on_hover_mouse=lambda p:None,):
         obstacle_groups = LineCollection([], color='k')
         ax.add_collection(obstacle_groups)
 
-        rmax=10
+        rmax=4
         rscaler = 1.1
         rlagger = 0.99
         ax.set_rmax(rmax)

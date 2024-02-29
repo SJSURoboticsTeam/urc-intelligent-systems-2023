@@ -28,7 +28,7 @@ import json
 config = {
     "step_meters": 0.5,
     "initial_radians": pi/2,
-    "neighbor_sector": np.array([-1,1])*(45/360)*(2*pi),
+    "neighbor_sector": np.array([-1,1])*(60/360)*(2*pi),
     "neighbors": 5,
     "update_frequency": 30, #Hz How frequently to update the shared path and exploration tree
     "explore_frequency": 1000, #Hz How frequently to expand on the exploration tree
