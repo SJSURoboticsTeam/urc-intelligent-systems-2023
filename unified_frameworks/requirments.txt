@@ -1,0 +1,8 @@
+python=3.11
+pyserial
+matplotlib
+ipython
+shapely
+requests
+ipympl
+numpy
