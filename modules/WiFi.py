@@ -44,6 +44,28 @@ class WiFi:
                 print('Failed to send data: status code', self.response.status_code)
         except requests.exceptions.RequestException as e:
             print('Error sending data:', e)
+    def send_command(self, data):
+        """Alias for write_data(..) | Send command to the rover"""
+        self.write_data(data)
+    def get_status(self, max_retries=3):
+        """Gets data from mission control. Expected response: {"HB":int, "IO":int, "WO":int, "DM":char, "CMD":list}
+        PARAMS:
+            max_retries [int]: max number of requests we send to web server before giving up 
+        RETURNS:
+            JSON data from mission control (if successful. Otherwise None).
+        """
+        for retry_count in range(max_retries):
+            try:
+                self.response = requests.get(f'{self.web_server_url}/drive/status', timeout=5)
+                if self.response.status_code == 200:
+                    data_received = self.response.json()
+                    return data_received
+                else:
+                    return None
+            except requests.exceptions.RequestException as e:
+                print(f'Error getting data (retry {retry_count + 1}/{max_retries}):', e)
+            time.sleep(1)  # wait for 1 second before retrying
+        # print('Max retries exceeded, giving up.')
 
 class Modes:
     DRIVE="D"

@@ -15,6 +15,8 @@ Thoughts on further development
 """
 
 import worldview
+import importlib
+importlib.reload(worldview)
 from math import pi, cos, sin, atan2, sqrt
 from unified_utils import Service
 import time
@@ -34,7 +36,7 @@ config = {
     "idx_sectors": 11,
     "shuffle_neighbors": True,
     "verbose_service_events": True,
-    "time_analysis": True
+    "time_analysis": False
 }
 
 exe_times = {}
@@ -109,7 +111,7 @@ def get_collision_potential(polar_pos, get_near_points):
     if not obstacle_points: 
         return 0
     min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
-    pot = 0.1/min_dis**2 if min_dis!=0 else float('inf')
+    pot = 10/min_dis**2 if min_dis!=0 else float('inf')
     return pot
 @track_time
 def check_collision(polar_step, obstacles: list[LineString]):

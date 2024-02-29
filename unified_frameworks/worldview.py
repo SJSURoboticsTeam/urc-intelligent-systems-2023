@@ -5,7 +5,11 @@ to access
 """
 import time
 from threading import Thread
-from sensor_array import lidar
+import sensor_array.lidar
+import importlib
+importlib.reload(sensor_array.lidar)
+lidar = sensor_array.lidar
+
 
 config = {
     "update_frequency": 20, #Hz

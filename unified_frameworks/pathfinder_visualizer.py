@@ -8,9 +8,9 @@ import time
 config = {
     "blit": True
 }
-def run_visualizer(pathfinder, on_hover_mouse=lambda p:None):
-    try:
-        fig = plt.figure()
+def run_visualizer(pathfinder, on_hover_mouse=lambda p:None,):
+        fig = plt.figure(0)
+        # fig.subplots
         ax = plt.subplot(111, projection='polar')
         tree_lines = LineCollection([], color='g',)
         tree_lines.set_alpha(0.5)
@@ -60,15 +60,15 @@ def run_visualizer(pathfinder, on_hover_mouse=lambda p:None):
         fig.canvas.mpl_connect("motion_notify_event", on_mouse_move)
         return fig, update_plot
 
-    except:
-        pass
-
 if __name__=='__main__':
     import pathfinder
+    import matplotlib
     pathfinder.start_pathfinder_service()
-    fig, update_func = run_visualizer(pathfinder)
-    def on_mouse_move(event):
-        print(event.xdata, event.ydata)
+    def on_hover_point(point_polar):
+        pathfinder.set_goal(point_polar) if not point_polar is None else None
+    fig, update_func = run_visualizer(pathfinder, on_hover_point)
+    # def on_mouse_move(event):
+    #     print(event.xdata, event.ydata)
     anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=True)
     plt.show()
     pathfinder.stop_pathfinder_service()
