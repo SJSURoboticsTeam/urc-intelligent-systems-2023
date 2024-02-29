@@ -8,3 +8,5 @@ numpy
 jupyterlab
 voila
 rplidar-roboticia
+pyqt5
+pyqt6
