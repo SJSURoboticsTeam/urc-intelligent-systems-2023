@@ -15,21 +15,20 @@ importlib.reload(pathfinder)
 import time
 
 config = {
-    "command_frequency": 1, #Hz
+    "command_frequency": 10, #Hz
     "verbose_service_events": True,
-    "fake_commands": True,
+    "send_commands_to_rover": False,
 }
 
+_command_printer = print
 rover = WiFi("http://192.168.0.211:5000")
 prev_rad = 0
 def captain_act(get_target_speed):
     path = pathfinder.get_path()
     if len(path) < 2:
         command = make_drive_command(speed_percent=0)
-        if config['fake_commands']:
-            print(command)
-        else:
-            rover.send_command()
+        rover.send_command(command) if config['send_commands_to_rover'] else None
+        _command_printer(command)
         radians=0
         return
     else:
@@ -50,15 +49,14 @@ def captain_act(get_target_speed):
         if mode == Modes.DRIVE:
             speed *= -1
     command = make_drive_command(mode, speed_percent=speed, angle_degrees=degrees)
-    if config['fake_commands']:
-        print(command)
-    else:
-        rover.send_command()
+    rover.send_command(command) if config['send_commands_to_rover'] else None
+    _command_printer(command) 
     # rover.send_command(command)
 
 def captain_stop():
     command = make_drive_command(speed_percent=0)
-    print(command) if config['fake_commands'] else rover.send_command(command)
+    rover.send_command(command) if config['send_commands_to_rover'] else None
+    _command_printer(command)
 
 _get_target_speed = lambda: 0
 def run_captain(is_captain_running):
@@ -70,11 +68,12 @@ def run_captain(is_captain_running):
     pathfinder.stop_pathfinder_service()
 
 _service = Service(run_captain, "Captain Service")
-def start_captain_service(get_target_speed):
+def start_captain_service(get_target_speed, command_printer):
     if config["verbose_service_events"]:
         print("Starting Captain Service")
-    global _get_target_speed
+    global _get_target_speed, _command_printer
     _get_target_speed = get_target_speed
+    _command_printer = command_printer
     _service.start_service()
     # visual = pathfinder_visualizer.show_visual(pathfinder)
     # return visual

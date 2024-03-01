@@ -7,7 +7,7 @@ class WiFi:
         self.data = None
         self.response = None
 
-    def read_data(self, max_retries=3):
+    def read_data(self, max_retries=3, wait_time=1):
         """Gets data from mission control. Expected response: {"HB":int, "IO":int, "WO":int, "DM":char, "CMD":list}
         PARAMS:
             max_retries [int]: max number of requests we send to web server before giving up 
@@ -25,7 +25,7 @@ class WiFi:
                     print('Failed to get data: status code', self.response.status_code)
             except requests.exceptions.RequestException as e:
                 print(f'Error getting data (retry {retry_count + 1}/{max_retries}):', e)
-            time.sleep(1)  # wait for 1 second before retrying
+            time.sleep(wait_time)  # wait for 1 second before retrying
         print('Max retries exceeded, giving up.')
 
 
@@ -47,7 +47,7 @@ class WiFi:
     def send_command(self, data):
         """Alias for write_data(..) | Send command to the rover"""
         self.write_data(data)
-    def get_status(self, max_retries=3):
+    def get_status(self, max_retries=3, wait_time=1):
         """Gets data from mission control. Expected response: {"HB":int, "IO":int, "WO":int, "DM":char, "CMD":list}
         PARAMS:
             max_retries [int]: max number of requests we send to web server before giving up 
@@ -64,7 +64,7 @@ class WiFi:
                     return None
             except requests.exceptions.RequestException as e:
                 print(f'Error getting data (retry {retry_count + 1}/{max_retries}):', e)
-            time.sleep(1)  # wait for 1 second before retrying
+            time.sleep(wait_time)  # wait for 1 second before retrying
         # print('Max retries exceeded, giving up.')
 
 class Modes:

@@ -34,7 +34,7 @@ config = {
     "explore_frequency": 1000, #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
     "idx_sectors": 11,
-    "shuffle_neighbors": True,
+    "shuffle_neighbors": False,
     "verbose_service_events": True,
     "time_analysis": True,
     "heurstic_weight": 3
@@ -112,8 +112,18 @@ def get_collision_potential(polar_pos, get_near_points):
     if not obstacle_points: 
         return 0
     min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
-    pot = 0.1/min_dis**2 if min_dis!=0 else float('inf')
+    pot = 1/(min_dis*0.2) if min_dis!=0 else float('inf')
     return pot
+@track_time
+def get_turning_cost(polar_p1, polar_p2, polar_p3):
+    return abs(polar_p3[0]-pi/2)
+    # if polar_p1 is None: return abs(polar_p3[0]-pi/2)
+    # p1, p2, p3 = [polar_to_cart(p) for p in [polar_p1, polar_p2, polar_p3]]
+    # v_a = p2-p1
+    # v_b = p3-p2
+    # ang_a, _ = cart_to_polar(v_a)
+    # ang_b, _ = cart_to_polar(v_b)
+    # return abs(ang_b-ang_a)
 @track_time
 def check_collision(polar_step, obstacles: list[LineString]):
     if any([i is None for i in polar_step]): return False
@@ -142,14 +152,15 @@ def exploration_step(obstacles:list[LineString], points):
     _, _cur, prev = heapq.heappop(_q)
     # if _cur in _backlinks: return
     if any([ (polar_dis(_cur, k) < 0.01) and (polar_dis(prev, _backlinks[k])) for k in _backlinks]): return
-    if check_collision((prev, _cur), obstacles):
-        return # Kinda sorta handled by avoiding high collision potential
+    # if check_collision((prev, _cur), obstacles):
+    #     return # Kinda sorta handled by avoiding high collision potential
     _backlinks[_cur] = prev
     _arivalcosts[_cur] = _arivalcosts[prev] + step_cost(prev, _cur)
     for n in get_neighbors(_cur):
-        pot = get_collision_potential(n, points)
-        cost = _arivalcosts[_cur]+step_cost(_cur, n)+heuristic_cost(n)*10
-        heapq.heappush(_q,((cost+pot), tuple(n), _cur))
+        pot = 0.1*get_collision_potential(n, points)
+        cost = 1*(_arivalcosts[_cur]*0+step_cost(_cur, n)*0+heuristic_cost(n)*1)
+        turning_cost = 0.0*get_turning_cost(prev, _cur, n)
+        heapq.heappush(_q,((cost+pot+turning_cost, np.random.rand()), tuple(n), _cur))
 
 
 def run_pathfinder(is_pathfinder_running):

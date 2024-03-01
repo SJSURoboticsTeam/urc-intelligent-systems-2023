@@ -23,7 +23,7 @@ config = {
     "update_frequency": 20, # Hz
     "history_size": 10,
     "rover_radius": 0.7,
-    "open_sector": [pi/20, pi-pi/20],
+    "open_sector": [-pi/4, 5*pi/4],
     "point_buffer_meters": 1,
     "point_buffer_count": 0,
     "service_event_verbose":True,
@@ -92,13 +92,18 @@ def run_lidar(service_is_active):
         buff_polar = [(atan2(b[1],b[0])%(2*pi), sqrt(b[0]**2+b[1]**2)) for b in buffs_cart]
         return buff_polar
 
+    def in_sector(angle):
+        a, b = config['open_sector']
+        a %= 2*pi
+        b %= 2*pi
+        return (angle-a)%(2*pi) < (b-a)%(2*pi)
     def get_scan(flipped=True):
         "Gets and array of (signal quality, angle (rad), distance (m))"
         sign = -1 if flipped else 1
         distances = [(quality, ((sign*angle_deg)%360)*2*pi/360, distance_mm/1000.0) for quality, angle_deg, distance_mm in scanned_data]
         # distances = [(q,a,m) for q,a,m in distances if (m > config['rover_radius'] or (a > config['open_sector'][0] and a < config['open_sector'][1]))]
-        distances = [(q,a,m) for q,a,m in distances if (m>config["rover_radius"] or (a > config['open_sector'][0] and a < config['open_sector'][1]))]
-        buffers = sum([ [ (q,ab, mb) for ab, mb in  get_buffers((a,m))] for q,a,m in distances], [])
+        distances = [(q,a,m) for q,a,m in distances if (m>config["rover_radius"] or in_sector(a))]
+        buffers = sum([ [ (q,ab,mb) for ab, mb in  get_buffers((a,m))] for q,a,m in distances], [])
         res = []
         while distances and buffers:
             ls = distances if distances[-1] > buffers[-1] else buffers
