@@ -26,12 +26,12 @@ import heapq
 import json
 
 config = {
-    "step_meters": 0.6,
+    "step_meters": 0.4,
     "initial_radians": pi/2,
-    "neighbor_sector": np.array([-1,1])*(180/360)*(2*pi),
-    "neighbors": 5,
+    "neighbor_sector": np.array([-1,1])*(90/360)*(2*pi),
+    "neighbors": 6,
     "update_frequency": 10, #Hz How frequently to update the shared path and exploration tree
-    "explore_frequency": 1000, #Hz How frequently to expand on the exploration tree
+    "explore_frequency": 10000, #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
     "idx_sectors": 11,
     "shuffle_neighbors": False,
@@ -157,7 +157,7 @@ def exploration_step(obstacles:list[LineString], points):
     _backlinks[_cur] = prev
     _arivalcosts[_cur] = _arivalcosts[prev] + step_cost(prev, _cur)
     for n in get_neighbors(_cur):
-        pot = 0*get_collision_potential(n, points)
+        pot = 1*get_collision_potential(n, points)
         cost = 1*(_arivalcosts[_cur]*1+step_cost(_cur, n)*1+heuristic_cost(n)*1)
         turning_cost = 0.0*get_turning_cost(prev, _cur, n)
         heapq.heappush(_q,((cost+pot+turning_cost, np.random.rand()), tuple(n), _cur))

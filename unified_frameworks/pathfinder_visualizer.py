@@ -7,7 +7,7 @@ import time
 
 config = {
     "blit": True,
-    "view_radius_meter": 4
+    "view_radius_meter": 4,
 }
 def run_visualizer(pathfinder, on_hover_mouse=lambda p:None,):
         fig = plt.figure(0)
@@ -72,6 +72,7 @@ def show_visual(pathfinder):
 if __name__=='__main__':
     import pathfinder
     import matplotlib
+    matplotlib.use("webagg")
     pathfinder.start_pathfinder_service()
     # def on_hover_point(point_polar):
     #     pathfinder.set_goal(point_polar) if not point_polar is None else None

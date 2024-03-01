@@ -38,14 +38,14 @@ config = {
     "lidar_port": getDevicePort()
 }
 
-Lidar = FakeLidar if config['use_fake_lidar'] else RPLidar
+Lidar = FakeLidar if config['lidar_port'] is None else RPLidar
 
 _point_clouds = None # This will be the raw point cloud
 _obstacles = None # This will be the points clustered into obstacles
 def run_lidar(service_is_active):
-    if config["lidar_port"] is None and not config['use_fake_lidar']:
-        print("Port not found!")
-        return
+    # if config["lidar_port"] is None and not config['use_fake_lidar']:
+    #     print("Port not found!")
+    #     return
 
     if config["service_event_verbose"]:
         print("Starting Lidar Service")
