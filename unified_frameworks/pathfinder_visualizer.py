@@ -6,7 +6,8 @@ import sys
 import time
 
 config = {
-    "blit": True
+    "blit": True,
+    "view_radius_meter": 4
 }
 def run_visualizer(pathfinder, on_hover_mouse=lambda p:None,):
         fig = plt.figure(0)
@@ -20,8 +21,8 @@ def run_visualizer(pathfinder, on_hover_mouse=lambda p:None,):
         obstacle_groups = LineCollection([], color='k')
         ax.add_collection(obstacle_groups)
 
-        rmax=4
-        rscaler = 1.1
+        rmax=config['view_radius_meter']
+        rscaler = 1.3
         rlagger = 0.99
         ax.set_rmax(rmax)
         def update_plot(_):
@@ -64,7 +65,7 @@ def show_visual(pathfinder):
     def on_hover_point(point_polar):
         pathfinder.set_goal(point_polar) if not point_polar is None else None
     fig, update_func = run_visualizer(pathfinder, on_hover_point)
-    anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=True)
+    anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=config['blit'])
     plt.show()
     return anime
 
@@ -72,11 +73,12 @@ if __name__=='__main__':
     import pathfinder
     import matplotlib
     pathfinder.start_pathfinder_service()
-    def on_hover_point(point_polar):
-        pathfinder.set_goal(point_polar) if not point_polar is None else None
-    fig, update_func = run_visualizer(pathfinder, on_hover_point)
-    # def on_mouse_move(event):
-    #     print(event.xdata, event.ydata)
-    anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=True)
-    plt.show()
+    # def on_hover_point(point_polar):
+    #     pathfinder.set_goal(point_polar) if not point_polar is None else None
+    # fig, update_func = run_visualizer(pathfinder, on_hover_point)
+    # # def on_mouse_move(event):
+    # #     print(event.xdata, event.ydata)
+    # anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=True)
+    # plt.show()
+    show_visual(pathfinder)
     pathfinder.stop_pathfinder_service()

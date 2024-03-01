@@ -1,10 +1,17 @@
+import os
 from rplidar import RPLidar, RPLidarException
+try:
+    from fake_lidar import FakeLidar
+except:
+    import sys
+    sys.path.append(__file__+os.sep+"..")
+    from fake_lidar import FakeLidar
+
 import traceback
 import sys
 from threading import Thread
 from math import pi, cos, sin, sqrt, atan2
 import time
-import os
 import json
 import serial.tools.list_ports
 import serial
@@ -19,7 +26,7 @@ def getDevicePort():
     return None
 
 config = {
-    "service_file": "lidar.txt",
+    "use_fake_lidar": True,
     "update_frequency": 20, # Hz
     "history_size": 10,
     "rover_radius": 0.7,
@@ -27,13 +34,16 @@ config = {
     "point_buffer_meters": 1,
     "point_buffer_count": 0,
     "service_event_verbose":True,
-    "verbose_lidar_exceptions":False,
+    "verbose_lidar_exceptions":True,
     "lidar_port": getDevicePort()
 }
+
+Lidar = FakeLidar if config['use_fake_lidar'] else RPLidar
+
 _point_clouds = None # This will be the raw point cloud
 _obstacles = None # This will be the points clustered into obstacles
 def run_lidar(service_is_active):
-    if config["lidar_port"] is None:
+    if config["lidar_port"] is None and not config['use_fake_lidar']:
         print("Port not found!")
         return
 
@@ -46,12 +56,14 @@ def run_lidar(service_is_active):
     lidar = None
     lidar_iter = None
     ts = time.time()
+    print(service_is_active())
     while service_is_active():
         if config['service_event_verbose'] and time.time()-ts > 1:
             ts = time.time()
         try: # Try and try again until Lambs become lions and 
-            lidar = RPLidar(PORT_NAME)
+            lidar = Lidar(PORT_NAME)
             # lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000)) # Large buffer is able to hold on to data for longer before yielding it. This means the data received can older (Therefore laggier)
+            print(lidar)
             lidar_iter = iter(lidar.iter_scans()) # Stick to the default buffer size
             next(lidar_iter) # and until the Lidar is able to yield stuff without errors
         except RPLidarException as e:
