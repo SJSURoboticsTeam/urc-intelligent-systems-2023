@@ -33,11 +33,14 @@ class WirelessLidar(Lidar):
 
 if __name__=='__main__':
     import time
-    lidar = WirelessLidar("ws://localhost:8765")
+    lidar = WirelessLidar("ws://192.168.0.101:8765")
+    # lidar = WirelessLidar("ws://localhost:8765")
     lidar_iter = iter(lidar)
     start_time = time.time()
-    while time.time() - start_time < 10:
-        print(next(lidar_iter))
+    count = 0
+    while time.time() - start_time < 5:
+        count += 1
+        print(f"{count}: {next(lidar_iter)}")
         time.sleep(0.4)
     lidar.disconnect()
     print("disconnected")
