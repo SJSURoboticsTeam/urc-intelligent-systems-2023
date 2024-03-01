@@ -18,7 +18,11 @@ class WirelessLidar(Lidar):
         asyncio.set_event_loop(asyncio.new_event_loop())
         asyncio.get_event_loop().run_until_complete(self.receive_data())
     def iter_scans(self):
-        pass
+        return iter(self)
+    def __iter__(self):
+        return self
+    def __next__(self):
+        return self.data
     def stop(self):
         return super().stop()
     def stop_motor(self):
@@ -30,8 +34,10 @@ class WirelessLidar(Lidar):
 if __name__=='__main__':
     import time
     lidar = WirelessLidar("ws://localhost:8765")
-    for i in range(20):
-        print(lidar.data)
+    lidar_iter = iter(lidar)
+    start_time = time.time()
+    while time.time() - start_time < 10:
+        print(next(lidar_iter))
         time.sleep(0.4)
     lidar.disconnect()
     print("disconnected")

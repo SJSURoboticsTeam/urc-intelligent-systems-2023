@@ -5,8 +5,9 @@ I think making this will help in testing an optimizing the lidar scripts
 """
 import numpy as np
 import time
+from LidarClass import Lidar
 
-class FakeLidar:
+class FakeLidar(Lidar):
     def __init__(self, port_name) -> None:
         self.n = 30
         self.scan = np.random.rand(self.n, 3)*1_000 +1_000
@@ -30,3 +31,15 @@ class FakeLidar:
         pass
     def disconnect(self):
         pass
+
+if __name__=='__main__':
+    import time
+    lidar = FakeLidar("ws://localhost:8765")
+    lidar_iter = lidar.iter_scans()
+    start_time = time.time()
+    while time.time() - start_time < 10:
+        print()
+        print(next(lidar_iter))
+        time.sleep(0.4)
+    lidar.disconnect()
+    print("disconnected")
