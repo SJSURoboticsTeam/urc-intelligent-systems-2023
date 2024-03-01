@@ -10,3 +10,4 @@ voila
 rplidar-roboticia
 pyqt5
 pyqt6
+websockets
