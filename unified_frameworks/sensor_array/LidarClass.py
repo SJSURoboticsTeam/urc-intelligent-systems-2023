@@ -1,18 +1,24 @@
 from abc import ABC, abstractmethod
 class Lidar(ABC):
     @abstractmethod
-    def iter_scans(self):
+    def connect(self, max_attempts=3, wait_seconds=1) -> bool:
+        """Make attempts to connect to the Lidar
+
+        Parameters
+        -----------
+        max_attempts: Number of attempts to make
+        wait_seconds: Seconds to wait between each attempt 
+
+        Returns
+        _______
+        True if connection is made
         """
-        Get an Iterable that iteratively returns a list of scanned points
-        Each Point is a 3 tuple of (quality, angle_degrees, distance_millimeters)
-        """
-        pass
-    @abstractmethod
-    def stop(self):
-        pass
-    @abstractmethod
-    def stop_motor(self):
         pass
     @abstractmethod
     def disconnect(self):
+        """Disconnect from the Lidar"""
+        pass
+    @abstractmethod
+    def get_measures(self):
+        """Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance meter)"""
         pass
