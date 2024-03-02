@@ -1,14 +1,18 @@
 import os
+import sys
+import re
+sys.path.append((next(re.finditer(".*unified_frameworks", __file__)).group()))
 from rplidar import RPLidar, RPLidarException
-try:
-    from fake_lidar import FakeLidar
-except:
-    import sys
-    sys.path.append(__file__+os.sep+"..")
-    from fake_lidar import FakeLidar
+from sensor_array.fake_lidar import FakeLidar
+from sensor_array.client_lidar import WirelessLidar
+# try:
+#     from fake_lidar import FakeLidar
+# except:
+#     import sys
+#     sys.path.append(__file__+os.sep+"..")
+#     from fake_lidar import FakeLidar
 
 import traceback
-import sys
 from threading import Thread
 from math import pi, cos, sin, sqrt, atan2
 import time
@@ -35,10 +39,11 @@ config = {
     "point_buffer_count": 0,
     "service_event_verbose":True,
     "verbose_lidar_exceptions":True,
-    "lidar_port": getDevicePort()
+    "lidar_port": "ws://192.168.1.130:8765", #getDevicePort(),
+    "wireless_uri": "ws://192.168.1.130:8765"
 }
 
-Lidar = FakeLidar if config['lidar_port'] is None else RPLidar
+Lidar = WirelessLidar  # FakeLidar if config['lidar_port'] is None else RPLidar
 
 _point_clouds = None # This will be the raw point cloud
 _obstacles = None # This will be the points clustered into obstacles
@@ -56,14 +61,12 @@ def run_lidar(service_is_active):
     lidar = None
     lidar_iter = None
     ts = time.time()
-    print(service_is_active())
     while service_is_active():
         if config['service_event_verbose'] and time.time()-ts > 1:
             ts = time.time()
         try: # Try and try again until Lambs become lions and 
-            lidar = Lidar(PORT_NAME)
+            lidar = Lidar(config["wireless_uri"])
             # lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000)) # Large buffer is able to hold on to data for longer before yielding it. This means the data received can older (Therefore laggier)
-            print(lidar)
             lidar_iter = iter(lidar.iter_scans()) # Stick to the default buffer size
             next(lidar_iter) # and until the Lidar is able to yield stuff without errors
         except RPLidarException as e:
@@ -83,10 +86,11 @@ def run_lidar(service_is_active):
     #====================================
     # Running the Lidar
     #------------------------------------
+    global scanned_data
     scanned_data = list() # buffer to hold distance data # use same ters scan/measures/
     def set_scan(distances):
         "Sets and array of (signal quality, angle (rad), distance (m))"
-        nonlocal scanned_data
+        global scanned_data
         scanned_data = distances #[(sq, a, m) for sq, a, m in distances if m > config['rover_radius']]
     # def get_buffers(polar_point):
     #     angles = [i*2*pi/config["point_buffer_count"] for i in range(config['point_buffer_count'])]
@@ -261,8 +265,9 @@ def lidar_service_is_running():
 
 if __name__=='__main__':
     start_lidar_service()
-    # time.sleep(30)
+    time.sleep(10)
     for _ in range(7):
-        # print(get_point_clouds())
+        print()
+        print(scanned_data)
         time.sleep(1)
     stop_lidar_service()

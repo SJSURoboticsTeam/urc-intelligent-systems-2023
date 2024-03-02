@@ -30,7 +30,7 @@ config = {
     "initial_radians": pi/2,
     "neighbor_sector": np.array([-1,1])*(90/360)*(2*pi),
     "neighbors": 6,
-    "update_frequency": 10, #Hz How frequently to update the shared path and exploration tree
+    "update_frequency": 50, #Hz How frequently to update the shared path and exploration tree
     "explore_frequency": 10000, #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
     "idx_sectors": 11,

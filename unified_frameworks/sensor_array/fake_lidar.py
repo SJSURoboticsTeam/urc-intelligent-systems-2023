@@ -5,12 +5,13 @@ I think making this will help in testing an optimizing the lidar scripts
 """
 import numpy as np
 import time
-from LidarClass import Lidar
+from sensor_array.LidarClass import Lidar
 
 class FakeLidar(Lidar):
-    def __init__(self, port_name) -> None:
+    def __init__(self, port_name, empty_scans) -> None:
         self.n = 30
         self.scan = np.random.rand(self.n, 3)*1_000 +1_000
+        self.empty_scans = empty_scans
         pass
     def iter_scans(self1):
         class scan_iterable:
@@ -18,6 +19,8 @@ class FakeLidar(Lidar):
                 return self
             def __next__(self):
                 time.sleep(1/4)
+                if self.empty_scans:
+                    return []
                 # print("Faking it")
                 # print(self1.scan)
                 self1.scan += (0,1,0)
