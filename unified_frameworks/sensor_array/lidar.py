@@ -1,17 +1,9 @@
-import os
 import sys
 import re
-sys.path.append((next(re.finditer(".*unified_frameworks", __file__)).group()))
-from rplidar import RPLidar, RPLidarException
+root = (next(re.finditer(".*unified_frameworks", __file__)).group())
+sys.path.append(root) if root not in sys.path else None
+from sensor_array.actual_lidar import ActualLidar
 from sensor_array.fake_lidar import FakeLidar
-from sensor_array.client_lidar import WirelessLidar
-# try:
-#     from fake_lidar import FakeLidar
-# except:
-#     import sys
-#     sys.path.append(__file__+os.sep+"..")
-#     from fake_lidar import FakeLidar
-
 import traceback
 from threading import Thread
 from math import pi, cos, sin, sqrt, atan2
@@ -20,17 +12,8 @@ import json
 import serial.tools.list_ports
 import serial
 
-def getDevicePort():
-    ports = serial.tools.list_ports.comports()
-
-    if len(ports) > 0:
-        for port, desc, hwid in sorted(ports):
-            if hwid != "n/a":
-                return port
-    return None
-
 config = {
-    "use_fake_lidar": True,
+    "lidar_preference": [ActualLidar, FakeLidar],
     "update_frequency": 20, # Hz
     "history_size": 10,
     "rover_radius": 0.7,
@@ -43,7 +26,7 @@ config = {
     "wireless_uri": "ws://192.168.1.130:8765"
 }
 
-Lidar = WirelessLidar  # FakeLidar if config['lidar_port'] is None else RPLidar
+Lidar = ActualLidar
 
 _point_clouds = None # This will be the raw point cloud
 _obstacles = None # This will be the points clustered into obstacles
@@ -57,40 +40,51 @@ def run_lidar(service_is_active):
     #==================================
     # Initial connect and set up Lidar
     #----------------------------------
-    PORT_NAME = config['lidar_port']
     lidar = None
-    lidar_iter = None
-    ts = time.time()
-    while service_is_active():
-        if config['service_event_verbose'] and time.time()-ts > 1:
-            ts = time.time()
-        try: # Try and try again until Lambs become lions and 
-            lidar = Lidar(config["wireless_uri"])
-            # lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000)) # Large buffer is able to hold on to data for longer before yielding it. This means the data received can older (Therefore laggier)
-            lidar_iter = iter(lidar.iter_scans()) # Stick to the default buffer size
-            next(lidar_iter) # and until the Lidar is able to yield stuff without errors
-        except RPLidarException as e:
-            if config['verbose_lidar_exceptions']:
-                print("======================RPLidarException================================")
-                print(e)
-            lidar.disconnect()
-            continue
-        except:
-            print("Lidar Service Failed before lidar could start")
-            print(traceback.format_exc())
-            sys.exit(1)
-        print()
-        break
+    for Lidar in config['lidar_preference']:
+        L = Lidar()
+        if L.connect():
+            lidar = L
+            break
+        
+    if lidar is None:
+        print("None of the Lidars could connect")
+        sys.exit(1)
+    
+    
+    # PORT_NAME = config['lidar_port']
+    # lidar = None
+    # lidar_iter = None
+    # ts = time.time()
+    # while service_is_active():
+    #     if config['service_event_verbose'] and time.time()-ts > 1:
+    #         ts = time.time()
+    #     try: # Try and try again until Lambs become lions and 
+    #         lidar = Lidar(config["wireless_uri"])
+    #         # lidar_iter = iter(lidar.iter_scans(max_buf_meas=10000)) # Large buffer is able to hold on to data for longer before yielding it. This means the data received can older (Therefore laggier)
+    #         lidar_iter = iter(lidar.iter_scans()) # Stick to the default buffer size
+    #         next(lidar_iter) # and until the Lidar is able to yield stuff without errors
+    #     except RPLidarException as e:
+    #         if config['verbose_lidar_exceptions']:
+    #             print("======================RPLidarException================================")
+    #             print(e)
+    #         lidar.disconnect()
+    #         continue
+    #     except:
+    #         print("Lidar Service Failed before lidar could start")
+    #         print(traceback.format_exc())
+    #         sys.exit(1)
+    #     print()
+    #     break
     #====================================
 
     #====================================
     # Running the Lidar
     #------------------------------------
-    global scanned_data
     scanned_data = list() # buffer to hold distance data # use same ters scan/measures/
     def set_scan(distances):
         "Sets and array of (signal quality, angle (rad), distance (m))"
-        global scanned_data
+        nonlocal scanned_data
         scanned_data = distances #[(sq, a, m) for sq, a, m in distances if m > config['rover_radius']]
     # def get_buffers(polar_point):
     #     angles = [i*2*pi/config["point_buffer_count"] for i in range(config['point_buffer_count'])]
@@ -129,12 +123,12 @@ def run_lidar(service_is_active):
 
     def look():
         """Fetch new distance data and update the buffer"""
-        set_scan(next(lidar_iter))
+        set_scan(lidar.get_measures())
     def spin(stop_check):
         """Keep fetching and updating buffer with distance data"""
         while not stop_check(): # You will notice there is no sleep to rest between loops.
             look()              # Thats cuz next(lidar_iter) is blocking for a while.
-                                # Also cuz we are literally trying to consume as fast as possible 
+            time.sleep(1/4)                    # Also cuz we are literally trying to consume as fast as possible 
                                 # to prevent data build up in buffer
     _stop_spinning=False
     lidar_thread = Thread(target=spin, args=(lambda: _stop_spinning, ), name="Lidar_consumption_thread")
@@ -219,8 +213,9 @@ def run_lidar(service_is_active):
     if config['service_event_verbose']:
         print("waiting for lidar thread to join")
     lidar_thread.join()
-    lidar.stop()
-    lidar.stop_motor()
+    # lidar.stop()
+    # lidar.stop_motor()
+    # lidar.disconnect()
     lidar.disconnect()
     if config["service_event_verbose"]:
         print("Stopping Lidar Service")
@@ -268,6 +263,6 @@ if __name__=='__main__':
     time.sleep(10)
     for _ in range(7):
         print()
-        print(scanned_data)
+        print(get_point_clouds())
         time.sleep(1)
     stop_lidar_service()

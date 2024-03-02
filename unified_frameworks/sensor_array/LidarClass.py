@@ -22,3 +22,15 @@ class Lidar(ABC):
     def get_measures(self):
         """Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance meter)"""
         pass
+    def test_Lidar(lidar):
+        import sys, time
+        if not lidar.connect():
+            print("failed to connect")
+            sys.exit(0)
+        print("Connected")
+        start_time = time.time()
+        while time.time() - start_time < 10:
+            print(len(lidar.get_measures()))
+            time.sleep(1)
+        lidar.disconnect()
+        print("disconnected")

@@ -69,13 +69,4 @@ class ActualLidar(Lidar):
 if __name__=='__main__':
     import time
     lidar = ActualLidar()
-    if not lidar.connect():
-        print("failed to connect")
-        sys.exit(0)
-    print("Connected")
-    start_time = time.time()
-    while time.time() - start_time < 10:
-        print(len(lidar.get_measures()))
-        time.sleep(1)
-    lidar.disconnect()
-    print("disconnected")
+    lidar.test_Lidar()
