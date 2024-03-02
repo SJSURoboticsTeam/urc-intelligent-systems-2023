@@ -6,7 +6,7 @@ import sys
 import time
 
 config = {
-    "blit": True,
+    "blit": False,
     "view_radius_meter": 4,
 }
 def run_visualizer(pathfinder, on_hover_mouse=lambda p:None,):
@@ -70,9 +70,12 @@ def show_visual(pathfinder):
     return anime
 
 if __name__=='__main__':
-    import pathfinder
+    from straight_shot import StraightShot
+    import worldview
+    pathfinder = StraightShot(worldview)
     import matplotlib
-    matplotlib.use("webagg")
+    from unified_utils import time_tracking_service
+    time_tracking_service.start_service()
     pathfinder.start_pathfinder_service()
     # def on_hover_point(point_polar):
     #     pathfinder.set_goal(point_polar) if not point_polar is None else None
@@ -83,3 +86,4 @@ if __name__=='__main__':
     # plt.show()
     show_visual(pathfinder)
     pathfinder.stop_pathfinder_service()
+    time_tracking_service.stop_service()

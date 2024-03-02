@@ -18,7 +18,7 @@ import worldview
 import importlib
 importlib.reload(worldview)
 from math import pi, cos, sin, atan2, sqrt
-from unified_utils import Service
+from unified_utils import Service, track_time
 import time
 import numpy as np
 from shapely import LineString, intersects
@@ -26,28 +26,27 @@ import heapq
 import json
 
 config = {
-    "step_meters": 0.4,
+    "step_meters": 0.2,
     "initial_radians": pi/2,
     "neighbor_sector": np.array([-1,1])*(90/360)*(2*pi),
     "neighbors": 6,
-    "update_frequency": 50, #Hz How frequently to update the shared path and exploration tree
+    "update_frequency": 4, #Hz How frequently to update the shared path and exploration tree
     "explore_frequency": 10000, #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
     "idx_sectors": 11,
     "shuffle_neighbors": False,
     "verbose_service_events": True,
-    "time_analysis": True,
     "heurstic_weight": 3
 }
 
-exe_times = {}
-def track_time(func):
-    def inner(*args, **kwargs):
-        begin = time.time()
-        res = func(*args, **kwargs)
-        exe_times.setdefault(func.__name__, []).append(time.time()-begin)
-        return res
-    return inner if config['time_analysis'] else func
+# exe_times = {}
+# def track_time(func):
+#     def inner(*args, **kwargs):
+#         begin = time.time()
+#         res = func(*args, **kwargs)
+#         exe_times.setdefault(func.__name__, []).append(time.time()-begin)
+#         return res
+#     return inner if config['time_analysis'] else func
 
 
 
@@ -158,7 +157,7 @@ def exploration_step(obstacles:list[LineString], points):
     _arivalcosts[_cur] = _arivalcosts[prev] + step_cost(prev, _cur)
     for n in get_neighbors(_cur):
         pot = 1*get_collision_potential(n, points)
-        cost = 1*(_arivalcosts[_cur]*1+step_cost(_cur, n)*1+heuristic_cost(n)*1)
+        cost = 1*(_arivalcosts[_cur]*1+step_cost(_cur, n)*1+heuristic_cost(n)*0)
         turning_cost = 0.0*get_turning_cost(prev, _cur, n)
         heapq.heappush(_q,((cost+pot+turning_cost, np.random.rand()), tuple(n), _cur))
 
@@ -195,12 +194,12 @@ def run_pathfinder(is_pathfinder_running):
         # for i in range(20):
             exploration_step(obstacles, get_near_points)
             time.sleep(1/config['explore_frequency'])
-        if config['time_analysis']:
-            n=10
-            time_anal = {i: sum(exe_times[i][-n:])/n for i in exe_times}
-            freq_anal = {i: 1/time_anal[i] if time_anal[i]!=0 else float("inf") for i in time_anal}
-            with(open("frequency_analysis.freq", "w")) as f:
-                f.write(json.dumps({"time":time_anal, "freq":freq_anal}, indent=4))
+        # if config['time_analysis']:
+        #     n=10
+        #     time_anal = {i: sum(exe_times[i][-n:])/n for i in exe_times}
+        #     freq_anal = {i: 1/time_anal[i] if time_anal[i]!=0 else float("inf") for i in time_anal}
+        #     with(open("frequency_analysis.freq", "w")) as f:
+        #         f.write(json.dumps({"time":time_anal, "freq":freq_anal}, indent=4))
         make_tree()
         make_path()
     print()

@@ -10,6 +10,7 @@ except ModuleNotFoundError:
     from sensor_array.LidarClass import Lidar
 from rplidar import RPLidar, RPLidarException
 import serial.tools.list_ports
+from serial.serialutil import PortNotOpenError
 from threading import Thread
 
 def getDevicePort():
@@ -26,9 +27,10 @@ class ActualLidar(Lidar):
     def __init__(self, port=port) -> None:
         self.serial_port = port
         self.measures = []
-    def connect_to_RPLidar(self, max_attempts=3, wait_seconds=1) -> bool:
+    def connect_to_RPLidar(self, max_attempts=3, wait_seconds=1, verbose_attempts=False) -> bool:
         for _ in range(max_attempts):
             try: 
+                print(f"trying to connect on port {port}") if verbose_attempts else None
                 self.lidar = RPLidar(port)
                 self.lidar_iter = self.lidar.iter_scans()
                 next(self.lidar_iter)
@@ -36,6 +38,8 @@ class ActualLidar(Lidar):
             except RPLidarException as e:
                 self.lidar.disconnect()
                 continue
+            except PortNotOpenError:
+                print(f"Actual Lidar Not connected: port {port}")
             except:
                 print("=================================================")
                 print("Lidar Service Failed before lidar could start")
@@ -43,8 +47,8 @@ class ActualLidar(Lidar):
                 print(traceback.format_exc())
             time.sleep(wait_seconds)
         return False
-    def connect(self, max_attempts=3, wait_seconds=1) -> bool:
-        if not self.connect_to_RPLidar(max_attempts, wait_seconds):
+    def connect(self, max_attempts=3, wait_seconds=1, verbose_attempts=False) -> bool:
+        if not self.connect_to_RPLidar(max_attempts, wait_seconds, verbose_attempts):
             return False
         self.stay_connected = True
         def look():

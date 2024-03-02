@@ -9,10 +9,11 @@ try:
 except:
     sys.path.append(os.path.realpath(__file__+os.sep+".."+os.sep+".."))
     from modules.WiFi import WiFi, make_drive_command, Modes
-import pathfinder, pathfinder_visualizer
-import importlib
-importlib.reload(pathfinder)
+import pathfinder_visualizer
 import time
+from straight_shot import StraightShot
+
+pathfinder = StraightShot()
 
 config = {
     "command_frequency": 10, #Hz

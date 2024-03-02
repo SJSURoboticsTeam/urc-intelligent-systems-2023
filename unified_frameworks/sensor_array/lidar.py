@@ -5,6 +5,7 @@ sys.path.append(root) if root not in sys.path else None
 from sensor_array.actual_lidar import ActualLidar
 from sensor_array.client_lidar import WirelessLidar
 from sensor_array.fake_lidar import FakeLidar
+from sensor_array.LidarClass import Lidar
 import traceback
 from threading import Thread
 from math import pi, cos, sin, sqrt, atan2
@@ -16,7 +17,7 @@ import serial
 config = {
     "lidar_preference": [ActualLidar, WirelessLidar, FakeLidar],
     "update_frequency": 20, # Hz
-    "history_size": 10,
+    "history_size": 1,
     "rover_radius": 0.7,
     "open_sector": [-pi/4, 5*pi/4],
     "point_buffer_meters": 1,
@@ -27,7 +28,6 @@ config = {
     "wireless_uri": "ws://192.168.1.130:8765"
 }
 
-Lidar = ActualLidar
 
 _point_clouds = None # This will be the raw point cloud
 _obstacles = None # This will be the points clustered into obstacles
@@ -42,9 +42,9 @@ def run_lidar(service_is_active):
     # Initial connect and set up Lidar
     #----------------------------------
     lidar = None
-    for Lidar in config['lidar_preference']:
-        L = Lidar()
-        if L.connect():
+    for _lidar in config['lidar_preference']:
+        L:Lidar = _lidar()
+        if L.connect(verbose_attempts=True):
             lidar = L
             break
         

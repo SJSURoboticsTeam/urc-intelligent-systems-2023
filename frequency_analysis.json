@@ -1,0 +1,40 @@
+{
+    "pathfinder": {
+        "polar_dis": {
+            "calls": 2,
+            "times": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.0,
+                0.0
+            ],
+            "runtime": 0.0,
+            "frequency": Infinity,
+            "total_time": 0.0
+        },
+        "heuristic_cost": {
+            "calls": 2,
+            "times": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.0,
+                0.0
+            ],
+            "runtime": 0.0,
+            "frequency": Infinity,
+            "total_time": 0.0
+        }
+    }
+}

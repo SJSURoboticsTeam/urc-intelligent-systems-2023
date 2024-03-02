@@ -19,7 +19,7 @@ class FakeLidar(Lidar):
         self.scan = np.random.rand(self.n, 3)*1_000 +1_000
         self.empty_scans = empty_scans
         pass
-    def connect(self, max_attempts=3, wait_seconds=1) -> bool:
+    def connect(self, max_attempts=3, wait_seconds=1, verbose_attempts=True) -> bool:
         return True
     def get_measures(self):
         if self.empty_scans:

@@ -22,6 +22,7 @@ class WirelessLidar(Lidar):
         for i in range(max_attempts):
             if self.connected: return True
             time.sleep(1)
+        self.disconnect()
         return False
     async def receive_data(self):
         while self.stay_connected:
@@ -72,4 +73,4 @@ class WirelessLidar(Lidar):
     #     self.thread.join()
 
 if __name__=='__main__':
-    WirelessLidar().test_Lidar(10)
+    WirelessLidar().test_Lidar(3)
