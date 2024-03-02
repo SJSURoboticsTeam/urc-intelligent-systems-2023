@@ -13,7 +13,7 @@ import time
 
 class WirelessLidar(Lidar):
     def __init__(self, uri):
-        self.uri = uri
+        self.uri = "ws://192.168.1.130:8765"
         self.data = []
         self.connected = True
         self.thread = Thread(target=self.start_connection)
@@ -23,10 +23,13 @@ class WirelessLidar(Lidar):
             try:
                 async with websockets.connect(self.uri) as websocket:
                     while self.connected:
-                        data = await websocket.recv()
-                        print(data)
+                        data = await asyncio.wait_for(websocket.recv(), timeout=1)
+                        # print(data)
                         self.data = json.loads(data)
-                        await asyncio.sleep(0.1)
+            except asyncio.TimeoutError:
+                print("Lidar update timed out")
+                time.sleep(1)
+                print("Trying again")
             except websockets.exceptions.ConnectionClosedOK:
                 print("Connection closed")
                 time.sleep(1)
@@ -39,6 +42,7 @@ class WirelessLidar(Lidar):
     def __iter__(self):
         return self
     def __next__(self):
+        time.sleep(1/4)
         return self.data
     def stop(self):
         return super().stop()
@@ -50,7 +54,7 @@ class WirelessLidar(Lidar):
 
 if __name__=='__main__':
     import time
-    lidar = WirelessLidar("ws://192.168.1.130:8765")
+    lidar = WirelessLidar()
     # lidar = WirelessLidar("ws://localhost:8765")
     lidar_iter = iter(lidar)
     start_time = time.time()
