@@ -3,6 +3,7 @@ import re
 root = (next(re.finditer(".*unified_frameworks", __file__)).group())
 sys.path.append(root) if root not in sys.path else None
 from sensor_array.actual_lidar import ActualLidar
+from sensor_array.client_lidar import WirelessLidar
 from sensor_array.fake_lidar import FakeLidar
 import traceback
 from threading import Thread
@@ -13,7 +14,7 @@ import serial.tools.list_ports
 import serial
 
 config = {
-    "lidar_preference": [ActualLidar, FakeLidar],
+    "lidar_preference": [ActualLidar, WirelessLidar, FakeLidar],
     "update_frequency": 20, # Hz
     "history_size": 10,
     "rover_radius": 0.7,
