@@ -12,8 +12,16 @@ except:
 import pathfinder_visualizer
 import time
 from straight_shot import StraightShot
+import rapid_random_tree
+from rapid_random_tree import RRT_Navigator
+import worldview
+import pathfinder
+import importlib
+importlib.reload(worldview)
+importlib.reload(pathfinder)
+# importlib.reload(rapid_random_tree)
+# pathfinder = RRT_Navigator(worldview)
 
-pathfinder = StraightShot()
 
 config = {
     "command_frequency": 10, #Hz
