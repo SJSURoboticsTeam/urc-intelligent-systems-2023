@@ -1,20 +1,23 @@
 """File to hold helpful util functions/classes"""
 from threading import Thread
 import time, json
+from math import sqrt, cos, atan2, sin
+import numpy as np
 
 config = {
-    'time_analysis': True
+    'time_analysis': True,
+    'decimal_precision': 5,
 }
 
 class Service():
-    def __init__(self, service_func, name) -> None:
+    def __init__(self, service_func, name, *args, **kwargs) -> None:
         """
         Create an easy to start/stop service from a function. 
         The function must accept a callable which returns if the service is still running. 
         That callable must be respected to prevent the service from running amok.
         """
         self._running = False
-        self._thread = Thread(target=service_func, args=(lambda: self._running,), name=name)
+        self._thread = Thread(target=service_func, args=(lambda: self._running, *args), kwargs=kwargs, name=name)
     def start_service(self):
         self._running=True
         self._thread.start()
@@ -56,6 +59,22 @@ def keep_track(is_active):
             f.write(json.dumps(exe_times, indent=4))
         time.sleep(1)
 time_tracking_service = Service(keep_track, "Time Tracking Service")
+
+@track_time
+def polar_dis(p1, p2):
+    """Distance between polar coordinates p1 and p2"""
+    if p1 is None or p2 is None: return float('inf')
+    return sqrt(abs(p1[1]**2 + p2[1]**2 - 2*p1[1]*p2[1]*cos(p1[0]-p2[0])))
+@track_time
+def polar_to_cart(p) -> np.ndarray:
+    return np.round(p[1]*np.array([cos(p[0]), sin(p[0])]), config['decimal_precision'])
+@track_time
+def cart_to_polar(coord):
+    x, y = coord
+    res = np.round((atan2(y, x), np.linalg.norm(coord)),config['decimal_precision'])
+    # print(f"cart_to_polar: {res}")
+    return res
+
 
 
 if __name__=="__main__":

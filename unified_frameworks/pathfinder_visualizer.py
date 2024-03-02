@@ -71,8 +71,11 @@ def show_visual(pathfinder):
 
 if __name__=='__main__':
     from straight_shot import StraightShot
+    from rapid_random_tree import RRT_Navigator
     import worldview
-    pathfinder = StraightShot(worldview)
+    # pathfinder = StraightShot(worldview)
+    # pathfinder = RRT_Navigator(worldview)
+    import pathfinder
     import matplotlib
     from unified_utils import time_tracking_service
     time_tracking_service.start_service()

@@ -13,6 +13,9 @@ except ModuleNotFoundError:
     sys.path.append((next(re.finditer(".*unified_frameworks", __file__)).group()))
     from sensor_array.LidarClass import Lidar
 
+config = {
+    "verbose":False
+}
 class FakeLidar(Lidar):
     def __init__(self, empty_scans=False) -> None:
         self.n = 30
@@ -25,7 +28,9 @@ class FakeLidar(Lidar):
         if self.empty_scans:
             return []
         self.scan += (0,1,0)
-        return self.scan + (np.random.rand(self.n, 3)-0.5)*(0,0,400)
+        res = self.scan + (np.random.rand(self.n, 3)-0.5)*(0,0,400)
+        print(res) if config["verbose"] else None
+        return res
     def disconnect(self):
         pass
 

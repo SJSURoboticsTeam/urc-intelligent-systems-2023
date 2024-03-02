@@ -32,7 +32,7 @@ def run_worldview(service_is_active):
         print("Starting Worldview Service")
 
 def get_obstacles():
-    return _obstacles
+    return [] if _obstacles is None else _obstacles
 def get_points():
     # print("points:", _points, sep=" ")
     return _points
