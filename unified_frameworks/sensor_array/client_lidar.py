@@ -1,6 +1,12 @@
 import asyncio
 import websockets
-from sensor_array.LidarClass import Lidar
+try:
+    from sensor_array.LidarClass import Lidar
+except ModuleNotFoundError:
+    import sys
+    import re
+    sys.path.append((next(re.finditer(".*unified_frameworks", __file__)).group()))
+    from sensor_array.LidarClass import Lidar
 from threading import Thread
 import json
 import time
@@ -18,6 +24,7 @@ class WirelessLidar(Lidar):
                 async with websockets.connect(self.uri) as websocket:
                     while self.connected:
                         data = await websocket.recv()
+                        print(data)
                         self.data = json.loads(data)
                         await asyncio.sleep(0.1)
             except websockets.exceptions.ConnectionClosedOK:
@@ -48,10 +55,10 @@ if __name__=='__main__':
     lidar_iter = iter(lidar)
     start_time = time.time()
     count = 0
-    while time.time() - start_time < 5:
+    while time.time() - start_time < 10:
         count += 1
         print()
         print(f"{count}: {next(lidar_iter)}")
-        # time.sleep(0.005)
+        time.sleep(1)
     lidar.disconnect()
     print("disconnected")
