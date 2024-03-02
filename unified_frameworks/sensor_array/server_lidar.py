@@ -7,14 +7,14 @@ import sys
 import serial.tools.list_ports
 import serial
 
+
 def getDevicePort():
     ports = serial.tools.list_ports.comports()
 
-    if len(ports) > 0:
-        for port, desc, hwid in sorted(ports):
-            if hwid != "n/a":
-                return port
-    return None
+    for port in ports:
+        if "USB" in port.device:
+            return port.device
+
 port = getDevicePort()
 
 print(f"Port = {getDevicePort()}")
@@ -24,46 +24,48 @@ if port is None:
     sys.exit(1)
 
 lidar = RPLidar(port)
-
+clients = [] # List of clients connected in the server
+buffer = None
 
 # Creating WebSocket server
-async def server(websocket):
+async def serverConnections(websocket):
     global lidar
+
+    clients.append(websocket)
 
     try:
         while True:
             # Receiving values from client (lidar)
             # RAW DATA is in tuples
-            # lidar_data = tuple()
-            # lidar_data = None
-
-            
             for scan in lidar.iter_scans():
-                # print(json.dumps(scan))
-                await websocket.send(json.dumps(scan))
-                await asyncio.sleep(0.005)
+                buffer = json.dumps(scan)
+
+                if len(clients) > 0:
+                    data = await data_buffer.get()
+                    await websocket.send(data)
+                    await asyncio.sleep(0.01)
 
     except websockets.exceptions.ConnectionClosedOK:
-        # await websocket.send("[SERVER] Disconnecting from server")
-        # await asyncio.sleep(1)
         print("[SERVER] Client disconnected from server!")
+        clients.remove(websocket)
     except websockets.ConnectionClosedError:
         print("Internal Server Error.")
     except rplidar.RPLidarException:
+        print("RPLidarException has been caught!")
         lidar.stop()
         lidar.stop_motor()
         lidar.disconnect()
         lidar = RPLidar(port)
  
  
-async def main():
-    async with websockets.serve(server, "0.0.0.0", 8765):
+async def runningServer():
+    async with websockets.serve(serverConnections, "0.0.0.0", 8765):
         await asyncio.Future()  # run forever
  
 if __name__ == "__main__":
     try:
         print("[SERVER] Server ON")
-        asyncio.run(main())
+        asyncio.run(runningServer())
     except KeyboardInterrupt:
         print("Keyboard Interrupt occurred!")
         lidar.stop()
