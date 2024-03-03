@@ -19,8 +19,11 @@ import pathfinder
 import importlib
 importlib.reload(worldview)
 importlib.reload(pathfinder)
+import straight_shot 
+importlib.reload(straight_shot)
 # importlib.reload(rapid_random_tree)
 # pathfinder = RRT_Navigator(worldview)
+# pathfinder = StraightShot(worldview)
 
 
 config = {
@@ -45,7 +48,7 @@ def captain_act(get_target_speed):
         radians = (nxt[0]%(2*pi))-pi/2
     radians*=-1
     global prev_rad
-    radians = 0.9*radians + 0.1*prev_rad
+    radians = 0.8*radians + 0.2*prev_rad
     prev_rad = radians
     degrees = int(radians/(2*pi)*360)
     mode = Modes.DRIVE if abs(degrees) < 30 else Modes.SPIN

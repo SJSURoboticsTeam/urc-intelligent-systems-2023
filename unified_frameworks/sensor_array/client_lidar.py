@@ -9,8 +9,13 @@ from threading import Thread
 import json
 import time
 
+wifi_address = {
+    "robotics_wifi": "ws://192.168.1.130:8765",
+    "tp_link": "ws://192.168.0.104:8765"
+}
+
 class WirelessLidar(Lidar):
-    def __init__(self, uri="ws://192.168.1.130:8765"):
+    def __init__(self, uri=wifi_address["tp_link"]):
         self.uri = uri
         self.data = []
     def connect(self, max_attempts=3, wait_seconds=1, verbose_attempts=False) -> bool:

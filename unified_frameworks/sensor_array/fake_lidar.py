@@ -17,9 +17,9 @@ config = {
     "verbose":False
 }
 class FakeLidar(Lidar):
-    def __init__(self, empty_scans=False) -> None:
-        self.n = 30
-        self.scan = np.random.rand(self.n, 3)*1_000 +1_000
+    def __init__(self, empty_scans=True) -> None:
+        self.n = 60
+        self.scan = np.random.rand(self.n, 3)*1_000 +2_000
         self.empty_scans = empty_scans
         pass
     def connect(self, max_attempts=3, wait_seconds=1, verbose_attempts=True) -> bool:

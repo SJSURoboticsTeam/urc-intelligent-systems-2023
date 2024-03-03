@@ -30,7 +30,7 @@ config = {
     "initial_radians": pi/3,
     "neighbor_sector": np.array([-1,1])*(90/360)*(2*pi),
     "neighbors": 6,
-    "update_frequency": 10, #Hz How frequently to update the shared path and exploration tree
+    "update_frequency": 15, #Hz How frequently to update the shared path and exploration tree
     "explore_frequency": 10000, #Hz How frequently to expand on the exploration tree
     "decimal_precision":5,
     "idx_sectors": 11,
@@ -110,7 +110,9 @@ def get_collision_potential(polar_pos, get_near_points):
     obstacle_points = get_near_points(polar_pos)
     if not obstacle_points: 
         return 0
-    min_dis = min((polar_dis(polar_pos, p) for p in obstacle_points))
+    pot = lambda d: 1/(d*(1/2))**3 if d!=0 else float('inf')
+    min_dis = max((pot(polar_dis(polar_pos, p)) for p in obstacle_points))
+    return min_dis
     pot = 1/(min_dis*0.2) if min_dis!=0 else float('inf')
     return pot
 @track_time
@@ -156,8 +158,8 @@ def exploration_step(obstacles:list[LineString], points):
     _backlinks[_cur] = prev
     _arivalcosts[_cur] = _arivalcosts[prev] + step_cost(prev, _cur)
     for n in get_neighbors(_cur):
-        pot = 0.3*get_collision_potential(n, points)
-        cost = 1*(_arivalcosts[_cur]*1+step_cost(_cur, n)*1+heuristic_cost(n)*4)
+        pot = 1*get_collision_potential(n, points)
+        cost = 1*(_arivalcosts[_cur]*1+step_cost(_cur, n)*1+(heuristic_cost(n)**4)*10)
         turning_cost = 0.0*get_turning_cost(prev, _cur, n)
         heapq.heappush(_q,((cost+pot+turning_cost, np.random.rand()), tuple(n), _cur))
 
@@ -172,7 +174,7 @@ def run_pathfinder(is_pathfinder_running):
         reset()
         ts = time.time()
         obstacles = worldview.get_obstacles()
-        obstacles = [LineString([polar_to_cart(p) for p in obs]) for obs in obstacles if len(obs)>1] if obstacles is not None else []
+        obstacles = [LineString([polar_to_cart(p) for p in obs]).buffer(0.4) for obs in obstacles if len(obs)>1] if obstacles is not None else []
         points = worldview.get_points()
         sectors = [i*2*pi/config['idx_sectors'] for i in range(config['idx_sectors'])]
         idx = {s:[] for s in sectors}
