@@ -17,8 +17,8 @@ config = {
     "update_frequency": 10,
     "grow_frequency": 10_000,
     "step_size": 0.2,
-    "neighbors": 6,
-    "initial_radians":pi/2
+    "neighbors": 3,
+    "neighbor_sector": [-pi/4, pi/4]
 }
 _goal = (pi/4, 1)
 class A_Star_Navigator(Navigator):
@@ -27,7 +27,7 @@ class A_Star_Navigator(Navigator):
         self.name="instance2"
         self.worldview = worldview
         self._path = []
-        self._backlinks = {}
+        self._backlinks = { (0,0): None }
         self._arrival_costs = { None: 0 }
         self._goal = np.array((pi/2, 1))
         self.count=0
@@ -41,7 +41,7 @@ class A_Star_Navigator(Navigator):
     def start_pathfinder_service(self, service_name="A* path finding service"):
         def service_func(is_running):
             while is_running():
-                self._backlinks.clear()
+                self._backlinks = { (0,0): None } 
                 self._arrival_costs = { None: 0 }
                 q = [(0,(0,0), None)]
                 ts = time()
@@ -49,6 +49,7 @@ class A_Star_Navigator(Navigator):
                     cartesian_obstacles = [[polar_to_cart(p) for p in obs] for obs in self.worldview.get_obstacles() if len(obs)>0]
                     self._grow_tree(q, [LineString(obs).buffer(0.5) if len(obs)>1 else Point(obs[0]) for obs in cartesian_obstacles])
                     sleep(1/config['grow_frequency'])
+                self._update_path()
         self._service = Service(service_func, service_name)
         self.worldview.start_worldview_service()
         self._service.start_service()
@@ -62,11 +63,20 @@ class A_Star_Navigator(Navigator):
         coll =  any([intersects(LineString((cart1, cart2)), obs) for obs in cart_obstacles])
         return coll
     def _get_neighbors(self, polar_point):
-        neighbors = [(config["initial_radians"] + i*2*pi/config['neighbors'], config['step_size']) for i in range(config['neighbors'])]
+        p,q = config['neighbor_sector']
+        a,b = polar_point, self._backlinks[polar_point]
+        initial_angle = pi/2 if b is None else polar_sum(a, (b[0],-b[1]))[0]
+        neighbors = [(p+i*(q-p)/(config['neighbors']-1)+initial_angle , config['step_size']) for i in range(config['neighbors'])]
         return [polar_sum(polar_point, n) for n in neighbors]
         pass
+    def _update_path(self):
+        near_point = min(self._backlinks, key=lambda p: polar_dis(p, self._goal))
+        path = [near_point]
+        while path[-1] is not None:
+            path.append(self._backlinks[path[-1]])
+        path.pop()
+        self._path = path[::-1]
     def _grow_tree(self, polar_q, cart_obstacles: list[Geometry]=[]):
-        self._path = ((0,0), self._goal)
         if not polar_q: return
         sorting_cost, current_node, previous_node = heappop(polar_q)
         assert current_node is not None, "Got None as current node"

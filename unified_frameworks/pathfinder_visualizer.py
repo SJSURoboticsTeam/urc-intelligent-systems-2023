@@ -16,7 +16,7 @@ def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
         tree_lines = LineCollection([], color='g',)
         tree_lines.set_alpha(0.5)
         ax.add_collection(tree_lines)
-        path_line = LineCollection([], color='g', linewidths=1)
+        path_line = LineCollection([], color='g', linewidths=3)
         ax.add_collection(path_line)
         obstacle_groups = LineCollection([], color='k')
         ax.add_collection(obstacle_groups)

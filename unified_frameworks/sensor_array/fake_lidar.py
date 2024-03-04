@@ -18,7 +18,7 @@ config = {
 }
 class FakeLidar(Lidar):
     def __init__(self, empty_scans=False) -> None:
-        self.n = 60
+        self.n = 30
         self.scan = np.random.rand(self.n, 3)*1_000 +2_000
         self.empty_scans = empty_scans
         pass
