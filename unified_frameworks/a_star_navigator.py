@@ -25,24 +25,21 @@ class A_Star_Navigator(Navigator):
         self.name="instance2"
         self.worldview = worldview
         self._path = []
-        # self._tree = [
-        #     # [(0,0), (0,0)],
-        # ]
         self._backlinks = {}
+        self._arrival_costs = { None: 0 }
         self._goal = np.array((pi/2, 1))
         print("Created")
     def get_path(self) -> ndarray:
         return self._path
     def get_tree_links(self) -> ndarray:
-        # return self._tree
         return [[self._backlinks[k], k] for k in self._backlinks if self._backlinks[k] is not None]
     def set_goal(self, polar_point):
         self._goal=polar_point
     def start_pathfinder_service(self, service_name="A* path finding service"):
         def service_func(is_running):
             while is_running():
-                # self._tree.clear()
                 self._backlinks.clear()
+                self._arrival_costs = { None: 0 }
                 q = [(0,(0,0), None)]
                 ts = time()
                 while time()-ts < 1/config['update_frequency']:
@@ -68,16 +65,19 @@ class A_Star_Navigator(Navigator):
         sorting_cost, current_node, previous_node = heappop(polar_q)
         assert current_node is not None, "Got None as current node"
         rpt = any([same_polar_point(current_node, existing_node) for existing_node in self._backlinks])
-        # rpt = any([same_polar_point(current_node, existing_node) for existing_node in [b for a,b in self._tree]])
         if len(self._backlinks) > 1 and rpt:
             return
-        if self._is_colision(None, polar_to_cart(current_node), cart_obstacles):
+        if self._is_colision(polar_to_cart(previous_node), polar_to_cart(current_node), cart_obstacles):
             return
         self._backlinks[current_node]=previous_node
-        # self._tree.append([previous_node, current_node]) if previous_node is not None else None
+        self._arrival_costs[current_node]  = self._arrival_costs[previous_node]
+        self._arrival_costs[current_node] += 0 if previous_node is None else polar_dis(previous_node, current_node)
         neighbors = self._get_neighbors(current_node)
         for n in neighbors:
-            heappush(polar_q, (len(self._backlinks), tuple(n), current_node))
+            ac = self._arrival_costs[current_node] + polar_dis(current_node, n)
+            hc = polar_dis(n, self._goal)
+            cost = ac+hc
+            heappush(polar_q, ((cost), tuple(n), current_node))
         
     
 if __name__=='__main__':
