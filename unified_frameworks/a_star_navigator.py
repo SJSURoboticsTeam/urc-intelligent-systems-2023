@@ -28,6 +28,7 @@ class A_Star_Navigator(Navigator):
         self._tree = [
             # [(0,0), (0,0)],
         ]
+        self._backlinks = {}
         self._goal = np.array((pi/2, 1))
         print("Created")
     def get_path(self) -> ndarray:
@@ -40,6 +41,7 @@ class A_Star_Navigator(Navigator):
         def service_func(is_running):
             while is_running():
                 self._tree.clear()
+                self._backlinks.clear()
                 q = [(0,(0,0), None)]
                 ts = time()
                 while time()-ts < 1/config['update_frequency']:
@@ -72,7 +74,7 @@ class A_Star_Navigator(Navigator):
         self._tree.append([previous_node, current_node]) if previous_node is not None else None
         neighbors = self._get_neighbors(current_node)
         for n in neighbors:
-            heappush(polar_q, (len(self._tree), n.tolist(), current_node))
+            heappush(polar_q, (len(self._tree), tuple(n), current_node))
         
     
 if __name__=='__main__':

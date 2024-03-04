@@ -17,7 +17,7 @@ config = {
     "verbose":False
 }
 class FakeLidar(Lidar):
-    def __init__(self, empty_scans=True) -> None:
+    def __init__(self, empty_scans=False) -> None:
         self.n = 60
         self.scan = np.random.rand(self.n, 3)*1_000 +2_000
         self.empty_scans = empty_scans

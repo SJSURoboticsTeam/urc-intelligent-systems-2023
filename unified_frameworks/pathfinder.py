@@ -226,8 +226,8 @@ class Pf(NavigatorClass.Navigator):
 
 import a_star_navigator
 importlib.reload(a_star_navigator)
-# pf = a_star_navigator.A_Star_Navigator(worldview)
-pf = Pf(worldview)
+pf = a_star_navigator.A_Star_Navigator(worldview)
+# pf = Pf(worldview)
 def get_pathfinder():
     return pf
 
