@@ -66,6 +66,10 @@ def polar_dis(p1, p2):
     if p1 is None or p2 is None: return float('inf')
     return sqrt(abs(p1[1]**2 + p2[1]**2 - 2*p1[1]*p2[1]*cos(p1[0]-p2[0])))
 @track_time
+def same_polar_point(p1, p2, thresh=0.1):
+    # return False
+    return polar_dis(p1, p2) < thresh
+@track_time
 def polar_to_cart(p) -> np.ndarray:
     return np.round(p[1]*np.array([cos(p[0]), sin(p[0])]), config['decimal_precision'])
 @track_time
@@ -74,7 +78,10 @@ def cart_to_polar(coord):
     res = np.round((atan2(y, x), np.linalg.norm(coord)),config['decimal_precision'])
     # print(f"cart_to_polar: {res}")
     return res
-
+@track_time
+def polar_sum(*polar_points):
+    cart_points = [polar_to_cart(p) for p in polar_points if p is not None]
+    return cart_to_polar(sum(cart_points, np.array([0,0])))
 
 
 if __name__=="__main__":

@@ -11,7 +11,7 @@ import time
 
 wifi_address = {
     "robotics_wifi": "ws://192.168.1.130:8765",
-    "tp_link": "ws://192.168.0.104:8765"
+    "tp_link": "ws://192.168.0.100:8765"
 }
 
 class WirelessLidar(Lidar):

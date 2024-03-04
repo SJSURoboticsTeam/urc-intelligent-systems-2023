@@ -224,7 +224,10 @@ class Pf(NavigatorClass.Navigator):
     def stop_pathfinder_service(self):
         return stop_pathfinder_service()
 
-pf = Pf(worldview)
+import a_star_navigator
+importlib.reload(a_star_navigator)
+pf = a_star_navigator.A_Star_Navigator(worldview)
+# pf = Pf(worldview)
 def get_pathfinder():
     return pf
 
