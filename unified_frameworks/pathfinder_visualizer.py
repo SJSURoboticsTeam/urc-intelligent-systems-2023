@@ -70,23 +70,15 @@ def show_visual(get_pathfinder):
     return anime
 
 if __name__=='__main__':
-    from straight_shot import StraightShot
-    from rapid_random_tree import RRT_Navigator
+    import pathfinder
     import worldview
     # pathfinder = StraightShot(worldview)
-    pathfinder = RRT_Navigator(worldview)
     # import pathfinder
     import matplotlib
     from unified_utils import time_tracking_service
     time_tracking_service.start_service()
-    pathfinder.start_pathfinder_service()
-    # def on_hover_point(point_polar):
-    #     pathfinder.set_goal(point_polar) if not point_polar is None else None
-    # fig, update_func = run_visualizer(pathfinder, on_hover_point)
-    # # def on_mouse_move(event):
-    # #     print(event.xdata, event.ydata)
-    # anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=True)
-    # plt.show()
-    show_visual(pathfinder)
-    pathfinder.stop_pathfinder_service()
+    pathfinder.get_pathfinder().start_pathfinder_service()
+
+    show_visual(pathfinder.get_pathfinder)
+    pathfinder.get_pathfinder().stop_pathfinder_service()
     time_tracking_service.stop_service()
