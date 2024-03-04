@@ -15,16 +15,16 @@ from straight_shot import StraightShot
 import rapid_random_tree
 from rapid_random_tree import RRT_Navigator
 import worldview
-import pathfinder
+import pathfinder as _pathfinder
 import importlib
 importlib.reload(worldview)
-importlib.reload(pathfinder)
+importlib.reload(_pathfinder)
 import straight_shot 
 importlib.reload(straight_shot)
 # importlib.reload(rapid_random_tree)
 # pathfinder = RRT_Navigator(worldview)
 # pathfinder = StraightShot(worldview)
-
+pathfinder = _pathfinder.get_pathfinder()
 
 config = {
     "command_frequency": 10, #Hz
@@ -94,7 +94,7 @@ def stop_captain_service():
         print("Stop Captain Service")
     _service.stop_service()
 def show_captain_visual():
-    return pathfinder_visualizer.show_visual(pathfinder)
+    return pathfinder_visualizer.show_visual(_pathfinder.get_pathfinder)
 
 
 if __name__=='__main__':

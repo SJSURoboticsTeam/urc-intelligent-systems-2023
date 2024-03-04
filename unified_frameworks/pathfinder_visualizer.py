@@ -9,7 +9,7 @@ config = {
     "blit": False,
     "view_radius_meter": 4,
 }
-def run_visualizer(pathfinder, on_hover_mouse=lambda p:None,):
+def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
         fig = plt.figure(0)
         # fig.subplots
         ax = plt.subplot(111, projection='polar')
@@ -29,17 +29,17 @@ def run_visualizer(pathfinder, on_hover_mouse=lambda p:None,):
             # print()
             modded = []
             # Visualize exploration tree
-            tree_links = pathfinder.get_tree_links()
+            tree_links = get_pathfinder().get_tree_links()
             tree_lines.set_segments(tree_links)
             modded.append(tree_lines)
             #---------------------------
             # Visualize path
-            path = pathfinder.get_path()
+            path = get_pathfinder().get_path()
             if path:
                 path_line.set_segments([path])
                 modded.append(path_line)
             #---------------------
-            obstacles = pathfinder.worldview.get_obstacles()
+            obstacles = get_pathfinder().worldview.get_obstacles()
             # Visualizing Obstacles
             obstacle_groups.set_segments(obstacles)
             modded.append(obstacle_groups)
@@ -61,10 +61,10 @@ def run_visualizer(pathfinder, on_hover_mouse=lambda p:None,):
         fig.canvas.mpl_connect("motion_notify_event", on_mouse_move)
         return fig, update_plot
 
-def show_visual(pathfinder):
+def show_visual(get_pathfinder):
     def on_hover_point(point_polar):
-        pathfinder.set_goal(point_polar) if not point_polar is None else None
-    fig, update_func = run_visualizer(pathfinder, on_hover_point)
+        get_pathfinder().set_goal(point_polar) if not point_polar is None else None
+    fig, update_func = run_visualizer(get_pathfinder, on_hover_point)
     anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=config['blit'])
     plt.show()
     return anime

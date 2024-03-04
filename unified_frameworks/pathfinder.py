@@ -38,18 +38,6 @@ config = {
     "verbose_service_events": True,
     "heurstic_weight": 3
 }
-
-# exe_times = {}
-# def track_time(func):
-#     def inner(*args, **kwargs):
-#         begin = time.time()
-#         res = func(*args, **kwargs)
-#         exe_times.setdefault(func.__name__, []).append(time.time()-begin)
-#         return res
-#     return inner if config['time_analysis'] else func
-
-
-
 _goal = (pi/2, 8) # 8 meters at 90 degrees
 _path = [] # Path to the point closest to the goal
 _tree = [] # Tree of explored area
@@ -118,13 +106,6 @@ def get_collision_potential(polar_pos, get_near_points):
 @track_time
 def get_turning_cost(polar_p1, polar_p2, polar_p3):
     return abs(polar_p3[0]-pi/2)
-    # if polar_p1 is None: return abs(polar_p3[0]-pi/2)
-    # p1, p2, p3 = [polar_to_cart(p) for p in [polar_p1, polar_p2, polar_p3]]
-    # v_a = p2-p1
-    # v_b = p3-p2
-    # ang_a, _ = cart_to_polar(v_a)
-    # ang_b, _ = cart_to_polar(v_b)
-    # return abs(ang_b-ang_a)
 @track_time
 def check_collision(polar_step, obstacles: list[LineString]):
     if any([i is None for i in polar_step]): return False
@@ -137,14 +118,17 @@ def make_tree():
     _tree = [[k, _backlinks[k]] for k in _backlinks if _backlinks[k] is not None]
 @track_time
 def make_path():
-    if not _backlinks.keys(): return
-    near_point = min(_backlinks, key=lambda k: polar_dis(k, _goal))
-    path = [near_point]
-    while path[-1] is not None:
-        path.append(_backlinks[path[-1]])
-    path.pop()
     global _path
-    _path = list(reversed(path))
+    _path = [(0,0), _goal]
+    return
+    # if not _backlinks.keys(): return
+    # near_point = min(_backlinks, key=lambda k: polar_dis(k, _goal))
+    # path = [near_point]
+    # while path[-1] is not None:
+    #     path.append(_backlinks[path[-1]])
+    # path.pop()
+    # global _path
+    # _path = list(reversed(path))
     
 @track_time
 def exploration_step(obstacles:list[LineString], points):
@@ -193,15 +177,8 @@ def run_pathfinder(is_pathfinder_running):
             return pts
 
         while time.time() - ts < 1/config['update_frequency']:
-        # for i in range(20):
             exploration_step(obstacles, get_near_points)
             time.sleep(1/config['explore_frequency'])
-        # if config['time_analysis']:
-        #     n=10
-        #     time_anal = {i: sum(exe_times[i][-n:])/n for i in exe_times}
-        #     freq_anal = {i: 1/time_anal[i] if time_anal[i]!=0 else float("inf") for i in time_anal}
-        #     with(open("frequency_analysis.freq", "w")) as f:
-        #         f.write(json.dumps({"time":time_anal, "freq":freq_anal}, indent=4))
         make_tree()
         make_path()
     print()
@@ -225,6 +202,7 @@ def stop_pathfinder_service():
 
 def get_path():
     # print(_path)
+    # return [(0,0), _goal]
     return _path
 def get_tree_links():
     return _tree
@@ -232,6 +210,23 @@ def set_goal(point_polar):
     global _goal
     _goal = point_polar
 
+import NavigatorClass
+class Pf(NavigatorClass.Navigator):
+    def get_path(self) -> np.ndarray:
+        # return [(0,0), _goal]
+        return get_path()
+    def get_tree_links(self) -> np.ndarray:
+        return get_tree_links()
+    def set_goal(self, polar_point):
+        return set_goal(polar_point)
+    def start_pathfinder_service(self):
+        return start_pathfinder_service()
+    def stop_pathfinder_service(self):
+        return stop_pathfinder_service()
+
+pf = Pf(worldview)
+def get_pathfinder():
+    return pf
+
 if __name__=='__main__':
     pass
-    # chart_route(None, None)
