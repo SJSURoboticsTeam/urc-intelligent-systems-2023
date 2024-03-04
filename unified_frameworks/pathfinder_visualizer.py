@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from matplotlib.collections import LineCollection
+from matplotlib.collections import LineCollection, PolyCollection
 import matplotlib.animation as anim
 import json
 import sys
@@ -20,6 +20,12 @@ def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
         ax.add_collection(path_line)
         obstacle_groups = LineCollection([], color='k')
         ax.add_collection(obstacle_groups)
+        body = get_pathfinder().worldview.get_rover_body()
+        rover_body = PolyCollection([body], closed=True)
+        ax.add_collection(rover_body)
+        rover_projection = PolyCollection([body], closed=True)
+        rover_projection.set_alpha(0.2)
+        # ax.add_collection(rover_projection)
 
         rmax=config['view_radius_meter']
         rscaler = 1.3

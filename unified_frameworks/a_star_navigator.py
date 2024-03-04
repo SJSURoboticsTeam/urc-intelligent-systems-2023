@@ -1,7 +1,7 @@
 from numpy import ndarray
 from NavigatorClass import Navigator
 from math import pi
-from shapely import Geometry, intersects
+from shapely import Geometry, intersects, LineString, Point
 from heapq import heappop, heappush
 import importlib
 import unified_utils
@@ -14,9 +14,11 @@ print("Reloaded")
 name="module2"
 
 config = {
-    "update_frequency": 1,
+    "update_frequency": 10,
     "grow_frequency": 10_000,
-    "step_size": 0.2
+    "step_size": 0.2,
+    "neighbors": 6,
+    "initial_radians":pi/2
 }
 _goal = (pi/4, 1)
 class A_Star_Navigator(Navigator):
@@ -28,6 +30,7 @@ class A_Star_Navigator(Navigator):
         self._backlinks = {}
         self._arrival_costs = { None: 0 }
         self._goal = np.array((pi/2, 1))
+        self.count=0
         print("Created")
     def get_path(self) -> ndarray:
         return self._path
@@ -43,7 +46,8 @@ class A_Star_Navigator(Navigator):
                 q = [(0,(0,0), None)]
                 ts = time()
                 while time()-ts < 1/config['update_frequency']:
-                    self._grow_tree(q)
+                    cartesian_obstacles = [[polar_to_cart(p) for p in obs] for obs in self.worldview.get_obstacles() if len(obs)>0]
+                    self._grow_tree(q, [LineString(obs).buffer(0.5) if len(obs)>1 else Point(obs[0]) for obs in cartesian_obstacles])
                     sleep(1/config['grow_frequency'])
         self._service = Service(service_func, service_name)
         self.worldview.start_worldview_service()
@@ -54,9 +58,11 @@ class A_Star_Navigator(Navigator):
         self.worldview.stop_worldview_service()
         pass
     def _is_colision(self,cart1, cart2, cart_obstacles: list[Geometry]):
-        return False
+        if cart1 is None or cart2 is None: return False
+        coll =  any([intersects(LineString((cart1, cart2)), obs) for obs in cart_obstacles])
+        return coll
     def _get_neighbors(self, polar_point):
-        neighbors = [(i*2*pi/6, config['step_size']) for i in range(6)]
+        neighbors = [(config["initial_radians"] + i*2*pi/config['neighbors'], config['step_size']) for i in range(config['neighbors'])]
         return [polar_sum(polar_point, n) for n in neighbors]
         pass
     def _grow_tree(self, polar_q, cart_obstacles: list[Geometry]=[]):
@@ -67,8 +73,10 @@ class A_Star_Navigator(Navigator):
         rpt = any([same_polar_point(current_node, existing_node) for existing_node in self._backlinks])
         if len(self._backlinks) > 1 and rpt:
             return
-        if self._is_colision(polar_to_cart(previous_node), polar_to_cart(current_node), cart_obstacles):
+        coll = self._is_colision(polar_to_cart(previous_node), polar_to_cart(current_node), cart_obstacles)
+        if coll:
             return
+        assert not coll
         self._backlinks[current_node]=previous_node
         self._arrival_costs[current_node]  = self._arrival_costs[previous_node]
         self._arrival_costs[current_node] += 0 if previous_node is None else polar_dis(previous_node, current_node)
@@ -76,7 +84,7 @@ class A_Star_Navigator(Navigator):
         for n in neighbors:
             ac = self._arrival_costs[current_node] + polar_dis(current_node, n)
             hc = polar_dis(n, self._goal)
-            cost = ac+hc
+            cost = ac+4*hc
             heappush(polar_q, ((cost), tuple(n), current_node))
         
     

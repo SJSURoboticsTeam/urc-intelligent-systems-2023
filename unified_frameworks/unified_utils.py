@@ -71,9 +71,11 @@ def same_polar_point(p1, p2, thresh=0.1):
     return polar_dis(p1, p2) < thresh
 @track_time
 def polar_to_cart(p) -> np.ndarray:
+    if p is None: return None
     return np.round(p[1]*np.array([cos(p[0]), sin(p[0])]), config['decimal_precision'])
 @track_time
 def cart_to_polar(coord):
+    if coord is None: return None
     x, y = coord
     res = np.round((atan2(y, x), np.linalg.norm(coord)),config['decimal_precision'])
     # print(f"cart_to_polar: {res}")
