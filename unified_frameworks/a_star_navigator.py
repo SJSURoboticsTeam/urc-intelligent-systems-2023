@@ -17,8 +17,9 @@ config = {
     "update_frequency": 10,
     "grow_frequency": 10_000,
     "step_size": 0.2,
-    "neighbors": 3,
-    "neighbor_sector": [-pi/4, pi/4]
+    "neighbors": 6,
+    "neighbor_sector": [-pi/4, pi/4],
+    "obstacle_buffer":0.45
 }
 _goal = (pi/4, 1)
 class A_Star_Navigator(Navigator):
@@ -47,7 +48,7 @@ class A_Star_Navigator(Navigator):
                 ts = time()
                 while time()-ts < 1/config['update_frequency']:
                     cartesian_obstacles = [[polar_to_cart(p) for p in obs] for obs in self.worldview.get_obstacles() if len(obs)>0]
-                    self._grow_tree(q, [LineString(obs).buffer(0.5) if len(obs)>1 else Point(obs[0]) for obs in cartesian_obstacles])
+                    self._grow_tree(q, [LineString(obs).buffer(config['obstacle_buffer']) if len(obs)>1 else Point(obs[0]) for obs in cartesian_obstacles])
                     sleep(1/config['grow_frequency'])
                 self._update_path()
         self._service = Service(service_func, service_name)
@@ -94,7 +95,7 @@ class A_Star_Navigator(Navigator):
         for n in neighbors:
             ac = self._arrival_costs[current_node] + polar_dis(current_node, n)
             hc = polar_dis(n, self._goal)
-            cost = ac+4*hc
+            cost = ac+3*hc
             heappush(polar_q, ((cost), tuple(n), current_node))
         
     
