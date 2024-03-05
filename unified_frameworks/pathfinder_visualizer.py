@@ -1,13 +1,17 @@
 import matplotlib.pyplot as plt
-from matplotlib.collections import LineCollection
+from matplotlib.collections import LineCollection, PolyCollection
 import matplotlib.animation as anim
 import json
 import sys
 import time
+from unified_utils import polar_sum
+import numpy as np
+from math import pi
 
 config = {
-    "blit": False,
+    "blit": True,
     "view_radius_meter": 4,
+    "step_delay": 5
 }
 def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
         fig = plt.figure(0)
@@ -16,15 +20,23 @@ def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
         tree_lines = LineCollection([], color='g',)
         tree_lines.set_alpha(0.5)
         ax.add_collection(tree_lines)
-        path_line = LineCollection([], color='g', linewidths=1)
+        path_line = LineCollection([], color='g', linewidths=3)
         ax.add_collection(path_line)
         obstacle_groups = LineCollection([], color='k')
         ax.add_collection(obstacle_groups)
+        body = get_pathfinder().worldview.get_rover_body()
+        rover_body = PolyCollection([body], closed=True)
+        ax.add_collection(rover_body)
+        rover_projection = PolyCollection([body], closed=True)
+        rover_projection.set_alpha(0.2)
+        ax.add_collection(rover_projection)
 
         rmax=config['view_radius_meter']
         rscaler = 1.3
         rlagger = 0.99
         ax.set_rmax(rmax)
+        pos = 1
+        delay = 0
         def update_plot(_):
             # print()
             modded = []
@@ -44,6 +56,25 @@ def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
             obstacle_groups.set_segments(obstacles)
             modded.append(obstacle_groups)
             #---------------------
+            # Animate the rover intention
+            nonlocal pos, delay
+            delay+=1
+            if delay >= config['step_delay']:
+                 delay=0
+                 pos+=1
+            if pos >= len(path): 
+                pos=1
+            if len(path)>1:
+                print(len(path),pos)
+                a, b = path[pos-1:pos+1]
+                rotate_angle = polar_sum(a, (b[0],-b[1]))[0]+pi/2
+                rotated_body = [np.array([rotate_angle, 0])+p for p in body]
+                shifted_body = [polar_sum(rov_p, b) for rov_p in rotated_body]
+            else:
+                 shifted_body = body
+            rover_projection.set_verts([shifted_body], closed=True)
+
+            
             # Scale for obstacles
             points = sum(obstacles, []) if obstacles is not None else []
             points.extend(path)
@@ -70,23 +101,15 @@ def show_visual(get_pathfinder):
     return anime
 
 if __name__=='__main__':
-    from straight_shot import StraightShot
-    from rapid_random_tree import RRT_Navigator
+    import pathfinder
     import worldview
     # pathfinder = StraightShot(worldview)
-    pathfinder = RRT_Navigator(worldview)
     # import pathfinder
     import matplotlib
     from unified_utils import time_tracking_service
     time_tracking_service.start_service()
-    pathfinder.start_pathfinder_service()
-    # def on_hover_point(point_polar):
-    #     pathfinder.set_goal(point_polar) if not point_polar is None else None
-    # fig, update_func = run_visualizer(pathfinder, on_hover_point)
-    # # def on_mouse_move(event):
-    # #     print(event.xdata, event.ydata)
-    # anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=True)
-    # plt.show()
-    show_visual(pathfinder)
-    pathfinder.stop_pathfinder_service()
+    pathfinder.get_pathfinder().start_pathfinder_service()
+
+    show_visual(pathfinder.get_pathfinder)
+    pathfinder.get_pathfinder().stop_pathfinder_service()
     time_tracking_service.stop_service()

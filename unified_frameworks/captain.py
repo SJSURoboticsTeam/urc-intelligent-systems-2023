@@ -30,26 +30,29 @@ config = {
     "command_frequency": 10, #Hz
     "verbose_service_events": True,
     "send_commands_to_rover": False,
+    "verbose_rover_commands": True
 }
 
 _command_printer = print
 rover = WiFi("http://192.168.0.211:5000")
-prev_rad = 0
+cur_rad = 0
+rad_lag = 0.9
 def captain_act(get_target_speed):
+    print("Captain acting")
     path = pathfinder.get_path()
     if len(path) < 2:
         command = make_drive_command(speed_percent=0)
         rover.send_command(command) if config['send_commands_to_rover'] else None
-        _command_printer(command)
+        print(command) if config["verbose_rover_commands"] else None
         radians=0
         return
     else:
         nxt = path[1]
         radians = (nxt[0]%(2*pi))-pi/2
     radians*=-1
-    global prev_rad
-    radians = 0.8*radians + 0.2*prev_rad
-    prev_rad = radians
+    global cur_rad
+    radians = (1-rad_lag)*radians + rad_lag*cur_rad
+    cur_rad = radians
     degrees = int(radians/(2*pi)*360)
     mode = Modes.DRIVE if abs(degrees) < 30 else Modes.SPIN
     speed = get_target_speed()
@@ -62,18 +65,21 @@ def captain_act(get_target_speed):
             speed *= -1
     command = make_drive_command(mode, speed_percent=speed, angle_degrees=degrees)
     rover.send_command(command) if config['send_commands_to_rover'] else None
-    _command_printer(command) 
+    with _command_printer:
+        print(command) if config["verbose_rover_commands"] else None
     # rover.send_command(command)
 
 def captain_stop():
     command = make_drive_command(speed_percent=0)
     rover.send_command(command) if config['send_commands_to_rover'] else None
-    _command_printer(command)
+    with _command_printer:
+        print(command)
 
 _get_target_speed = lambda: 0
 def run_captain(is_captain_running):
     pathfinder.start_pathfinder_service()
     while is_captain_running():
+        print("Running")
         captain_act(_get_target_speed)
         time.sleep(1/config['command_frequency'])
     captain_stop()

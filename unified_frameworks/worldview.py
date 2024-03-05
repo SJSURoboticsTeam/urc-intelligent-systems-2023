@@ -5,6 +5,8 @@ to access
 """
 import time
 from threading import Thread
+from math import pi
+from unified_utils import polar_sum
 import sensor_array.lidar
 import importlib
 importlib.reload(sensor_array.lidar)
@@ -14,9 +16,13 @@ lidar = sensor_array.lidar
 config = {
     "update_frequency": 20, #Hz
     "service_event_verbose": True,
+    "rover_body": [(-pi/2, 0.5), (pi, 0.25), (0, 0.25)],
 }
 _obstacles = None # List of points clustered into obstacles (radians,meters)
 _points = None # List of points (radians, meters)
+_self_body = config['rover_body']
+def get_rover_body():
+    return _self_body
 def run_worldview(service_is_active):
     if config["service_event_verbose"]:
         print("Starting Worldview Service")

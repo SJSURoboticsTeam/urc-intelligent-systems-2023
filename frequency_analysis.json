@@ -1,16 +1,16 @@
 {
-    "pathfinder": {
+    "unified_utils": {
         "polar_dis": {
-            "calls": 2,
+            "calls": 235327,
             "times": [
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
                 0.0,
                 0.0
             ],
@@ -18,28 +18,8 @@
             "frequency": Infinity,
             "total_time": 0.0
         },
-        "heuristic_cost": {
-            "calls": 2,
-            "times": [
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0.0,
-                0.0
-            ],
-            "runtime": 0.0,
-            "frequency": Infinity,
-            "total_time": 0.0
-        }
-    },
-    "unified_utils": {
-        "polar_dis": {
-            "calls": 91,
+        "same_polar_point": {
+            "calls": 167709,
             "times": [
                 0.0,
                 0.0,
@@ -57,22 +37,58 @@
             "total_time": 0.0
         },
         "polar_to_cart": {
-            "calls": 2,
+            "calls": 309596,
             "times": [
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
                 0.0,
                 0.0
             ],
             "runtime": 0.0,
             "frequency": Infinity,
             "total_time": 0.0
+        },
+        "cart_to_polar": {
+            "calls": 39578,
+            "times": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "runtime": 0.0,
+            "frequency": Infinity,
+            "total_time": 0.0
+        },
+        "polar_sum": {
+            "calls": 39578,
+            "times": [
+                0.0,
+                0.0,
+                0.0005071163177490234,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "runtime": 5.071163177490234e-05,
+            "frequency": 19719.341795956745,
+            "total_time": 2.0068621158599855
         }
     }
 }
