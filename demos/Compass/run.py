@@ -12,6 +12,8 @@ if __name__ == '__main__':
         exit(1)
 
     while True:
+        # x,y,z = compass.get_raw()
+        # print(f"{x},{y},{z}")
         heading = compass.get_heading()
         print(str(heading) + chr(176))
-        time.sleep(0.5)
+        time.sleep(1/10)
