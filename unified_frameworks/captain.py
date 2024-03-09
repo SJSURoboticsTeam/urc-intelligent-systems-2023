@@ -9,6 +9,7 @@ try:
 except:
     sys.path.append(os.path.realpath(__file__+os.sep+".."+os.sep+".."))
     from modules.WiFi import WiFi, make_drive_command, Modes
+from unified_frameworks.sensor_array import gps_compas
 import pathfinder_visualizer
 import time
 from straight_shot import StraightShot
@@ -21,10 +22,12 @@ importlib.reload(worldview)
 importlib.reload(_pathfinder)
 import straight_shot 
 importlib.reload(straight_shot)
+importlib.reload(gps_compas)
 # importlib.reload(rapid_random_tree)
 # pathfinder = RRT_Navigator(worldview)
 # pathfinder = StraightShot(worldview)
 pathfinder = _pathfinder.get_pathfinder()
+
 
 config = {
     "command_frequency": 10, #Hz
@@ -75,11 +78,15 @@ def captain_stop():
     with _command_printer:
         print(command)
 
+def set_goal_coordinates(*args):
+    """Set the latitude, longitude for the goal"""
+    pass
 _get_target_speed = lambda: 0
 def run_captain(is_captain_running):
     pathfinder.start_pathfinder_service()
     while is_captain_running():
         print("Running")
+        pathfinder.set_goal(gps_compas.geographic_coordinates_to_relative_coordinates(None, None))
         captain_act(_get_target_speed)
         time.sleep(1/config['command_frequency'])
     captain_stop()

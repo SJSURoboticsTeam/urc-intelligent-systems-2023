@@ -39,6 +39,8 @@ class A_Star_Navigator(Navigator):
         return [[self._backlinks[k], k] for k in self._backlinks if self._backlinks[k] is not None]
     def set_goal(self, polar_point):
         self._goal=polar_point
+    def get_goal(self):
+        return self._goal
     def start_pathfinder_service(self, service_name="A* path finding service"):
         def service_func(is_running):
             while is_running():

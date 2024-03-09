@@ -19,4 +19,6 @@ class Navigator(ABC):
     @abstractmethod
     def set_goal(self, polar_point):
         pass
-    
+    @abstractmethod
+    def get_goal(self):
+        pass

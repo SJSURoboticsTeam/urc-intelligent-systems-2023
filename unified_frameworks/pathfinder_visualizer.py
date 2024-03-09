@@ -10,13 +10,14 @@ from math import pi
 
 config = {
     "blit": True,
-    "view_radius_meter": 4,
+    "view_radius_meter": 10,
     "step_delay": 5
 }
 def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
         fig = plt.figure(0)
         # fig.subplots
         ax = plt.subplot(111, projection='polar')
+        goal_points = ax.scatter([0],[1], marker="*", color='g')
         tree_lines = LineCollection([], color='g',)
         tree_lines.set_alpha(0.5)
         ax.add_collection(tree_lines)
@@ -40,6 +41,10 @@ def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
         def update_plot(_):
             # print()
             modded = []
+            # Goal points
+            goal = get_pathfinder().get_goal()
+            goal_points.set_offsets([goal])
+            modded.append(goal_points)
             # Visualize exploration tree
             tree_links = get_pathfinder().get_tree_links()
             tree_lines.set_segments(tree_links)
@@ -80,6 +85,7 @@ def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
             points = sum(obstacles, []) if obstacles is not None else []
             points.extend(path)
             points.extend(sum(tree_links, []))
+            points.append(goal)
             nonlocal rmax
             if points:
                 rmax = rlagger*rmax + rscaler*(1-rlagger)*max([d for a,d in points])
