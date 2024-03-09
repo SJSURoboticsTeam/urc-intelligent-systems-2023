@@ -5,7 +5,7 @@ from shapely import Geometry, intersects, LineString, Point
 from heapq import heappop, heappush
 import importlib
 import unified_utils
-from unified_utils import polar_dis, polar_to_cart, polar_sum, same_polar_point
+from unified_utils import polar_dis, polar_to_cart, polar_sum, same_polar_point, three_point_deviation
 importlib.reload(unified_utils)
 import numpy as np
 from unified_utils import Service, track_time
@@ -95,9 +95,10 @@ class A_Star_Navigator(Navigator):
         for n in neighbors:
             ac = self._arrival_costs[current_node] + polar_dis(current_node, n)
             hc = polar_dis(n, self._goal)
-            cost = ac+3*hc
-            heappush(polar_q, ((cost), tuple(n), current_node))
-        
+            tc = abs(three_point_deviation(previous_node, current_node, n))
+            cost = ac+3*hc+3*(tc/0.5)**2
+            # cost = ac+3*hc
+            heappush(polar_q, ((cost), tuple(n), current_node)) 
     
 if __name__=='__main__':
     A_Star_Navigator(None)

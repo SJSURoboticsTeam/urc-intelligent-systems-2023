@@ -1,7 +1,7 @@
 """File to hold helpful util functions/classes"""
 from threading import Thread
 import time, json
-from math import sqrt, cos, atan2, sin
+from math import sqrt, cos, atan2, sin, pi
 import numpy as np
 
 config = {
@@ -84,6 +84,14 @@ def cart_to_polar(coord):
 def polar_sum(*polar_points):
     cart_points = [polar_to_cart(p) for p in polar_points if p is not None]
     return cart_to_polar(sum(cart_points, np.array([0,0])))
+@track_time
+def three_point_deviation(polar1, polar2, polar3):
+    if polar1 is None: 
+        a = (pi/2,0)
+    else:
+        a = polar_sum(polar2, (polar1[0], -polar1[1]))
+    b = polar_sum(polar3, (polar2[0], -polar2[1]))
+    return b[0]-a[0]
 
 
 if __name__=="__main__":
