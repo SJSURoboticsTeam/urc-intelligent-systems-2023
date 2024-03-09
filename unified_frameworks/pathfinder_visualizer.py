@@ -65,7 +65,7 @@ def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
             if pos >= len(path): 
                 pos=1
             if len(path)>1:
-                print(len(path),pos)
+                # print(len(path),pos)
                 a, b = path[pos-1:pos+1]
                 rotate_angle = polar_sum(a, (b[0],-b[1]))[0]+pi/2
                 rotated_body = [np.array([rotate_angle, 0])+p for p in body]
@@ -73,6 +73,7 @@ def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
             else:
                  shifted_body = body
             rover_projection.set_verts([shifted_body], closed=True)
+            modded.append(rover_projection)
 
             
             # Scale for obstacles

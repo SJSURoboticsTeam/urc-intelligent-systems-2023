@@ -1,7 +1,7 @@
 {
     "unified_utils": {
         "polar_dis": {
-            "calls": 235327,
+            "calls": 289049,
             "times": [
                 0.0,
                 0.0,
@@ -19,7 +19,7 @@
             "total_time": 0.0
         },
         "same_polar_point": {
-            "calls": 167709,
+            "calls": 223119,
             "times": [
                 0.0,
                 0.0,
@@ -37,7 +37,7 @@
             "total_time": 0.0
         },
         "polar_to_cart": {
-            "calls": 309596,
+            "calls": 300942,
             "times": [
                 0.0,
                 0.0,
@@ -55,7 +55,7 @@
             "total_time": 0.0
         },
         "cart_to_polar": {
-            "calls": 39578,
+            "calls": 90210,
             "times": [
                 0.0,
                 0.0,
@@ -73,11 +73,11 @@
             "total_time": 0.0
         },
         "polar_sum": {
-            "calls": 39578,
+            "calls": 90210,
             "times": [
                 0.0,
                 0.0,
-                0.0005071163177490234,
+                0.0,
                 0.0,
                 0.0,
                 0.0,
@@ -86,9 +86,27 @@
                 0.0,
                 0.0
             ],
-            "runtime": 5.071163177490234e-05,
-            "frequency": 19719.341795956745,
-            "total_time": 2.0068621158599855
+            "runtime": 0.0,
+            "frequency": Infinity,
+            "total_time": 0.0
+        },
+        "three_point_deviation": {
+            "calls": 28314,
+            "times": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ],
+            "runtime": 0.0,
+            "frequency": Infinity,
+            "total_time": 0.0
         }
     }
 }
