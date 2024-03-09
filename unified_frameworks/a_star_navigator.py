@@ -96,7 +96,8 @@ class A_Star_Navigator(Navigator):
             ac = self._arrival_costs[current_node] + polar_dis(current_node, n)
             hc = polar_dis(n, self._goal)
             tc = abs(three_point_deviation(previous_node, current_node, n))
-            cost = ac+0.7*hc+1*(tc/0.5)**2
+            cost = ac+3*hc+3*(tc/0.5)**2
+            # cost = ac+3*hc
             heappush(polar_q, ((cost), tuple(n), current_node)) 
     
 if __name__=='__main__':
