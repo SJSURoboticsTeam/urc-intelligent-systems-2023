@@ -98,10 +98,12 @@ class Autonomy:
                     reachedDestination = False
                     if "LS" not in command:
                         command["LS"] = 1  # red = autonomously driving = 1
+                        command["IO"] = 1  # force IO
                     else:
                         reachedDestination = True
+                        print("reached destination")
+                        command["IO"] = 0
 
-                    command["IO"] = 1  # force IO
                     self.rover_comms.write_data(command)
 
                     # if we've been ordered to stop (reached our destination, wait)

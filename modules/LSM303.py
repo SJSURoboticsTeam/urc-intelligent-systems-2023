@@ -6,21 +6,21 @@ import math
 
 class Compass:
     # calibration results from calibrate.py
-    hard_iron_bias_x = 18.87701934
-    hard_iron_bias_y = 58.4384496
-    hard_iron_bias_z = 26.31685794
+    hard_iron_bias_x = 8.33426572
+    hard_iron_bias_y = 38.4854981
+    hard_iron_bias_z = 0.51834922
 
-    soft_iron_bias_xx = 22.266777324823483
-    soft_iron_bias_xy = -0.028101845326386522
-    soft_iron_bias_xz = 0.5375605726239839
+    soft_iron_bias_xx = 20.097355661177684
+    soft_iron_bias_xy = 0.20530722218264985
+    soft_iron_bias_xz = 0.544377527437325
 
-    soft_iron_bias_yx = -0.02810184532638666
-    soft_iron_bias_yy = 22.223229896289904
-    soft_iron_bias_yz = 0.8679722456023597
+    soft_iron_bias_yx = 0.20530722218265313
+    soft_iron_bias_yy = 20.0365536823096
+    soft_iron_bias_yz = 1.1208798385500047
 
-    soft_iron_bias_zx = 0.5375605726239857
-    soft_iron_bias_zy = 0.8679722456023594
-    soft_iron_bias_zz = 21.339926725974067
+    soft_iron_bias_zx = 0.5443775274373277
+    soft_iron_bias_zy = 1.12087983855
+    soft_iron_bias_zz = 19.24727698802664
 
     def __init__(self):
         self.i2c = board.I2C()
