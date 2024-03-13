@@ -9,3 +9,13 @@ Any device should be able to extend this pipe to handle the data production and 
 ### OK, maybe magic pipeline is not easily feasible
 
 but I think its feasible to create a magic dict thats synchronized across the bridge. [Client Side](client_side.py) and [Rover Side](rover_side.py) together make a sample of this bridge. When the **Rover Side** is running, any **Client Side** that starts up will synchronize its data to the data of the **Rover Side**.
+
+Try it out
+
+```sh
+python rover_side.py
+```
+
+```sh
+python client_side.py # do this twice on two different terminals at once
+```
