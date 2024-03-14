@@ -6,12 +6,11 @@ import json
 data = {
 
 }
-stay_connected = True
 
-async def sync_path(uri, path):
-    print(f"Synchronizing with {path}")
+async def sync_path(uri, path, is_running):
+    # print(f"Synchronizing with {path}")
     async with websockets.connect(uri+path) as ws:
-        while stay_connected:
+        while is_running():
             d = await ws.recv()
             data[path]=d
 
@@ -19,32 +18,39 @@ connection_tasks = {
 
 }
 
-async def create_connections(uri):
+async def create_connections(uri, is_running):
     async with websockets.connect(uri) as ws:
-        while stay_connected:
+        while is_running():
             d = await ws.recv()
-            print("Synchronizing", d)
+            # print("Synchronizing", d)
             paths = json.loads(d)
             for p in paths:
                 if f'{p} synchronizing task' in connection_tasks: continue
-                t = asyncio.create_task(sync_path(uri, p), name=f'{p} synchronizing task')
+                t = asyncio.create_task(sync_path(uri, p, is_running), name=f'{p} synchronizing task')
                 connection_tasks[f'{p} synchronizing task']=t
-                # def popit(p):
-                #     print(f"popping {p} from {connection_tasks.keys()}")
-                #     connection_tasks.pop(p)
                 t.add_done_callback(lambda task: connection_tasks.pop(task.get_name()))
 
+def blocking_start_client(is_running):
+    try:
+        asyncio.run(create_connections('ws://localhost:8765', is_running))
+    except KeyboardInterrupt:
+        print("[Keyboard Interrupted Client]")
+    print("[Closing Client]")
 
-async def start_client():
-    t = asyncio.create_task(create_connections('ws://localhost:8765'))
-    import time
-    ts = time.time()
-    while time.time()-ts < 5:
-        print(json.dumps(data, indent=2))
-        await asyncio.sleep(0.5)
-    global stay_connected
-    stay_connected = False
-    await t
+import os
+import sys
+root = os.path.realpath(os.path.join(__file__, "..", "..", ".."))
+sys.path.append(root) if root not in sys.path else None
+from unified_frameworks.unified_utils import Service
+
+service = Service(blocking_start_client, "Client Side thread")
+
 
 if __name__=='__main__':
-    asyncio.run(start_client())
+    service.start_service()
+    import time
+    ts = time.time()
+    while time.time()-ts < 10:
+        print(json.dumps(data, indent=2))
+        time.sleep(0.5)
+    service.stop_service()
