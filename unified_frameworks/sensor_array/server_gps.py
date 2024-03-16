@@ -30,7 +30,7 @@ async def sendServerDataToClient(websocket):
 
             if len(clients) > 0:
                 await websocket.send(buffer)
-                await asyncio.sleep(0.01)
+                await asyncio.sleep(0.2)
 
     except websockets.exceptions.ConnectionClosedOK:
         print("[SERVER] Client disconnected from server!")

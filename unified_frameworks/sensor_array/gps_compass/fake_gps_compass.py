@@ -1,5 +1,5 @@
 from typing import Tuple
-from gps_compass_class import GPSCompass
+from sensor_array.gps_compass.gps_compass_class import GPSCompass
 import math
 
 

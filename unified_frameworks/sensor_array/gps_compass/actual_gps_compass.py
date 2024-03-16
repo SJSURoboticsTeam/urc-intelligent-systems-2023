@@ -1,24 +1,40 @@
 from typing import Tuple
-from gps_compass_class import GPSCompass
+from gps_compass.gps_compass_class import GPSCompass
 import sys
+import serial.tools.list_ports as port_list
 
 root = __file__[: __file__.index("/unified_frameworks")]
 sys.path.append(root + "/modules")
 
+# import from modules
 import GPS
-import LSCM303
+import LSM303
 
 
 class ActualGPSCompass(GPSCompass):
     def __init__(self) -> None:
-        self.gps = GPS.gpsRead()
         self.cur_gps = None
-        self.compass = LSCM303.Compass()
+        port_number = 0
+        ports = list(
+            filter(lambda port: "USB" not in port.device, port_list.comports())
+        )
+        print("====> Designated Port not found. Using Port:", ports[port_number].device)
+        port = ports[port_number].device
+        self.gps = GPS.gpsRead(port, 57600)
+        while (
+            self.gps.get_position() == ["error"] * 2 or self.gps.get_position() is None
+        ):
+            print("Port not found, going to next port...")
+            port_number += 1
+            port = ports[port_number].device
+            try:
+                self.gps = GPS.gpsRead(port, 57600)
+                break
+            except:
+                continue
+        self.cur_gps = self.gps.get_position()
 
-        # get initial position
-        print("getting initial gps position")
-        while self.cur_gps is None:
-            self.cur_gps = self.gps.get_position()
+        self.compass = LSM303.Compass()
 
     def get_cur_angle(self) -> float:
         return self.compass.get_heading()

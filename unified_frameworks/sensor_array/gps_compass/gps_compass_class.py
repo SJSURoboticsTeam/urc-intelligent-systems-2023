@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, Union
 import math
-import numpy as np
 
 
 class Util:
@@ -10,10 +9,12 @@ class Util:
     """
 
     def get_distance(
-        current_GPS: Tuple[int, int], target_GPS: Tuple[int, int]
-    ) -> Union[Tuple[int, int] | None]:
+        current_GPS: Tuple[float, float], target_GPS: Tuple[float, float]
+    ) -> Union[Tuple[float, float], None]:
         """
-        Returns the distance between current_GPS and target_GPS, in meters
+        Returns a tuple containing the distance between current_GPS and target_GPS
+        The tuple is of the following format: (distanceInKM, distanceInMiles)
+
         """
         R_KM = 6373.0
         R_MI = 3958.8
@@ -95,6 +96,7 @@ class GPSCompass(ABC):
         cur_gps = self.get_cur_gps()
 
         distance = Util.get_distance(cur_gps, (target_latitude, target_longitude))
+        distance = distance[0] * 1000  # convert from km to m
         target_angle = Util.get_bearing(cur_gps, (target_latitude, target_longitude))
 
         # this is how much we need to turn
@@ -106,4 +108,4 @@ class GPSCompass(ABC):
             final_angle += 360
 
         # convert to radians before returning
-        return (final_angle * 180 / math.pi, distance)
+        return (final_angle * math.pi / 180, distance)

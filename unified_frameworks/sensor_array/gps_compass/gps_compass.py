@@ -1,6 +1,6 @@
 from typing import Tuple
-from fake_gps_compass import FakeGPSCompass
-from wireless_gps_compass import WirelessGPSCompass
+from sensor_array.gps_compass.fake_gps_compass import FakeGPSCompass
+from sensor_array.gps_compass.wireless_gps_compass import WirelessGPSCompass
 
 try:
     _gps = WirelessGPSCompass()
@@ -14,4 +14,11 @@ except Exception as e:
 def geographic_coordinates_to_relative_coordinates(
     lat: float, long: float
 ) -> Tuple[float, float]:
+    while _gps.get_cur_gps() is None:
+        pass
     return _gps.geographic_coordinates_to_relative_coordinates(lat, long)
+
+
+def disconnect():
+    if isinstance(_gps, WirelessGPSCompass):
+        _gps.disconnect()

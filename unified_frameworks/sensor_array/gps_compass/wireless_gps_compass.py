@@ -4,7 +4,7 @@ from typing import Tuple
 
 root = next(re.finditer(".*unified_frameworks", __file__)).group()
 sys.path.append(root) if root not in sys.path else None
-from gps_compass_class import GPSCompass
+from sensor_array.gps_compass.gps_compass_class import GPSCompass
 import asyncio
 import websockets
 from threading import Thread
@@ -22,6 +22,8 @@ class WirelessGPSCompass(GPSCompass):
         self.uri = uri
         self.gps = None
         self.angle = None
+
+        self.connect()
 
     def connect(self, max_attempts=3, verbose_attempts=False) -> bool:
         self.stay_connected = True
@@ -43,7 +45,7 @@ class WirelessGPSCompass(GPSCompass):
                 async with websockets.connect(self.uri) as websocket:
                     self.connected = True
                     while self.stay_connected:
-                        data = await asyncio.wait_for(websocket.recv(), timeout=1)
+                        data = await asyncio.wait_for(websocket.recv(), timeout=5)
                         data = json.loads(data)
 
                         # store results
@@ -67,9 +69,6 @@ class WirelessGPSCompass(GPSCompass):
         asyncio.set_event_loop(asyncio.new_event_loop())
         asyncio.get_event_loop().run_until_complete(self.receive_data())
 
-    def get_measures(self):
-        return self.data
-
     def disconnect(self):
         self.stay_connected = False
         for _ in range(10):
@@ -85,4 +84,10 @@ class WirelessGPSCompass(GPSCompass):
 
 
 if __name__ == "__main__":
-    WirelessGPSCompass()
+    gps = WirelessGPSCompass()
+    try:
+        while 1:
+            print(gps.gps, gps.angle)
+            time.sleep(1)
+    except KeyboardInterrupt:
+        gps.disconnect()
