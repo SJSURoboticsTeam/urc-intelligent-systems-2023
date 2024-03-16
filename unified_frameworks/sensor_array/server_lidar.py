@@ -8,6 +8,7 @@ import sys
 import serial.tools.list_ports
 import serial
 
+
 def getDevicePort():
     ports = serial.tools.list_ports.comports()
 
@@ -15,15 +16,18 @@ def getDevicePort():
         if "USB" in port.device:
             return port.device
 
+
 port = getDevicePort()
+
 
 # @note Quick encoder from numpy's ndarray to json
 # @note since json cannot serialize ndarrays
 class NumpyEncoder(json.JSONEncoder):
 
-    def default(self,obj):
+    def default(self, obj):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
+
 
 # lidar = RPLidar(port)
 lidar = None
@@ -34,10 +38,12 @@ if port is None:
     lidar = FakeLidar()
 else:
     print(f"[SERVER] Device port {port} found!")
-    lidar = ActualLidar()
+    lidar = ActualLidar(port)
+lidar.connect()
 
-clients = [] # @note List of clients connected in the server
+clients = []  # @note List of clients connected in the server
 buffer = None
+
 
 # Creating WebSocket server
 # @note Server listens for ConnectionClosedOK
@@ -80,11 +86,13 @@ async def sendServerDataToClient(websocket):
         # await websocket.send(json.dumps("[SERVER] RPLidarException has occurred!"))
         # await asyncio.sleep(0.01)
         lidar.disconnect()
- 
+
+
 async def startServer():
     async with websockets.serve(sendServerDataToClient, "0.0.0.0", 8765):
         await asyncio.Future()  # run forever
- 
+
+
 if __name__ == "__main__":
     try:
         print("[SERVER] Server ON")

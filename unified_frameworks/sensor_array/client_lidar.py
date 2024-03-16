@@ -1,6 +1,7 @@
 import sys
 import re
-root = (next(re.finditer(".*unified_frameworks", __file__)).group())
+
+root = next(re.finditer(".*unified_frameworks", __file__)).group()
 sys.path.append(root) if root not in sys.path else None
 from sensor_array.LidarClass import Lidar
 import asyncio
@@ -11,24 +12,28 @@ import time
 
 wifi_address = {
     "robotics_wifi": "ws://192.168.1.130:8765",
-    "tp_link": "ws://192.168.0.100:8765"
+    "tp_link": "ws://192.168.0.105:8765",
 }
+
 
 class WirelessLidar(Lidar):
     def __init__(self, uri=wifi_address["tp_link"]):
         self.uri = uri
         self.data = []
+
     def connect(self, max_attempts=3, wait_seconds=1, verbose_attempts=False) -> bool:
         self.stay_connected = True
         self.connected = False
-        self.verbose_attempts=verbose_attempts
+        self.verbose_attempts = verbose_attempts
         self.thread = Thread(target=self.start_connection)
         self.thread.start()
         for i in range(max_attempts):
-            if self.connected: return True
+            if self.connected:
+                return True
             time.sleep(1)
         self.disconnect()
         return False
+
     async def receive_data(self):
         while self.stay_connected:
             try:
@@ -50,18 +55,24 @@ class WirelessLidar(Lidar):
                 print("Connection closed")
                 time.sleep(1)
                 print("Trying again")
+
     def start_connection(self):
-        asyncio.set_event_loop(asyncio.new_event_loop())
-        asyncio.get_event_loop().run_until_complete(self.receive_data())
+        try:
+            loop = asyncio.get_running_loop()
+        except:
+            loop = asyncio.new_event_loop()
+        loop.run_until_complete(self.receive_data())
+
     def get_measures(self):
         return self.data
+
     def disconnect(self):
         self.stay_connected = False
         for _ in range(10):
             if self.connected:
                 print("still connected waiting to disconnect")
                 time.sleep(1)
-                
+
     # def iter_scans(self):
     #     return iter(self)
     # def __iter__(self):
@@ -77,5 +88,6 @@ class WirelessLidar(Lidar):
     #     self.connected = False
     #     self.thread.join()
 
-if __name__=='__main__':
+
+if __name__ == "__main__":
     WirelessLidar().test_Lidar(3)
