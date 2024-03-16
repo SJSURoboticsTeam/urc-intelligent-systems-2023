@@ -7,19 +7,29 @@ data = {
     # "/hello": "kitty",
     # "/general": "kenobi"
 }
+_is_alive = None
+async def value_changed(get_value, check_interval=0.1):
+    v = get_value()
+    while get_value()==v and _is_alive():
+        await asyncio.sleep(check_interval)
+        # break
 
-async def send_data(ws, path):
+
+async def send_data(ws, path, **kwargs):
     print("Connection on", path)
     if path not in data and path != "/":
         await ws.send("")
         return
     try:
-        while True:
+        while _is_alive():
             d = json.dumps(list(data.keys())) if path == "/" else data[path]
             await ws.send(str(d))
             # if path in data:
             #     data[path]+='+'
-            await asyncio.sleep(0.1)
+            # await asyncio.sleep(0.1)
+            await value_changed(
+                (lambda: list(data.keys())) if path=='/' else (lambda: data[path])
+            )
     except websockets.exceptions.ConnectionClosedOK:
         print("[Connection Closed OK]:", path)
     except websockets.exceptions.ConnectionClosedError:
@@ -36,6 +46,8 @@ async def start_server(is_alive):
     print("[Closed Server]")
 
 def blocking_start_server(is_alive):
+    global _is_alive
+    _is_alive = is_alive
     try:
         asyncio.run(start_server(is_alive))
     except KeyboardInterrupt:
@@ -62,7 +74,7 @@ if __name__=='__main__':
             time.sleep(1)
         while True:
             for i in data:
-                data[i]=data[i][:-1]+chr(ord(data[i][-1])+1)
+                data[i]= "".join(chr(ord(i)+1) for i in data[i])
                 time.sleep(1)
     except KeyboardInterrupt:
         pass
