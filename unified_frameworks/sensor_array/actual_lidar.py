@@ -22,6 +22,7 @@ def getDevicePort():
                 return port
     return None
 port = getDevicePort()
+port = "COM10"
 
 class ActualLidar(Lidar):
     def __init__(self, port=port) -> None:
@@ -72,5 +73,5 @@ class ActualLidar(Lidar):
 
 if __name__=='__main__':
     import time
-    lidar = ActualLidar()
+    lidar = ActualLidar(port)
     lidar.test_Lidar()

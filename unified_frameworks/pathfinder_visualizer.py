@@ -9,8 +9,8 @@ import numpy as np
 from math import pi
 
 config = {
-    "blit": True,
-    "view_radius_meter": 10,
+    "blit": False,
+    "view_radius_meter": 40,
     "step_delay": 5
 }
 def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):

@@ -47,11 +47,15 @@ def run_lidar(service_is_active):
     #----------------------------------
     lidar = None
     for _lidar in config['lidar_preference']:
+        print(f"Trying to use {_lidar}")
         L:Lidar = _lidar()
-        if L.connect(verbose_attempts=True):
-            lidar = L
-            break
-        
+        try:
+            if L.connect(verbose_attempts=True):
+                lidar = L
+                break
+        except:
+            pass
+
     if lidar is None:
         print("None of the Lidars could connect")
         sys.exit(1)

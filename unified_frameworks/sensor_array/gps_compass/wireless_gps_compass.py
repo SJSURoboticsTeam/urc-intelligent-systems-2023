@@ -18,7 +18,7 @@ wifi_address = {
 
 
 class WirelessGPSCompass(GPSCompass):
-    def __init__(self, uri=wifi_address["tp_link"]):
+    def __init__(self, uri=wifi_address["robotics_wifi"]):
         self.uri = uri
         self.gps = None
         self.angle = None
@@ -66,8 +66,9 @@ class WirelessGPSCompass(GPSCompass):
                 print("Trying again")
 
     def start_connection(self):
-        asyncio.set_event_loop(asyncio.new_event_loop())
+        # asyncio.set_event_loop(asyncio.new_event_loop())
         asyncio.get_event_loop().run_until_complete(self.receive_data())
+        # asyncio.ru)
 
     def disconnect(self):
         self.stay_connected = False
