@@ -25,7 +25,7 @@ importlib.reload(_pathfinder)
 import straight_shot
 
 importlib.reload(straight_shot)
-importlib.reload(gps_compass)
+# importlib.reload(gps_compass)
 # importlib.reload(rapid_random_tree)
 # pathfinder = RRT_Navigator(worldview)
 # pathfinder = StraightShot(worldview)
