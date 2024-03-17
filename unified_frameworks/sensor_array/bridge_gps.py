@@ -40,7 +40,7 @@ class BridgeGPS:
             # return BridgeLidar.PATH in self.data
         def update_gps_data(is_alive):
             while is_alive():
-                print("Data updated")
+                print(f"Data updated {self.data}")
                 self.data[BridgeGPS.PATH] = json.dumps(
                     {"gps": self.gps.get_cur_gps(), "angle": self.gps.get_cur_angle()}
                 )
@@ -50,9 +50,9 @@ class BridgeGPS:
         return True
     def disconnect(self):
         if self.ON_ROVER_SIDE:
-            self.gps.disconnect()
+            self._service.stop_service()
     def get_measures(self):
-        return json.loads(self.data[BridgeGPS.PATH]) if BridgeGPS in self.data else "Not yet Set"
+        return json.loads(self.data[BridgeGPS.PATH]) if BridgeGPS in self.data else f"Not yet Set {self.data}"
 
 
 if __name__=='__main__':
