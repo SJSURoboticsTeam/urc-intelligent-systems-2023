@@ -15,7 +15,7 @@ config = {
 }
 
 class BridgeGPS:
-    PATH = '/'
+    PATH = '/gps'
     def __init__(self) -> None:
         super().__init__()
         if rover_side.bridge_is_up():
@@ -40,6 +40,7 @@ class BridgeGPS:
             # return BridgeLidar.PATH in self.data
         def update_gps_data(is_alive):
             while is_alive():
+                print("Data updated")
                 self.data[BridgeGPS.PATH] = json.dumps(
                     {"gps": self.gps.get_cur_gps(), "angle": self.gps.get_cur_angle()}
                 )
@@ -57,16 +58,16 @@ class BridgeGPS:
 if __name__=='__main__':
     if sys.argv[1]=='r':
         rover_side.service.start_service()
-        lidar = BridgeGPS()
-        lidar.connect()
+        gps = BridgeGPS()
+        gps.connect()
         while True:
             try:
-                print(len(lidar.get_measures()))
+                print(gps.get_measures())
                 time.sleep(1)
             except KeyboardInterrupt:
                 print("Keyboard Interrupted")
                 break
-        lidar.disconnect()
+        gps.disconnect()
         rover_side.service.stop_service()
     elif sys.argv[1]=='c':
         # client_side.service.start_service()
