@@ -24,7 +24,7 @@ def getDevicePort():
 
 
 class ActualLidar(Lidar):
-    def __init__(self, port="COM10") -> None:
+    def __init__(self, port=getDevicePort()) -> None:
         self.serial_port = port
         self.measures = []
 
