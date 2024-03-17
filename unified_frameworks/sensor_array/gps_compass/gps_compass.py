@@ -1,4 +1,7 @@
 from typing import Tuple
+import sys
+root = __file__[: __file__.index("/unified_frameworks")]
+sys.path.append(root + "/unified_frameworks")
 from sensor_array.gps_compass.fake_gps_compass import FakeGPSCompass
 from sensor_array.gps_compass.wireless_gps_compass import WirelessGPSCompass
 
