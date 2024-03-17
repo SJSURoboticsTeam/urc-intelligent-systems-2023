@@ -52,7 +52,7 @@ class BridgeGPS:
         if self.ON_ROVER_SIDE:
             self._service.stop_service()
     def get_measures(self):
-        return json.loads(self.data[BridgeGPS.PATH]) if BridgeGPS in self.data else f"Not yet Set {self.data}"
+        return json.loads(self.data[BridgeGPS.PATH]) if BridgeGPS.PATH in self.data else f"Not yet Set {self.data}"
 
 
 if __name__=='__main__':
