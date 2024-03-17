@@ -18,16 +18,13 @@ from threading import Thread
 
 def getDevicePort():
     ports = serial.tools.list_ports.comports()
-
-    if len(ports) > 0:
-        for port, desc, hwid in sorted(ports):
-            if hwid != "n/a":
-                return port
-    return None
+    for port in ports:
+        if "USB" in port.device:
+            return port.device
 
 
 class ActualLidar(Lidar):
-    def __init__(self, port=getDevicePort()) -> None:
+    def __init__(self, port="COM10") -> None:
         self.serial_port = port
         self.measures = []
 
@@ -82,6 +79,8 @@ class ActualLidar(Lidar):
 
 
 if __name__ == "__main__":
+    print(getDevicePort())
+    exit()
     import time
 
     lidar = ActualLidar()

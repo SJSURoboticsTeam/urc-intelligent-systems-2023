@@ -38,7 +38,7 @@ if port is None:
     lidar = FakeLidar()
 else:
     print(f"[SERVER] Device port {port} found!")
-    lidar = ActualLidar(port)
+    lidar = ActualLidar()
 lidar.connect()
 
 clients = []  # @note List of clients connected in the server
