@@ -52,7 +52,7 @@ class BridgeGPS:
         if self.ON_ROVER_SIDE:
             self.gps.disconnect()
     def get_measures(self):
-        return json.loads(self.data[BridgeGPS.PATH])
+        return json.loads(self.data[BridgeGPS.PATH]) if BridgeGPS in self.data else "Not yet Set"
 
 
 if __name__=='__main__':
@@ -62,6 +62,7 @@ if __name__=='__main__':
         gps.connect()
         while True:
             try:
+                # time.sleep(2)
                 print(gps.get_measures())
                 time.sleep(1)
             except KeyboardInterrupt:
