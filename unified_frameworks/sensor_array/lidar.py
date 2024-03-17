@@ -4,6 +4,7 @@ root = (next(re.finditer(".*unified_frameworks", __file__)).group())
 sys.path.append(root) if root not in sys.path else None
 from sensor_array.actual_lidar import ActualLidar
 from sensor_array.client_lidar import WirelessLidar
+from sensor_array.bridge_lidar import BridgeLidar
 import importlib
 from sensor_array.fake_lidar import FakeLidar
 from sensor_array.LidarClass import Lidar
@@ -19,7 +20,7 @@ import sensor_array.client_lidar
 importlib.reload(sensor_array.client_lidar)
 
 config = {
-    "lidar_preference": [ActualLidar, WirelessLidar, FakeLidar],
+    "lidar_preference": [ActualLidar, BridgeLidar, WirelessLidar, FakeLidar],
     "update_frequency": 20, # Hz
     "history_size": 1,
     "rover_radius": 0.7,
@@ -48,8 +49,8 @@ def run_lidar(service_is_active):
     lidar = None
     for _lidar in config['lidar_preference']:
         print(f"Trying to use {_lidar}")
-        L:Lidar = _lidar()
         try:
+            L:Lidar = _lidar()
             if L.connect(verbose_attempts=True):
                 lidar = L
                 break

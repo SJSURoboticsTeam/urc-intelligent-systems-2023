@@ -48,8 +48,8 @@ async def create_connections(uri, is_running):
 _connection_failed = False
 def blocking_start_client(is_running):
     try:
-        asyncio.run(create_connections('ws://localhost:8765', is_running))
-        # asyncio.run(create_connections('ws://192.168.1.130:8765', is_running))
+        # asyncio.run(create_connections('ws://localhost:8765', is_running))
+        asyncio.run(create_connections('ws://192.168.1.130:8765', is_running))
     except KeyboardInterrupt:
         print("[Keyboard Interrupted Client]")
     except ConnectionRefusedError:

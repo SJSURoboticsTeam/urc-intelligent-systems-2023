@@ -1,10 +1,11 @@
-from actual_lidar import ActualLidar
-from LidarClass import Lidar
 import sys
 import re
 root = (next(re.finditer(".*unified_frameworks", __file__)).group())
 sys.path.append(root) if root not in sys.path else None
+from sensor_array.actual_lidar import ActualLidar
+from sensor_array.LidarClass import Lidar
 from bridge import rover_side, client_side
+from bridge.exceptions import NoOpenBridgeException
 from unified_utils import Service
 import json
 import time
@@ -27,7 +28,7 @@ class BridgeLidar(Lidar):
             self.ON_ROVER_SIDE = False
             self.ON_CLIENT_SIDE = not self.ON_ROVER_SIDE
             return
-        raise Exception("Neither Rover nor Client side of bridge is up!")
+        raise NoOpenBridgeException("Neither Rover nor Client side of bridge is up!")
     
     def connect(self, max_attempts=3, wait_seconds=1, verbose_attempts=False) -> bool:
         if self.ON_CLIENT_SIDE:

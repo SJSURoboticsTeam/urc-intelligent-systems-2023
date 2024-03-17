@@ -8,7 +8,9 @@ from threading import Thread
 from math import pi
 from unified_utils import polar_sum
 import sensor_array.lidar
+import bridge.client_side
 import importlib
+importlib.reload(bridge.client_side)
 importlib.reload(sensor_array.lidar)
 lidar = sensor_array.lidar
 
@@ -48,6 +50,7 @@ _running = False
 def start_worldview_service():
     if config["service_event_verbose"]:
         print("Called start_worldview_service")
+    bridge.client_side.open_bridge()
     global _thread, _running
     if _running:
         raise Exception("Tried to Start Worldview Service but it was already running.")
@@ -61,6 +64,7 @@ def stop_worldview_service():
     global _running, _thread
     _running = False
     _thread.join()
+    bridge.client_side.close_bridge()
 
 def worldview_service_is_running():
     return _running

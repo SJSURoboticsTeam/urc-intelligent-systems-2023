@@ -1,0 +1,2 @@
+class NoOpenBridgeException(Exception):
+    pass
