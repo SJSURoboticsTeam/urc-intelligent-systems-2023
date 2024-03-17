@@ -28,7 +28,7 @@ class Lidar(ABC):
         import sys, time
         if not lidar.connect(connection_attempts, verbose_attempts=True):
             print("failed to connect")
-            sys.exit(0)
+            return
         print("Connected")
         start_time = time.time()
         while time.time() - start_time < 10:

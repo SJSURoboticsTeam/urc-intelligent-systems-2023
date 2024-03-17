@@ -26,6 +26,7 @@ def getDevicePort():
         else:
             if "USB" in port.device:
                 return port.device
+    return None
 
 
 class ActualLidar(Lidar):
@@ -59,6 +60,7 @@ class ActualLidar(Lidar):
         return False
 
     def connect(self, max_attempts=3, wait_seconds=1, verbose_attempts=False) -> bool:
+        if self.serial_port is None: return False
         if not self.connect_to_RPLidar(max_attempts, wait_seconds, verbose_attempts):
             return False
         self.stay_connected = True

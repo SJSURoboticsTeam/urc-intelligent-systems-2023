@@ -7,7 +7,6 @@ data = {
     # "/hello": "kitty",
     # "/general": "kenobi"
 }
-_is_alive = None
 async def value_changed(get_value, is_connected, check_interval=0.1):
     v = get_value()
     while get_value()==v and is_connected():
@@ -44,8 +43,6 @@ async def start_server(is_alive):
     print("[Closed Server]")
 
 def blocking_start_server(is_alive):
-    global _is_alive
-    _is_alive = is_alive
     try:
         asyncio.run(start_server(is_alive))
     except KeyboardInterrupt:
@@ -58,6 +55,9 @@ sys.path.append(root) if root not in sys.path else None
 from unified_frameworks.unified_utils import Service
 
 service = Service(blocking_start_server, "Rover Side Server Thread")
+
+def bridge_is_up():
+    return service.is_running()
 
 
 # if False:

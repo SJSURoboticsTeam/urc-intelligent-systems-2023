@@ -17,7 +17,7 @@ wifi_address = {
 
 
 class WirelessLidar(Lidar):
-    def __init__(self, uri=wifi_address["tp_link"]):
+    def __init__(self, uri=wifi_address["robotics_wifi"]):
         self.uri = uri
         self.data = []
 
