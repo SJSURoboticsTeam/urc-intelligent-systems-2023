@@ -44,3 +44,14 @@ class ActualGPSCompass(GPSCompass):
         if temp is not None:
             self.cur_gps = temp
         return self.cur_gps
+
+
+if __name__ == "__main__":
+    import time
+    gps = ActualGPSCompass()
+    try:
+        while 1:
+            print(gps.gps, gps.angle)
+            time.sleep(1)
+    except KeyboardInterrupt:
+        gps.disconnect()
