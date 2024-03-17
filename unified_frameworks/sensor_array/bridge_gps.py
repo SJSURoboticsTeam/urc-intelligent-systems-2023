@@ -1,4 +1,8 @@
-from gps_compass.actual_gps_compass import ActualGPSCompass
+try:
+    from gps_compass.actual_gps_compass import ActualGPSCompass
+except:
+    pass
+
 import time
 import sys
 import re
@@ -40,7 +44,6 @@ class BridgeGPS:
             # return BridgeLidar.PATH in self.data
         def update_gps_data(is_alive):
             while is_alive():
-                print(f"Data updated {self.data}")
                 self.data[BridgeGPS.PATH] = json.dumps(
                     {"gps": self.gps.get_cur_gps(), "angle": self.gps.get_cur_angle()}
                 )
@@ -52,7 +55,7 @@ class BridgeGPS:
         if self.ON_ROVER_SIDE:
             self._service.stop_service()
     def get_measures(self):
-        return json.loads(self.data[BridgeGPS.PATH]) if BridgeGPS.PATH in self.data else f"Not yet Set {self.data}"
+        return json.loads(self.data[BridgeGPS.PATH]) if BridgeGPS.PATH in self.data else None
 
 
 if __name__=='__main__':

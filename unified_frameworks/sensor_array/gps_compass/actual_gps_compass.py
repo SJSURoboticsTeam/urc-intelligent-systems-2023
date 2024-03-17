@@ -3,8 +3,8 @@ from gps_compass.gps_compass_class import GPSCompass
 import sys
 import serial.tools.list_ports as port_list
 
-root = __file__[: __file__.index("/unified_frameworks")]
-sys.path.append(root + "/modules")
+root = __file__[: __file__.index("\\unified_frameworks")]
+sys.path.append(root + "\\modules")
 
 # import from modules
 import GPS
