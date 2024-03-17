@@ -8,27 +8,25 @@ data = {
     # "/general": "kenobi"
 }
 _is_alive = None
-async def value_changed(get_value, check_interval=0.1):
+async def value_changed(get_value, is_connected, check_interval=0.1):
     v = get_value()
-    while get_value()==v and _is_alive():
+    while get_value()==v and is_connected():
         await asyncio.sleep(check_interval)
         # break
 
 
-async def send_data(ws, path, **kwargs):
+async def send_data(ws, path):
     print("Connection on", path)
     if path not in data and path != "/":
         await ws.send("")
         return
     try:
-        while _is_alive():
+        while True:
             d = json.dumps(list(data.keys())) if path == "/" else data[path]
             await ws.send(str(d))
-            # if path in data:
-            #     data[path]+='+'
-            # await asyncio.sleep(0.1)
             await value_changed(
-                (lambda: list(data.keys())) if path=='/' else (lambda: data[path])
+                (lambda: list(data.keys())) if path=='/' else (lambda: data[path]),
+                is_connected=lambda: not ws.closed
             )
     except websockets.exceptions.ConnectionClosedOK:
         print("[Connection Closed OK]:", path)
@@ -37,7 +35,7 @@ async def send_data(ws, path, **kwargs):
 
 # _stay_alive = False
 async def start_server(is_alive):
-    server = websockets.serve(send_data, "localhost", 8765)
+    server = websockets.serve(send_data, "0.0.0.0", 8765)
     async with server:
         # Server starts when entering this context
         while is_alive():

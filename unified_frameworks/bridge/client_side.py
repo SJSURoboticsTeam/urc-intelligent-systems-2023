@@ -8,12 +8,12 @@ data = {
 }
 
 async def sync_path(uri, path, is_running):
-    print(f"Synchronizing with {path}")
+    # print(f"Synchronizing with {path}")
     async with websockets.connect(uri+path) as ws:
         while is_running():
             d = await ws.recv()
             data[path]=d
-    print(f"Ending Connection on {path}")
+    # print(f"Ending Connection on {path}")
 
 connection_tasks = {
 
@@ -21,19 +21,23 @@ connection_tasks = {
 
 async def create_connections(uri, is_running):
     async with websockets.connect(uri) as ws:
-        d=None
         while is_running():
-            print(f"awaiting {d}")
-            d = await asyncio.wait_for(ws.recv(), 5)
+            try:
+                d = await asyncio.wait_for(ws.recv(), 1)
+            except asyncio.TimeoutError:
+                # print(f"Time out on {uri}")
+                # print("Trying again") if is_running() else None
+                continue
             
-            print("Synchronizing", d)
+            # print("Synchronizing", d)
             paths = json.loads(d)
             for p in paths:
                 if f'{p} synchronizing task' in connection_tasks: continue
                 t = asyncio.create_task(sync_path(uri, p, is_running), name=f'{p} synchronizing task')
                 connection_tasks[f'{p} synchronizing task']=t
                 t.add_done_callback(lambda task: connection_tasks.pop(task.get_name()))
-            print("ending this round")
+            # print("ending this round")
+
 
 def blocking_start_client(is_running):
     try:
