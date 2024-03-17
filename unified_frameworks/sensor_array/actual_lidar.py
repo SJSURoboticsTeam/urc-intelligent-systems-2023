@@ -79,8 +79,8 @@ class ActualLidar(Lidar):
 
 
 if __name__ == "__main__":
-    print(getDevicePort())
-    exit()
+    print(f"Using port: {getDevicePort()}")
+    # exit()
     import time
 
     lidar = ActualLidar()
