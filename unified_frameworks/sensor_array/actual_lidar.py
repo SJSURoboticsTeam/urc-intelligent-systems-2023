@@ -15,12 +15,17 @@ import serial.tools.list_ports
 from serial.serialutil import PortNotOpenError
 from threading import Thread
 
+import platform
 
 def getDevicePort():
     ports = serial.tools.list_ports.comports()
     for port in ports:
-        if "USB" in port.device:
-            return port.device
+        if platform.system() == "Windows":
+            if "COM10" in port.device:
+                return port.device
+        else:
+            if "USB" in port.device:
+                return port.device
 
 
 class ActualLidar(Lidar):
