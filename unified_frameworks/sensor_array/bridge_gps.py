@@ -1,9 +1,11 @@
+import traceback
 try:
     from gps_compass.actual_gps_compass import ActualGPSCompass
     print("Bridge GPS did import ActualGPSCompass")
 except:
     print("Bridge GPS did not import ActualGPSCompass")
     pass
+
 
 import time
 import sys
