@@ -2,5 +2,5 @@
 env
 *env
 **.freq
-
+**.vscode
 frequency_analysis.json
