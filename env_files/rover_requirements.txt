@@ -4,5 +4,5 @@ requests
 numpy
 rplidar-roboticia
 websockets
-Adafruit_Blinka
 board
+adafruit-circuitpython-lsm303dlh-mag
