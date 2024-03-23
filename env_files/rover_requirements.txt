@@ -1,0 +1,8 @@
+pyserial
+ipython
+requests
+numpy
+rplidar-roboticia
+websockets
+Adafruit_Blinka
+board
