@@ -1,6 +1,7 @@
 try:
     from gps_compass.actual_gps_compass import ActualGPSCompass
-except:
+except Exception as e:
+    print(e)
     pass
 
 import time
