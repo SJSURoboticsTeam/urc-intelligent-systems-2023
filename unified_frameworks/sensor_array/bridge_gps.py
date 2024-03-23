@@ -1,8 +1,9 @@
+import traceback
 try:
     from gps_compass.actual_gps_compass import ActualGPSCompass
-except Exception as e:
-    print(e)
+except:
     pass
+
 
 import time
 import sys
