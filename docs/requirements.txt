@@ -6,3 +6,4 @@ shapely
 requests
 rplidar-roboticia
 websockets
+board
