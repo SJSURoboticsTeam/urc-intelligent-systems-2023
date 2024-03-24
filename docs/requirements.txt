@@ -9,7 +9,6 @@ numpy
 jupyterlab
 voila
 rplidar-roboticia
-pyqt6
 websockets
 Sphinx
 sphinx-rtd-theme
