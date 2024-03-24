@@ -1,4 +1,7 @@
 from typing import Tuple
+import sys
+root = __file__[: __file__.index("gps_compass")]
+sys.path.append(root + "gps_compass")
 from gps_compass.gps_compass_class import GPSCompass
 import sys
 import serial.tools.list_ports as port_list
