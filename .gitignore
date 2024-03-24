@@ -14,3 +14,4 @@ venv.bak/
 
 **.freq
 frequency_analysis.json
+**_build

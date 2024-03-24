@@ -1,3 +1,13 @@
+"""
+This is a navigator that implementes an A* stearch in a continous space
+to find a path from the current position to the destination position
+bla bla bla
+
+"""
+import sys
+import re
+root = (next(re.finditer(".*unified_frameworks", __file__)).group())
+sys.path.append(root) if root not in sys.path else None
 from numpy import ndarray
 from NavigatorClass import Navigator
 from math import pi
