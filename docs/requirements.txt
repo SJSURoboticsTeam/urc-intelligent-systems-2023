@@ -15,4 +15,3 @@ sphinx-rtd-theme
 board
 adafruit-circuitpython-lsm303dlh-mag
 simple-pid
-smbus
