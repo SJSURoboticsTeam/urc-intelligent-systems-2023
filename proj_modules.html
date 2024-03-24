@@ -52,18 +52,27 @@
 <li class="toctree-l2"><a class="reference internal" href="Vision.html">Vision package</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">proj_modules package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#proj-modules-gps-module">proj_modules.GPS module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-proj_modules.GPS">proj_modules.GPS module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#proj_modules.GPS.gpsRead"><code class="docutils literal notranslate"><span class="pre">gpsRead</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#proj-modules-ir-sensor-module">proj_modules.IR_Sensor module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#proj-modules-lsm303-module">proj_modules.LSM303 module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#proj-modules-mpu6050-module">proj_modules.MPU6050 module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#proj-modules-serial-module">proj_modules.Serial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-proj_modules.Serial">proj_modules.Serial module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#proj_modules.Serial.SerialSystem"><code class="docutils literal notranslate"><span class="pre">SerialSystem</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-proj_modules.WiFi">proj_modules.WiFi module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#proj_modules.WiFi.Modes"><code class="docutils literal notranslate"><span class="pre">Modes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#proj_modules.WiFi.WiFi"><code class="docutils literal notranslate"><span class="pre">WiFi</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#proj_modules.WiFi.make_drive_command"><code class="docutils literal notranslate"><span class="pre">make_drive_command()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#proj-modules-old-gps-module">proj_modules.old_GPS module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-proj_modules.old_GPS">proj_modules.old_GPS module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#proj_modules.old_GPS.gpsRead"><code class="docutils literal notranslate"><span class="pre">gpsRead</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-proj_modules">Module contents</a></li>
 </ul>
 </li>
@@ -102,8 +111,24 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="proj-modules-gps-module">
-<h2>proj_modules.GPS module<a class="headerlink" href="#proj-modules-gps-module" title="Permalink to this heading"></a></h2>
+<section id="module-proj_modules.GPS">
+<span id="proj-modules-gps-module"></span><h2>proj_modules.GPS module<a class="headerlink" href="#module-proj_modules.GPS" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="proj_modules.GPS.gpsRead">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">proj_modules.GPS.</span></span><span class="sig-name descname"><span class="pre">gpsRead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.GPS.gpsRead" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.GPS.gpsRead.get_position">
+<span class="sig-name descname"><span class="pre">get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.GPS.gpsRead.get_position" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.GPS.gpsRead.send_request">
+<span class="sig-name descname"><span class="pre">send_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">LonLat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.GPS.gpsRead.send_request" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="proj-modules-ir-sensor-module">
 <h2>proj_modules.IR_Sensor module<a class="headerlink" href="#proj-modules-ir-sensor-module" title="Permalink to this heading"></a></h2>
@@ -114,8 +139,29 @@
 <section id="proj-modules-mpu6050-module">
 <h2>proj_modules.MPU6050 module<a class="headerlink" href="#proj-modules-mpu6050-module" title="Permalink to this heading"></a></h2>
 </section>
-<section id="proj-modules-serial-module">
-<h2>proj_modules.Serial module<a class="headerlink" href="#proj-modules-serial-module" title="Permalink to this heading"></a></h2>
+<section id="module-proj_modules.Serial">
+<span id="proj-modules-serial-module"></span><h2>proj_modules.Serial module<a class="headerlink" href="#module-proj_modules.Serial" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="proj_modules.Serial.SerialSystem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">proj_modules.Serial.</span></span><span class="sig-name descname"><span class="pre">SerialSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.Serial.SerialSystem" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.Serial.SerialSystem.close_serial">
+<span class="sig-name descname"><span class="pre">close_serial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.Serial.SerialSystem.close_serial" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.Serial.SerialSystem.read_serial">
+<span class="sig-name descname"><span class="pre">read_serial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.Serial.SerialSystem.read_serial" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.Serial.SerialSystem.write_serial">
+<span class="sig-name descname"><span class="pre">write_serial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.Serial.SerialSystem.write_serial" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-proj_modules.WiFi">
 <span id="proj-modules-wifi-module"></span><h2>proj_modules.WiFi module<a class="headerlink" href="#module-proj_modules.WiFi" title="Permalink to this heading"></a></h2>
@@ -209,8 +255,24 @@ Look forward to this parameter being modified in the future</p>
 </dd></dl>
 
 </section>
-<section id="proj-modules-old-gps-module">
-<h2>proj_modules.old_GPS module<a class="headerlink" href="#proj-modules-old-gps-module" title="Permalink to this heading"></a></h2>
+<section id="module-proj_modules.old_GPS">
+<span id="proj-modules-old-gps-module"></span><h2>proj_modules.old_GPS module<a class="headerlink" href="#module-proj_modules.old_GPS" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="proj_modules.old_GPS.gpsRead">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">proj_modules.old_GPS.</span></span><span class="sig-name descname"><span class="pre">gpsRead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.old_GPS.gpsRead" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.old_GPS.gpsRead.get_position">
+<span class="sig-name descname"><span class="pre">get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.old_GPS.gpsRead.get_position" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.old_GPS.gpsRead.send_request">
+<span class="sig-name descname"><span class="pre">send_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">LonLat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.old_GPS.gpsRead.send_request" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-proj_modules">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-proj_modules" title="Permalink to this heading"></a></h2>
