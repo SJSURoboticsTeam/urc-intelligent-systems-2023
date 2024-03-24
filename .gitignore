@@ -1,6 +1,16 @@
-*.pyc
-env
-*env
-**.freq
+__pycache__/
+*.py[cod]
+*$py.class
 
+.python-version
+
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+**.freq
 frequency_analysis.json
