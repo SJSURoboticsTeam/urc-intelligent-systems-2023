@@ -3,7 +3,7 @@ import asyncio
 import json
 from gps_compass.actual_gps_compass import ActualGPSCompass
 
-gps = ActualGPSCompass()
+# gps = ActualGPSCompass() # Commented this cuz it should not run if the file is not __main__
 print("successfully made actual gps")
 
 clients = []  # @note List of clients connected in the server

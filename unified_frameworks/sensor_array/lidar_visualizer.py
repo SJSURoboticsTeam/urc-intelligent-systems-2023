@@ -8,38 +8,39 @@ import lidar
 import time
 
 # lidar.config['']
-lidar.start_lidar_service()
-# time.sleep(20)
-try:
-    fig = plt.figure()
-    ax = plt.subplot(111, projection='polar')
-    obstacle_points = ax.scatter([],[], s=1)
-    obstacle_groups = LineCollection([], color=(0,0,0,0.5), linewidths=5)
-    ax.add_collection(obstacle_groups)
+if __name__=='__main__':
+    lidar.start_lidar_service()
+    # time.sleep(20)
+    try:
+        fig = plt.figure()
+        ax = plt.subplot(111, projection='polar')
+        obstacle_points = ax.scatter([],[], s=1)
+        obstacle_groups = LineCollection([], color=(0,0,0,0.5), linewidths=5)
+        ax.add_collection(obstacle_groups)
 
-    rmax=10
-    rmax_=0.01
-    ax.set_rmax(rmax)
-    def update_plot(_):
-        modded = []
-        # Visualizing Point Cloud
-        point_clouds = lidar.get_point_clouds()
-        measures = sum(point_clouds, []) if point_clouds is not None else []
-        if measures:
-            obstacle_points.set_offsets(measures)
-            modded.append(obstacle_points)                                          #
-        #---------------------
-        # Visualizing Obstacles
-        # obstacle_groups.set_segments(obstacles)
-        obstacle_groups.set_segments(lidar.get_obstacles())
-        modded.append(obstacle_groups)
-        #---------------------
-        return modded
+        rmax=10
+        rmax_=0.01
+        ax.set_rmax(rmax)
+        def update_plot(_):
+            modded = []
+            # Visualizing Point Cloud
+            point_clouds = lidar.get_point_clouds()
+            measures = sum(point_clouds, []) if point_clouds is not None else []
+            if measures:
+                obstacle_points.set_offsets(measures)
+                modded.append(obstacle_points)                                          #
+            #---------------------
+            # Visualizing Obstacles
+            # obstacle_groups.set_segments(obstacles)
+            obstacle_groups.set_segments(lidar.get_obstacles())
+            modded.append(obstacle_groups)
+            #---------------------
+            return modded
 
-    anime = anim.FuncAnimation(fig, update_plot, 1, interval=50, blit=True)
+        anime = anim.FuncAnimation(fig, update_plot, 1, interval=50, blit=True)
 
-    plt.show()
-except:
-    pass
-lidar.stop_lidar_service()
+        plt.show()
+    except:
+        pass
+    lidar.stop_lidar_service()
 

@@ -10,4 +10,5 @@ async def receive_data():
             print(f"Received: {data}")
             count+=1
 
-asyncio.get_event_loop().run_until_complete(receive_data())
+if __name__=='__main__':
+    asyncio.get_event_loop().run_until_complete(receive_data())

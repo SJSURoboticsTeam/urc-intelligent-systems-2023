@@ -1,3 +1,7 @@
+import sys
+import re
+root = (next(re.finditer(".*unified_frameworks", __file__)).group())
+sys.path.append(root) if root not in sys.path else None
 from numpy import ndarray
 from NavigatorClass import Navigator
 from math import pi
