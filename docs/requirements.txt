@@ -1,2 +1,2 @@
-docutils
+docutils==0.20.1
 sphinx-rtd-theme
