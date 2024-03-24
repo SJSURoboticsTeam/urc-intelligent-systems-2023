@@ -2,13 +2,17 @@ from typing import Tuple
 from gps_compass.gps_compass_class import GPSCompass
 import sys
 import serial.tools.list_ports as port_list
+import re
+import os
 
-root = __file__[: __file__.index("\\unified_frameworks")]
-sys.path.append(root + "\\modules")
+root = (next(re.finditer(".*unified_frameworks", __file__)).group())
+sys.path.append(root) if root not in sys.path else None
+root = os.path.realpath(os.path.join(root, '..'))
+sys.path.append(root) if root not in sys.path else None
 
 # import from modules
-import GPS
-import LSM303
+import modules.GPS as GPS
+import modules.LSM303 as LSM303
 
 
 class ActualGPSCompass(GPSCompass):
