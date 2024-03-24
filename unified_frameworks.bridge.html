@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>unified_frameworks.bridge package &mdash; Autonomy@SJSU-Robotics 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=2389946f"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="unified_frameworks.sensor_array package" href="unified_frameworks.sensor_array.html" />
+    <link rel="prev" title="unified_frameworks package" href="unified_frameworks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Autonomy@SJSU-Robotics
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">autonomy_setup_test</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="CommandScripts.html">CommandScripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Missions.html">Missions package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Vision.html">Vision package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proj_modules.html">proj_modules package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="unified_frameworks.html">unified_frameworks package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="unified_frameworks.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">unified_frameworks.bridge package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html">unified_frameworks.sensor_array package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#unified-frameworks-navigatorclass-module">unified_frameworks.NavigatorClass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#unified-frameworks-a-star-navigator-module">unified_frameworks.a_star_navigator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#unified-frameworks-captain-module">unified_frameworks.captain module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#unified-frameworks-pathfinder-module">unified_frameworks.pathfinder module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#unified-frameworks-pathfinder-visualizer-module">unified_frameworks.pathfinder_visualizer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#unified-frameworks-rapid-random-tree-module">unified_frameworks.rapid_random_tree module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#unified-frameworks-straight-shot-module">unified_frameworks.straight_shot module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#unified-frameworks-unified-utils-module">unified_frameworks.unified_utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#unified-frameworks-worldview-module">unified_frameworks.worldview module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#unified-frameworks-worldview-visualizer-module">unified_frameworks.worldview_visualizer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.html#module-unified_frameworks">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Autonomy@SJSU-Robotics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">autonomy_setup_test</a></li>
+          <li class="breadcrumb-item"><a href="unified_frameworks.html">unified_frameworks package</a></li>
+      <li class="breadcrumb-item active">unified_frameworks.bridge package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/unified_frameworks.bridge.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="unified-frameworks-bridge-package">
+<h1>unified_frameworks.bridge package<a class="headerlink" href="#unified-frameworks-bridge-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-unified_frameworks.bridge.acync_demos">
+<span id="unified-frameworks-bridge-acync-demos-module"></span><h2>unified_frameworks.bridge.acync_demos module<a class="headerlink" href="#module-unified_frameworks.bridge.acync_demos" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.bridge.acync_demos.count_up">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.bridge.acync_demos.</span></span><span class="sig-name descname"><span class="pre">count_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.bridge.acync_demos.count_up" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.bridge.acync_demos.run_them">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.bridge.acync_demos.</span></span><span class="sig-name descname"><span class="pre">run_them</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.bridge.acync_demos.run_them" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="unified-frameworks-bridge-client-side-module">
+<h2>unified_frameworks.bridge.client_side module<a class="headerlink" href="#unified-frameworks-bridge-client-side-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-unified_frameworks.bridge.exceptions">
+<span id="unified-frameworks-bridge-exceptions-module"></span><h2>unified_frameworks.bridge.exceptions module<a class="headerlink" href="#module-unified_frameworks.bridge.exceptions" title="Permalink to this heading"></a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="unified_frameworks.bridge.exceptions.NoOpenBridgeException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.bridge.exceptions.</span></span><span class="sig-name descname"><span class="pre">NoOpenBridgeException</span></span><a class="headerlink" href="#unified_frameworks.bridge.exceptions.NoOpenBridgeException" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+</section>
+<section id="unified-frameworks-bridge-rover-side-module">
+<h2>unified_frameworks.bridge.rover_side module<a class="headerlink" href="#unified-frameworks-bridge-rover-side-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-unified_frameworks.bridge">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unified_frameworks.bridge" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="unified_frameworks.html" class="btn btn-neutral float-left" title="unified_frameworks package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="unified_frameworks.sensor_array.html" class="btn btn-neutral float-right" title="unified_frameworks.sensor_array package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Rahul.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

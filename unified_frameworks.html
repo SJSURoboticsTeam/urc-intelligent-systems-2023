@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>unified_frameworks package &mdash; Autonomy@SJSU-Robotics 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=2389946f"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="unified_frameworks.bridge package" href="unified_frameworks.bridge.html" />
+    <link rel="prev" title="proj_modules package" href="proj_modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Autonomy@SJSU-Robotics
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">autonomy_setup_test</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="CommandScripts.html">CommandScripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Missions.html">Missions package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Vision.html">Vision package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proj_modules.html">proj_modules package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">unified_frameworks package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.bridge.html">unified_frameworks.bridge package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html">unified_frameworks.sensor_array package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-navigatorclass-module">unified_frameworks.NavigatorClass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-a-star-navigator-module">unified_frameworks.a_star_navigator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-captain-module">unified_frameworks.captain module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-pathfinder-module">unified_frameworks.pathfinder module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-pathfinder-visualizer-module">unified_frameworks.pathfinder_visualizer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-rapid-random-tree-module">unified_frameworks.rapid_random_tree module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-straight-shot-module">unified_frameworks.straight_shot module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-unified-utils-module">unified_frameworks.unified_utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-worldview-module">unified_frameworks.worldview module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-worldview-visualizer-module">unified_frameworks.worldview_visualizer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-unified_frameworks">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Autonomy@SJSU-Robotics</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">autonomy_setup_test</a></li>
+      <li class="breadcrumb-item active">unified_frameworks package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/unified_frameworks.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="unified-frameworks-package">
+<h1>unified_frameworks package<a class="headerlink" href="#unified-frameworks-package" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="unified_frameworks.bridge.html">unified_frameworks.bridge package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.bridge.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.bridge.html#module-unified_frameworks.bridge.acync_demos">unified_frameworks.bridge.acync_demos module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.bridge.html#unified_frameworks.bridge.acync_demos.count_up"><code class="docutils literal notranslate"><span class="pre">count_up()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.bridge.html#unified_frameworks.bridge.acync_demos.run_them"><code class="docutils literal notranslate"><span class="pre">run_them()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.bridge.html#unified-frameworks-bridge-client-side-module">unified_frameworks.bridge.client_side module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.bridge.html#module-unified_frameworks.bridge.exceptions">unified_frameworks.bridge.exceptions module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.bridge.html#unified_frameworks.bridge.exceptions.NoOpenBridgeException"><code class="docutils literal notranslate"><span class="pre">NoOpenBridgeException</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.bridge.html#unified-frameworks-bridge-rover-side-module">unified_frameworks.bridge.rover_side module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.bridge.html#module-unified_frameworks.bridge">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="unified_frameworks.sensor_array.html">unified_frameworks.sensor_array package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html">unified_frameworks.sensor_array.gps_compass package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified-frameworks-sensor-array-gps-compass-actual-gps-compass-module">unified_frameworks.sensor_array.gps_compass.actual_gps_compass module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#module-unified_frameworks.sensor_array.gps_compass.fake_gps_compass">unified_frameworks.sensor_array.gps_compass.fake_gps_compass module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified-frameworks-sensor-array-gps-compass-gps-compass-module">unified_frameworks.sensor_array.gps_compass.gps_compass module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#module-unified_frameworks.sensor_array.gps_compass.gps_compass_class">unified_frameworks.sensor_array.gps_compass.gps_compass_class module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified-frameworks-sensor-array-gps-compass-wireless-gps-compass-module">unified_frameworks.sensor_array.gps_compass.wireless_gps_compass module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#module-unified_frameworks.sensor_array.gps_compass">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#module-unified_frameworks.sensor_array.LidarClass">unified_frameworks.sensor_array.LidarClass module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.Lidar"><code class="docutils literal notranslate"><span class="pre">Lidar</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.Lidar.connect"><code class="docutils literal notranslate"><span class="pre">Lidar.connect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.Lidar.disconnect"><code class="docutils literal notranslate"><span class="pre">Lidar.disconnect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.Lidar.get_measures"><code class="docutils literal notranslate"><span class="pre">Lidar.get_measures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.Lidar.test_Lidar"><code class="docutils literal notranslate"><span class="pre">Lidar.test_Lidar()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.LidarDisconnectException"><code class="docutils literal notranslate"><span class="pre">LidarDisconnectException</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-actual-gps-test-module">unified_frameworks.sensor_array.actual_gps_test module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-actual-lidar-module">unified_frameworks.sensor_array.actual_lidar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-bridge-gps-module">unified_frameworks.sensor_array.bridge_gps module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-bridge-lidar-module">unified_frameworks.sensor_array.bridge_lidar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-client-bridge-lidar-module">unified_frameworks.sensor_array.client_bridge_lidar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-client-lidar-module">unified_frameworks.sensor_array.client_lidar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-fake-lidar-module">unified_frameworks.sensor_array.fake_lidar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-lidar-module">unified_frameworks.sensor_array.lidar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-lidar-visualizer-module">unified_frameworks.sensor_array.lidar_visualizer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-server-gps-module">unified_frameworks.sensor_array.server_gps module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-server-lidar-module">unified_frameworks.sensor_array.server_lidar module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-websocket-client-module">unified_frameworks.sensor_array.websocket_client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-websocket-server-module">unified_frameworks.sensor_array.websocket_server module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#module-unified_frameworks.sensor_array">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="unified-frameworks-navigatorclass-module">
+<h2>unified_frameworks.NavigatorClass module<a class="headerlink" href="#unified-frameworks-navigatorclass-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="unified-frameworks-a-star-navigator-module">
+<h2>unified_frameworks.a_star_navigator module<a class="headerlink" href="#unified-frameworks-a-star-navigator-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="unified-frameworks-captain-module">
+<h2>unified_frameworks.captain module<a class="headerlink" href="#unified-frameworks-captain-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="unified-frameworks-pathfinder-module">
+<h2>unified_frameworks.pathfinder module<a class="headerlink" href="#unified-frameworks-pathfinder-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="unified-frameworks-pathfinder-visualizer-module">
+<h2>unified_frameworks.pathfinder_visualizer module<a class="headerlink" href="#unified-frameworks-pathfinder-visualizer-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="unified-frameworks-rapid-random-tree-module">
+<h2>unified_frameworks.rapid_random_tree module<a class="headerlink" href="#unified-frameworks-rapid-random-tree-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="unified-frameworks-straight-shot-module">
+<h2>unified_frameworks.straight_shot module<a class="headerlink" href="#unified-frameworks-straight-shot-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="unified-frameworks-unified-utils-module">
+<h2>unified_frameworks.unified_utils module<a class="headerlink" href="#unified-frameworks-unified-utils-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="unified-frameworks-worldview-module">
+<h2>unified_frameworks.worldview module<a class="headerlink" href="#unified-frameworks-worldview-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="unified-frameworks-worldview-visualizer-module">
+<h2>unified_frameworks.worldview_visualizer module<a class="headerlink" href="#unified-frameworks-worldview-visualizer-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-unified_frameworks">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unified_frameworks" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="proj_modules.html" class="btn btn-neutral float-left" title="proj_modules package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="unified_frameworks.bridge.html" class="btn btn-neutral float-right" title="unified_frameworks.bridge package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Rahul.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
