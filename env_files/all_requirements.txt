@@ -16,4 +16,7 @@ board
 adafruit-circuitpython-lsm303dlh-mag
 simple-pid
 RPi.GPIO
-smbus
+smbus; sys_platform == 'linux'
+blobconverter==1.2.*
+depthai==2.22.*
+opencv-python==4.5.*; platform_machine != "aarch64"
