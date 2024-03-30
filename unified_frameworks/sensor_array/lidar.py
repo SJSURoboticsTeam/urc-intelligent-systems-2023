@@ -20,7 +20,7 @@ import sensor_array.client_lidar
 importlib.reload(sensor_array.client_lidar)
 
 config = {
-    "lidar_preference": [ActualLidar, BridgeLidar, WirelessLidar, FakeLidar],
+    "lidar_preference": [ActualLidar, BridgeLidar, FakeLidar],
     "update_frequency": 20, # Hz
     "history_size": 1,
     "rover_radius": 0.7,

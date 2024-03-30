@@ -101,8 +101,8 @@ def run_visualizer(get_pathfinder, on_hover_mouse=lambda p:None,):
 
 def show_visual(get_pathfinder):
     def on_hover_point(point_polar):
-        return
-        # get_pathfinder().set_goal(point_polar) if not point_polar is None else None
+        # return
+        get_pathfinder().set_goal(point_polar) if not point_polar is None else None
     fig, update_func = run_visualizer(get_pathfinder, on_hover_point)
     anime = anim.FuncAnimation(fig, update_func, 1, interval=50, blit=config['blit'])
     plt.show()
