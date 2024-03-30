@@ -9,10 +9,12 @@ To get started, you will need to install the following dependencies, you can do 
 ```sh
 python -m venv venv
 source venv/bin/activate
+
+# if you are running not on a Raspberry Pi, run the below
 pip install -r env_files/all_requirements.txt
 
-# uncomment the below line if running on a Raspberry Pi
-# pip install -r env_files/rover_requirements.txt
+# If you are running on a Raspberry Pi, run the below
+pip install -r env_files/rover_requirements.txt
 ```
 
 ![classes](https://github.com/SJSURoboticsTeam/urc-intelligent-systems-2023/assets/50222631/3d47c3d4-b21a-463e-9739-bc99b61f450f)

@@ -12,7 +12,6 @@ pyqt6
 websockets
 Sphinx
 sphinx-rtd-theme
-board
 adafruit-circuitpython-lsm303dlh-mag
 simple-pid
 RPi.GPIO
