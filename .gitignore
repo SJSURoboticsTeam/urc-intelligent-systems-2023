@@ -5,6 +5,7 @@ __pycache__/
 .python-version
 
 *env
+*.*env
 ENV/
 env.bak/
 venv.bak/
