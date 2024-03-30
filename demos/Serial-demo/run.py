@@ -1,7 +1,7 @@
 import sys
 import serial.tools.list_ports as port_list
 sys.path.append( '../../')
-from modules.Serial import SerialSystem
+from proj_modules.Serial import SerialSystem
 import json
 
 port = "/dev/ttyACM2"

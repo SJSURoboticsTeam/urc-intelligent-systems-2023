@@ -11,8 +11,8 @@ root = os.path.realpath(os.path.join(root, '..'))
 sys.path.append(root) if root not in sys.path else None
 
 # import from modules
-import modules.GPS as GPS
-import modules.LSM303 as LSM303
+from proj_modules import GPS
+from proj_modules import LSM303
 
 
 class ActualGPSCompass(GPSCompass):

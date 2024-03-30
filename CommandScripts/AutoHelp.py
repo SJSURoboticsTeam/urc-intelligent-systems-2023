@@ -1,6 +1,6 @@
 import math
 #from modules.LSM303 import Compass
-from modules.LSM303 import Compass
+from proj_modules.LSM303 import Compass
 import json
 
 class AutoHelp:
@@ -75,12 +75,15 @@ class AutoHelp:
 
 
     def get_bearing(self, current_GPS, target_GPS):
-        """Returns the angle between two GPS coordinates
+        """
+        Returns the angle between two GPS coordinates
+        
         PARAMS:
             current_GPS (tuple): (latitude, longitude)
             target_GPS (tuple):  (latitude, longitude)
         RETURNS:
             float. angle between the two coordinates
+
         """
         try:
             current_latitude = math.radians(current_GPS[1])

@@ -1,7 +1,7 @@
 import sys
 sys.path.append( '../../')
 import time
-from modules.IR_Sensor import IR_Sensor
+from proj_modules.IR_Sensor import IR_Sensor
 
 sensor = 12
 rover_detection = IR_Sensor(sensor)

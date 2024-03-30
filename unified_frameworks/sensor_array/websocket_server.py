@@ -11,7 +11,8 @@ async def data_stream(websocket, path):
         await websocket.send(data)
         await asyncio.sleep(1)  # Adjust the delay as needed
 
-start_server = websockets.serve(data_stream, "localhost", 8765)
+if __name__=='__main__':
+    start_server = websockets.serve(data_stream, "localhost", 8765)
 
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
