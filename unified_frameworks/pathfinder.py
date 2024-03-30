@@ -4,16 +4,17 @@ accounting for surrounding environment and goal
 
 
 Thoughts on further development
-- Currently this limits charting by number of iterations, make it so that its 
-    always charting a route and only resets the obstacles every once in a while. 
-- Update get neighbors to get neighbors with realistic constraints, like no 
-    sharp turns
+- Currently this limits charting by number of iterations, make it so that its always charting a route and only resets the obstacles every once in a while. 
+- Update get neighbors to get neighbors with realistic constraints, like no sharp turns
 - Update cost function to have higher cost for points near obstacles.
-- ^this can be used to create a potential field, and that potential field could be
-    used to update an existing path for a new environment instead of invalidating it 
-    due to a new environment
+- ^this can be used to create a potential field, and that potential field could be used to update an existing path for a new environment instead of invalidating it due to a new environment
+
 """
 
+import sys
+import re
+root = (next(re.finditer(".*unified_frameworks", __file__)).group())
+sys.path.append(root) if root not in sys.path else None
 import worldview
 import importlib
 importlib.reload(worldview)

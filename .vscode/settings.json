@@ -1,6 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./sensors-modules",
-        "./modules/LSM303"
-    ]
-}

@@ -2,7 +2,7 @@ import requests
 import os, sys
 
 sys.path.insert(0, os.path.abspath(".."))
-from modules.LSM303 import Compass
+from proj_modules.LSM303 import Compass
 from CommandScripts import AutoHelp
 from simple_pid import PID
 import time
@@ -19,6 +19,7 @@ class VFH_obstacle_avoidance:
         self, lidar_data, rover_angle, current_longlat, target_longlat
     ):
         """Obstacle avoidance logic that uses vector field histogram (VFH)
+        
         PARAMS:
             lidar_data (list):      array of 360 elements. each index is an angle
             rover_angle (int):      the angle that the rover is currently facing

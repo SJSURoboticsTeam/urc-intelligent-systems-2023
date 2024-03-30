@@ -7,8 +7,8 @@ import os, sys
 sys.path.insert(0, os.path.abspath(".."))
 from CommandScripts.GPS_NAV import GPS_Nav
 from CommandScripts import AutoHelp
-from modules.LSM303 import Compass
-from modules.WiFi import WiFi
+from proj_modules.LSM303 import Compass
+from proj_modules.WiFi import WiFi
 import time
 import threading
 

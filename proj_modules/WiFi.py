@@ -9,6 +9,7 @@ class WiFi:
 
     def read_data(self, max_retries=3, wait_time=1):
         """Gets data from mission control. Expected response: {"HB":int, "IO":int, "WO":int, "DM":char, "CMD":list}
+
         PARAMS:
             max_retries [int]: max number of requests we send to web server before giving up 
         RETURNS:
@@ -31,6 +32,7 @@ class WiFi:
 
     def write_data(self, data):
         """Sends data to mission control using an http post request
+
         PARAMS:
             data [dict]: something
         RETURNS:
@@ -49,6 +51,7 @@ class WiFi:
         self.write_data(data)
     def get_status(self, max_retries=3, wait_time=1):
         """Gets data from mission control. Expected response: {"HB":int, "IO":int, "WO":int, "DM":char, "CMD":list}
+
         PARAMS:
             max_retries [int]: max number of requests we send to web server before giving up 
         RETURNS:
@@ -77,13 +80,15 @@ def make_drive_command(mode=None, speed_percent=None, angle_degrees=None):
 
     Parameters
     ----------
-    mode: Specify the mode in which to interpret command
-            D: Drive, S: Spin, T: Translate
-            Default to "D"
-    speed_percent: Specify the speed as a % of max speed. Can be +-
-    angle_degree: Specify angle the rover should deviate by
-            Look forward to this parameter being modified in the future
-    """
+    mode: str
+        Specify the mode in which to interpret command
+        D: Drive, S: Spin, T: Translate
+        Default to "D"
+    speed_percent: int
+        Specify the speed as a % of max speed. Can be +-
+    angle_degree: int
+        Specify angle the rover should deviate by
+        Look forward to this parameter being modified in the future"""
     command = {
         "HB": 0,        # Heart Beat
         "IO": 1,        # Is Operational

@@ -1,15 +1,19 @@
 """This script is responsible for taking in the path from pathfinder 
 and determining a command to send to the rover"""
 
+import sys
+import re
+root = (next(re.finditer(".*unified_frameworks", __file__)).group())
+sys.path.append(root) if root not in sys.path else None
 from math import pi
 from unified_utils import Service
 import sys, os
 
 try:
-    from modules.WiFi import WiFi, make_drive_command, Modes
+    from proj_modules.WiFi import WiFi, make_drive_command, Modes
 except:
     sys.path.append(os.path.realpath(__file__ + os.sep + ".." + os.sep + ".."))
-    from modules.WiFi import WiFi, make_drive_command, Modes
+    from proj_modules.WiFi import WiFi, make_drive_command, Modes
 from unified_frameworks.sensor_array.gps_compass import gps_compass
 import pathfinder_visualizer
 import time

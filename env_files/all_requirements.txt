@@ -1,0 +1,21 @@
+pyserial
+matplotlib
+ipython
+shapely
+requests
+ipympl
+numpy
+jupyterlab
+voila
+rplidar-roboticia
+pyqt6
+websockets
+Sphinx
+sphinx-rtd-theme
+adafruit-circuitpython-lsm303dlh-mag
+simple-pid
+RPi.GPIO
+smbus; sys_platform == 'linux'
+blobconverter==1.2.*
+depthai==2.22.*
+opencv-python==4.5.*; platform_machine != "aarch64"

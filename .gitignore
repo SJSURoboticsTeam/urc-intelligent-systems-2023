@@ -4,13 +4,12 @@ __pycache__/
 
 .python-version
 
-.env
-.venv
-env/
-venv/
+*env
+*.*env
 ENV/
 env.bak/
 venv.bak/
 
 **.freq
 frequency_analysis.json
+**_build

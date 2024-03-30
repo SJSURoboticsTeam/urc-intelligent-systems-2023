@@ -1,0 +1,11 @@
+pyserial
+requests
+numpy
+rplidar-roboticia
+websockets
+adafruit-circuitpython-lsm303dlh-mag
+simple_pid==2.0.*
+RPi.GPIO
+simple-pid
+blobconverter==1.2.*
+depthai==2.22.*
