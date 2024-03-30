@@ -6,3 +6,5 @@ rplidar-roboticia
 websockets
 board
 adafruit-circuitpython-lsm303dlh-mag
+Adafruit_Blinka
+simple_pid==2.0.*
