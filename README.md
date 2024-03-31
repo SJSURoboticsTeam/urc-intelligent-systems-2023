@@ -2,6 +2,8 @@
 
 Contains the intelligent systems module and sensor logic for the SJSU Robotics' 3-Wheeled Mars Rover
 
+## [Documentation Site](https://sjsuroboticsteam.github.io/urc-intelligent-systems-2023/index.html)
+
 ## Setup
 
 To get started, you will need to install the following dependencies, you can do this by using a virtual environment and the requirements.txt file in the root directory of the project.
