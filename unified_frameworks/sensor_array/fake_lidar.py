@@ -25,7 +25,6 @@ class FakeLidar(Lidar):
         quality = [15]*self.n
         self.scan = np.stack([quality, angles, distances], 1)
         # self.scan = np.random.rand(self.n, 3)*1_000 +2_000
-        print(self.scan)
         self.empty_scans = empty_scans
         self.noise = noise
         def update(is_alive):
