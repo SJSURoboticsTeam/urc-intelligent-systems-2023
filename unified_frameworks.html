@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -15,9 +15,9 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=2389946f"></script>
+        <script src="_static/documentation_options.js?v=01f34227"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -62,16 +62,39 @@
 <li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.NavigatorClass.Navigator"><code class="docutils literal notranslate"><span class="pre">Navigator</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-a-star-navigator-module">unified_frameworks.a_star_navigator module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-captain-module">unified_frameworks.captain module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-pathfinder-module">unified_frameworks.pathfinder module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-unified_frameworks.a_star_navigator">unified_frameworks.a_star_navigator module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.a_star_navigator.A_Star_Navigator"><code class="docutils literal notranslate"><span class="pre">A_Star_Navigator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-unified_frameworks.captain">unified_frameworks.captain module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.captain.captain_act"><code class="docutils literal notranslate"><span class="pre">captain_act()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.captain.captain_stop"><code class="docutils literal notranslate"><span class="pre">captain_stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.captain.run_captain"><code class="docutils literal notranslate"><span class="pre">run_captain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.captain.set_goal_coordinates"><code class="docutils literal notranslate"><span class="pre">set_goal_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.captain.show_captain_visual"><code class="docutils literal notranslate"><span class="pre">show_captain_visual()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.captain.start_captain_service"><code class="docutils literal notranslate"><span class="pre">start_captain_service()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.captain.stop_captain_service"><code class="docutils literal notranslate"><span class="pre">stop_captain_service()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-unified_frameworks.pathfinder">unified_frameworks.pathfinder module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.pathfinder.get_pathfinder"><code class="docutils literal notranslate"><span class="pre">get_pathfinder()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-unified_frameworks.pathfinder_visualizer">unified_frameworks.pathfinder_visualizer module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.pathfinder_visualizer.run_visualizer"><code class="docutils literal notranslate"><span class="pre">run_visualizer()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.pathfinder_visualizer.show_visual"><code class="docutils literal notranslate"><span class="pre">show_visual()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-rapid-random-tree-module">unified_frameworks.rapid_random_tree module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#unified-frameworks-straight-shot-module">unified_frameworks.straight_shot module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-unified_frameworks.rapid_random_tree">unified_frameworks.rapid_random_tree module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.rapid_random_tree.RRT_Navigator"><code class="docutils literal notranslate"><span class="pre">RRT_Navigator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.rapid_random_tree.exploration_step"><code class="docutils literal notranslate"><span class="pre">exploration_step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.rapid_random_tree.grow_tree"><code class="docutils literal notranslate"><span class="pre">grow_tree()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-unified_frameworks.straight_shot">unified_frameworks.straight_shot module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.straight_shot.StraightShot"><code class="docutils literal notranslate"><span class="pre">StraightShot</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-unified_frameworks.unified_utils">unified_frameworks.unified_utils module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.unified_utils.Service"><code class="docutils literal notranslate"><span class="pre">Service</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.unified_utils.cart_to_polar"><code class="docutils literal notranslate"><span class="pre">cart_to_polar()</span></code></a></li>
@@ -129,9 +152,9 @@
            <div itemprop="articleBody">
              
   <section id="unified-frameworks-package">
-<h1>unified_frameworks package<a class="headerlink" href="#unified-frameworks-package" title="Permalink to this heading"></a></h1>
+<h1>unified_frameworks package<a class="headerlink" href="#unified-frameworks-package" title="Link to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="unified_frameworks.bridge.html">unified_frameworks.bridge package</a><ul>
@@ -283,191 +306,359 @@
 </div>
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
 <section id="module-unified_frameworks.NavigatorClass">
-<span id="unified-frameworks-navigatorclass-module"></span><h2>unified_frameworks.NavigatorClass module<a class="headerlink" href="#module-unified_frameworks.NavigatorClass" title="Permalink to this heading"></a></h2>
+<span id="unified-frameworks-navigatorclass-module"></span><h2>unified_frameworks.NavigatorClass module<a class="headerlink" href="#module-unified_frameworks.NavigatorClass" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="unified_frameworks.NavigatorClass.Navigator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.NavigatorClass.</span></span><span class="sig-name descname"><span class="pre">Navigator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worldview</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.NavigatorClass.</span></span><span class="sig-name descname"><span class="pre">Navigator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worldview</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.NavigatorClass.Navigator.get_goal">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_goal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.get_goal" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_goal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.get_goal" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.NavigatorClass.Navigator.get_path">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.get_path" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.get_path" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.NavigatorClass.Navigator.get_tree_links">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tree_links</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.get_tree_links" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_tree_links</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.get_tree_links" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.NavigatorClass.Navigator.set_goal">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polar_point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.set_goal" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polar_point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.set_goal" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.NavigatorClass.Navigator.start_pathfinder_service">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_pathfinder_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.start_pathfinder_service" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_pathfinder_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.start_pathfinder_service" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.NavigatorClass.Navigator.stop_pathfinder_service">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_pathfinder_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.stop_pathfinder_service" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_pathfinder_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.NavigatorClass.Navigator.stop_pathfinder_service" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </section>
-<section id="unified-frameworks-a-star-navigator-module">
-<h2>unified_frameworks.a_star_navigator module<a class="headerlink" href="#unified-frameworks-a-star-navigator-module" title="Permalink to this heading"></a></h2>
+<section id="module-unified_frameworks.a_star_navigator">
+<span id="unified-frameworks-a-star-navigator-module"></span><h2>unified_frameworks.a_star_navigator module<a class="headerlink" href="#module-unified_frameworks.a_star_navigator" title="Link to this heading"></a></h2>
+<p>This is a navigator that implementes an A* stearch in a continous space
+to find a path from the current position to the destination position
+bla bla bla</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="unified_frameworks.a_star_navigator.A_Star_Navigator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.a_star_navigator.</span></span><span class="sig-name descname"><span class="pre">A_Star_Navigator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worldview</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.a_star_navigator.A_Star_Navigator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Navigator</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.a_star_navigator.A_Star_Navigator.get_goal">
+<span class="sig-name descname"><span class="pre">get_goal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.a_star_navigator.A_Star_Navigator.get_goal" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.a_star_navigator.A_Star_Navigator.get_path">
+<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#unified_frameworks.a_star_navigator.A_Star_Navigator.get_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.a_star_navigator.A_Star_Navigator.get_tree_links">
+<span class="sig-name descname"><span class="pre">get_tree_links</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#unified_frameworks.a_star_navigator.A_Star_Navigator.get_tree_links" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unified_frameworks.a_star_navigator.A_Star_Navigator.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'class2'</span></em><a class="headerlink" href="#unified_frameworks.a_star_navigator.A_Star_Navigator.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.a_star_navigator.A_Star_Navigator.set_goal">
+<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polar_point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.a_star_navigator.A_Star_Navigator.set_goal" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.a_star_navigator.A_Star_Navigator.start_pathfinder_service">
+<span class="sig-name descname"><span class="pre">start_pathfinder_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'A*</span> <span class="pre">path</span> <span class="pre">finding</span> <span class="pre">service'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.a_star_navigator.A_Star_Navigator.start_pathfinder_service" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.a_star_navigator.A_Star_Navigator.stop_pathfinder_service">
+<span class="sig-name descname"><span class="pre">stop_pathfinder_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.a_star_navigator.A_Star_Navigator.stop_pathfinder_service" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="unified-frameworks-captain-module">
-<h2>unified_frameworks.captain module<a class="headerlink" href="#unified-frameworks-captain-module" title="Permalink to this heading"></a></h2>
+<section id="module-unified_frameworks.captain">
+<span id="unified-frameworks-captain-module"></span><h2>unified_frameworks.captain module<a class="headerlink" href="#module-unified_frameworks.captain" title="Link to this heading"></a></h2>
+<p>This script is responsible for taking in the path from pathfinder 
+and determining a command to send to the rover</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.captain.captain_act">
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.captain.</span></span><span class="sig-name descname"><span class="pre">captain_act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">get_target_speed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.captain.captain_act" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.captain.captain_stop">
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.captain.</span></span><span class="sig-name descname"><span class="pre">captain_stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.captain.captain_stop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.captain.run_captain">
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.captain.</span></span><span class="sig-name descname"><span class="pre">run_captain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_captain_running</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.captain.run_captain" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.captain.set_goal_coordinates">
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.captain.</span></span><span class="sig-name descname"><span class="pre">set_goal_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.captain.set_goal_coordinates" title="Link to this definition"></a></dt>
+<dd><p>Set the latitude, longitude for the goal</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.captain.show_captain_visual">
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.captain.</span></span><span class="sig-name descname"><span class="pre">show_captain_visual</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.captain.show_captain_visual" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.captain.start_captain_service">
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.captain.</span></span><span class="sig-name descname"><span class="pre">start_captain_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">get_target_speed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_printer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.captain.start_captain_service" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.captain.stop_captain_service">
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.captain.</span></span><span class="sig-name descname"><span class="pre">stop_captain_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.captain.stop_captain_service" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unified-frameworks-pathfinder-module">
-<h2>unified_frameworks.pathfinder module<a class="headerlink" href="#unified-frameworks-pathfinder-module" title="Permalink to this heading"></a></h2>
+<section id="module-unified_frameworks.pathfinder">
+<span id="unified-frameworks-pathfinder-module"></span><h2>unified_frameworks.pathfinder module<a class="headerlink" href="#module-unified_frameworks.pathfinder" title="Link to this heading"></a></h2>
+<p>This script/service will keep an upto date path for navigation 
+accounting for surrounding environment and goal</p>
+<p>Thoughts on further development
+- Currently this limits charting by number of iterations, make it so that its always charting a route and only resets the obstacles every once in a while. 
+- Update get neighbors to get neighbors with realistic constraints, like no sharp turns
+- Update cost function to have higher cost for points near obstacles.
+- ^this can be used to create a potential field, and that potential field could be used to update an existing path for a new environment instead of invalidating it due to a new environment</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.pathfinder.get_pathfinder">
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.pathfinder.</span></span><span class="sig-name descname"><span class="pre">get_pathfinder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.pathfinder.get_pathfinder" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-unified_frameworks.pathfinder_visualizer">
-<span id="unified-frameworks-pathfinder-visualizer-module"></span><h2>unified_frameworks.pathfinder_visualizer module<a class="headerlink" href="#module-unified_frameworks.pathfinder_visualizer" title="Permalink to this heading"></a></h2>
+<span id="unified-frameworks-pathfinder-visualizer-module"></span><h2>unified_frameworks.pathfinder_visualizer module<a class="headerlink" href="#module-unified_frameworks.pathfinder_visualizer" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.pathfinder_visualizer.run_visualizer">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.pathfinder_visualizer.</span></span><span class="sig-name descname"><span class="pre">run_visualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">get_pathfinder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_hover_mouse=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.pathfinder_visualizer.run_visualizer" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.pathfinder_visualizer.</span></span><span class="sig-name descname"><span class="pre">run_visualizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">get_pathfinder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_hover_mouse=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.pathfinder_visualizer.run_visualizer" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.pathfinder_visualizer.show_visual">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.pathfinder_visualizer.</span></span><span class="sig-name descname"><span class="pre">show_visual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">get_pathfinder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.pathfinder_visualizer.show_visual" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.pathfinder_visualizer.</span></span><span class="sig-name descname"><span class="pre">show_visual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">get_pathfinder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.pathfinder_visualizer.show_visual" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="unified-frameworks-rapid-random-tree-module">
-<h2>unified_frameworks.rapid_random_tree module<a class="headerlink" href="#unified-frameworks-rapid-random-tree-module" title="Permalink to this heading"></a></h2>
+<section id="module-unified_frameworks.rapid_random_tree">
+<span id="unified-frameworks-rapid-random-tree-module"></span><h2>unified_frameworks.rapid_random_tree module<a class="headerlink" href="#module-unified_frameworks.rapid_random_tree" title="Link to this heading"></a></h2>
+<p>This script will implement helpful functions for RRT. 
+It will do all its calculations in cartesian coordinates but it will</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="unified_frameworks.rapid_random_tree.RRT_Navigator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.rapid_random_tree.</span></span><span class="sig-name descname"><span class="pre">RRT_Navigator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worldview</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.rapid_random_tree.RRT_Navigator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Navigator</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.rapid_random_tree.RRT_Navigator.get_path">
+<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#unified_frameworks.rapid_random_tree.RRT_Navigator.get_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.rapid_random_tree.RRT_Navigator.get_tree_links">
+<span class="sig-name descname"><span class="pre">get_tree_links</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#unified_frameworks.rapid_random_tree.RRT_Navigator.get_tree_links" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.rapid_random_tree.RRT_Navigator.set_goal">
+<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polar_point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.rapid_random_tree.RRT_Navigator.set_goal" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.rapid_random_tree.RRT_Navigator.start_pathfinder_service">
+<span class="sig-name descname"><span class="pre">start_pathfinder_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.rapid_random_tree.RRT_Navigator.start_pathfinder_service" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.rapid_random_tree.RRT_Navigator.stop_pathfinder_service">
+<span class="sig-name descname"><span class="pre">stop_pathfinder_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.rapid_random_tree.RRT_Navigator.stop_pathfinder_service" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.rapid_random_tree.exploration_step">
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.rapid_random_tree.</span></span><span class="sig-name descname"><span class="pre">exploration_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obstacles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">LineString</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.rapid_random_tree.exploration_step" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.rapid_random_tree.grow_tree">
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.rapid_random_tree.</span></span><span class="sig-name descname"><span class="pre">grow_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_growing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obstacles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.rapid_random_tree.grow_tree" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unified-frameworks-straight-shot-module">
-<h2>unified_frameworks.straight_shot module<a class="headerlink" href="#unified-frameworks-straight-shot-module" title="Permalink to this heading"></a></h2>
+<section id="module-unified_frameworks.straight_shot">
+<span id="unified-frameworks-straight-shot-module"></span><h2>unified_frameworks.straight_shot module<a class="headerlink" href="#module-unified_frameworks.straight_shot" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="unified_frameworks.straight_shot.StraightShot">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.straight_shot.</span></span><span class="sig-name descname"><span class="pre">StraightShot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worldview</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.straight_shot.StraightShot" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Navigator</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.straight_shot.StraightShot.get_path">
+<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.straight_shot.StraightShot.get_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.straight_shot.StraightShot.get_tree_links">
+<span class="sig-name descname"><span class="pre">get_tree_links</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.straight_shot.StraightShot.get_tree_links" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.straight_shot.StraightShot.set_goal">
+<span class="sig-name descname"><span class="pre">set_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polar_point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.straight_shot.StraightShot.set_goal" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.straight_shot.StraightShot.start_pathfinder_service">
+<span class="sig-name descname"><span class="pre">start_pathfinder_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.straight_shot.StraightShot.start_pathfinder_service" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.straight_shot.StraightShot.stop_pathfinder_service">
+<span class="sig-name descname"><span class="pre">stop_pathfinder_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.straight_shot.StraightShot.stop_pathfinder_service" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-unified_frameworks.unified_utils">
-<span id="unified-frameworks-unified-utils-module"></span><h2>unified_frameworks.unified_utils module<a class="headerlink" href="#module-unified_frameworks.unified_utils" title="Permalink to this heading"></a></h2>
+<span id="unified-frameworks-unified-utils-module"></span><h2>unified_frameworks.unified_utils module<a class="headerlink" href="#module-unified_frameworks.unified_utils" title="Link to this heading"></a></h2>
 <p>File to hold helpful util functions/classes</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.Service">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">Service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">Service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.Service.is_running">
-<span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service.is_running" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service.is_running" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.Service.start_service">
-<span class="sig-name descname"><span class="pre">start_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service.start_service" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">start_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service.start_service" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.Service.stop_service">
-<span class="sig-name descname"><span class="pre">stop_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service.stop_service" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stop_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service.stop_service" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.cart_to_polar">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">cart_to_polar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.cart_to_polar" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">cart_to_polar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.cart_to_polar" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.keep_track">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">keep_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_active</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.keep_track" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">keep_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_active</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.keep_track" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.polar_dis">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">polar_dis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.polar_dis" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">polar_dis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.polar_dis" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.polar_sum">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">polar_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.polar_sum" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">polar_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.polar_sum" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.polar_to_cart">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">polar_to_cart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.polar_to_cart" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">polar_to_cart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.polar_to_cart" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.printLog">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">printLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">TAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.printLog" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">printLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">TAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.printLog" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.same_polar_point">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">same_polar_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.same_polar_point" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">same_polar_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.same_polar_point" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.three_point_deviation">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">three_point_deviation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.three_point_deviation" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">three_point_deviation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.three_point_deviation" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.track_time">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">track_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.track_time" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">track_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.track_time" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
 <section id="module-unified_frameworks.worldview">
-<span id="unified-frameworks-worldview-module"></span><h2>unified_frameworks.worldview module<a class="headerlink" href="#module-unified_frameworks.worldview" title="Permalink to this heading"></a></h2>
+<span id="unified-frameworks-worldview-module"></span><h2>unified_frameworks.worldview module<a class="headerlink" href="#module-unified_frameworks.worldview" title="Link to this heading"></a></h2>
 <p>This code is responsible for reading in all sensory inputs 
 and unifying them into a single worldview for everything else
 to access</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.worldview.get_obstacles">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">get_obstacles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.get_obstacles" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">get_obstacles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.get_obstacles" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.worldview.get_points">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">get_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.get_points" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">get_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.get_points" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.worldview.get_rover_body">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">get_rover_body</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.get_rover_body" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">get_rover_body</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.get_rover_body" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.worldview.run_worldview">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">run_worldview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_is_active</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.run_worldview" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">run_worldview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_is_active</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.run_worldview" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.worldview.start_worldview_service">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">start_worldview_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.start_worldview_service" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">start_worldview_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.start_worldview_service" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.worldview.stop_worldview_service">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">stop_worldview_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.stop_worldview_service" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">stop_worldview_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.stop_worldview_service" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unified_frameworks.worldview.worldview_service_is_running">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">worldview_service_is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.worldview_service_is_running" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">worldview_service_is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.worldview_service_is_running" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
 <section id="module-unified_frameworks.worldview_visualizer">
-<span id="unified-frameworks-worldview-visualizer-module"></span><h2>unified_frameworks.worldview_visualizer module<a class="headerlink" href="#module-unified_frameworks.worldview_visualizer" title="Permalink to this heading"></a></h2>
+<span id="unified-frameworks-worldview-visualizer-module"></span><h2>unified_frameworks.worldview_visualizer module<a class="headerlink" href="#module-unified_frameworks.worldview_visualizer" title="Link to this heading"></a></h2>
 </section>
 <section id="module-unified_frameworks">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unified_frameworks" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unified_frameworks" title="Link to this heading"></a></h2>
 </section>
 </section>
 
