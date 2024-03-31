@@ -7,6 +7,7 @@ Welcome to Autonomy@SJSU-Robotics's documentation!
 ==================================================
 
 Hi Welcome to documentation
+Hello There
 
 .. toctree::
    :maxdepth: 10
