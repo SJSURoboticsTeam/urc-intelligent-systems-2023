@@ -16,6 +16,7 @@ jobs:
     - name: Install requirements
       run: pip install -r docs/requirements.txt
     - run: cd docs/
+    - run: ls .
     - name: Make HTML
       run: make html
     - run: cd ..
