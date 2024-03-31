@@ -49,14 +49,24 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">autonomy_setup_test</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">CommandScripts package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#commandscripts-autohelp-module">CommandScripts.AutoHelp module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#commandscripts-gps-nav-module">CommandScripts.GPS_NAV module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-CommandScripts.AutoHelp">CommandScripts.AutoHelp module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#CommandScripts.AutoHelp.AutoHelp"><code class="docutils literal notranslate"><span class="pre">AutoHelp</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-CommandScripts.GPS_NAV">CommandScripts.GPS_NAV module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#CommandScripts.GPS_NAV.GPS_Nav"><code class="docutils literal notranslate"><span class="pre">GPS_Nav</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CommandScripts.GPS_NAV.VFH_obstacle_avoidance"><code class="docutils literal notranslate"><span class="pre">VFH_obstacle_avoidance</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-CommandScripts.MMT_drive_command">CommandScripts.MMT_drive_command module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-CommandScripts.Trajectory">CommandScripts.Trajectory module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#CommandScripts.Trajectory.Trajectory"><code class="docutils literal notranslate"><span class="pre">Trajectory</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#commandscripts-autonomy-module">CommandScripts.autonomy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-CommandScripts.autonomy">CommandScripts.autonomy module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#CommandScripts.autonomy.Autonomy"><code class="docutils literal notranslate"><span class="pre">Autonomy</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-CommandScripts.drive_command">CommandScripts.drive_command module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-CommandScripts">Module contents</a></li>
 </ul>
@@ -99,11 +109,112 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="commandscripts-autohelp-module">
-<h2>CommandScripts.AutoHelp module<a class="headerlink" href="#commandscripts-autohelp-module" title="Link to this heading"></a></h2>
+<section id="module-CommandScripts.AutoHelp">
+<span id="commandscripts-autohelp-module"></span><h2>CommandScripts.AutoHelp module<a class="headerlink" href="#module-CommandScripts.AutoHelp" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="CommandScripts.AutoHelp.AutoHelp">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CommandScripts.AutoHelp.</span></span><span class="sig-name descname"><span class="pre">AutoHelp</span></span><a class="headerlink" href="#CommandScripts.AutoHelp.AutoHelp" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.AutoHelp.AutoHelp.get_bearing">
+<span class="sig-name descname"><span class="pre">get_bearing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_GPS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_GPS</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.AutoHelp.AutoHelp.get_bearing" title="Link to this definition"></a></dt>
+<dd><p>Returns the angle between two GPS coordinates</p>
+<dl class="simple">
+<dt>PARAMS:</dt><dd><p>current_GPS (tuple): (latitude, longitude)
+target_GPS (tuple):  (latitude, longitude)</p>
+</dd>
+<dt>RETURNS:</dt><dd><p>float. angle between the two coordinates</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.AutoHelp.AutoHelp.get_distance">
+<span class="sig-name descname"><span class="pre">get_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_GPS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_GPS</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.AutoHelp.AutoHelp.get_distance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.AutoHelp.AutoHelp.get_spin_angle">
+<span class="sig-name descname"><span class="pre">get_spin_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_GPS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_GPS</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.AutoHelp.AutoHelp.get_spin_angle" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.AutoHelp.AutoHelp.jsonify_commands">
+<span class="sig-name descname"><span class="pre">jsonify_commands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commands</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.AutoHelp.AutoHelp.jsonify_commands" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="commandscripts-gps-nav-module">
-<h2>CommandScripts.GPS_NAV module<a class="headerlink" href="#commandscripts-gps-nav-module" title="Link to this heading"></a></h2>
+<section id="module-CommandScripts.GPS_NAV">
+<span id="commandscripts-gps-nav-module"></span><h2>CommandScripts.GPS_NAV module<a class="headerlink" href="#module-CommandScripts.GPS_NAV" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.GPS_Nav">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CommandScripts.GPS_NAV.</span></span><span class="sig-name descname"><span class="pre">GPS_Nav</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_speed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steering</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPS_coordinate_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.GPS_Nav" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.GPS_Nav.PID_steer">
+<span class="sig-name descname"><span class="pre">PID_steer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steer_output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.GPS_Nav.PID_steer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.GPS_Nav.change_modes">
+<span class="sig-name descname"><span class="pre">change_modes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">desired_mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.GPS_Nav.change_modes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.GPS_Nav.forward_drive">
+<span class="sig-name descname"><span class="pre">forward_drive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commands</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.GPS_Nav.forward_drive" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.GPS_Nav.get_steering">
+<span class="sig-name descname"><span class="pre">get_steering</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_GPS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPS_target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.GPS_Nav.get_steering" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.GPS_Nav.goto_next_coordinate">
+<span class="sig-name descname"><span class="pre">goto_next_coordinate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.GPS_Nav.goto_next_coordinate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.GPS_Nav.spin">
+<span class="sig-name descname"><span class="pre">spin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commands</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.GPS_Nav.spin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.GPS_Nav.stop_rover">
+<span class="sig-name descname"><span class="pre">stop_rover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commands</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.GPS_Nav.stop_rover" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.VFH_obstacle_avoidance">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CommandScripts.GPS_NAV.</span></span><span class="sig-name descname"><span class="pre">VFH_obstacle_avoidance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">general_angle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.VFH_obstacle_avoidance" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.VFH_obstacle_avoidance.get_bearing">
+<span class="sig-name descname"><span class="pre">get_bearing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_longlat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_longlat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.VFH_obstacle_avoidance.get_bearing" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.GPS_NAV.VFH_obstacle_avoidance.get_target_angle">
+<span class="sig-name descname"><span class="pre">get_target_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lidar_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rover_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_longlat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_longlat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.GPS_NAV.VFH_obstacle_avoidance.get_target_angle" title="Link to this definition"></a></dt>
+<dd><p>Obstacle avoidance logic that uses vector field histogram (VFH)</p>
+<dl class="simple">
+<dt>PARAMS:</dt><dd><p>lidar_data (list):      array of 360 elements. each index is an angle
+rover_angle (int):      the angle that the rover is currently facing
+current_longlat(tuple): (longitude, latitude) of rover’s current position
+target_longlat (tuple): (longitude, latitude) of rover’s target position</p>
+</dd>
+<dt>RETURNS:</dt><dd><p>integer. The angle we want to turn to</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-CommandScripts.MMT_drive_command">
 <span id="commandscripts-mmt-drive-command-module"></span><h2>CommandScripts.MMT_drive_command module<a class="headerlink" href="#module-CommandScripts.MMT_drive_command" title="Link to this heading"></a></h2>
@@ -122,8 +233,29 @@
 </dd></dl>
 
 </section>
-<section id="commandscripts-autonomy-module">
-<h2>CommandScripts.autonomy module<a class="headerlink" href="#commandscripts-autonomy-module" title="Link to this heading"></a></h2>
+<section id="module-CommandScripts.autonomy">
+<span id="commandscripts-autonomy-module"></span><h2>CommandScripts.autonomy module<a class="headerlink" href="#module-CommandScripts.autonomy" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="CommandScripts.autonomy.Autonomy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CommandScripts.autonomy.</span></span><span class="sig-name descname"><span class="pre">Autonomy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rover_comms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_speed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steering</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GPS_coordinate_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.autonomy.Autonomy" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.autonomy.Autonomy.get_rover_status">
+<span class="sig-name descname"><span class="pre">get_rover_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bearing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.autonomy.Autonomy.get_rover_status" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.autonomy.Autonomy.start_mission">
+<span class="sig-name descname"><span class="pre">start_mission</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.autonomy.Autonomy.start_mission" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CommandScripts.autonomy.Autonomy.update_gps">
+<span class="sig-name descname"><span class="pre">update_gps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#CommandScripts.autonomy.Autonomy.update_gps" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-CommandScripts.drive_command">
 <span id="commandscripts-drive-command-module"></span><h2>CommandScripts.drive_command module<a class="headerlink" href="#module-CommandScripts.drive_command" title="Link to this heading"></a></h2>

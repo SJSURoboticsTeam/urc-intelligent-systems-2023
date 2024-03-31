@@ -82,8 +82,34 @@ Hello There</p>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">autonomy_setup_test</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="CommandScripts.html">CommandScripts package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#commandscripts-autohelp-module">CommandScripts.AutoHelp module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#commandscripts-gps-nav-module">CommandScripts.GPS_NAV module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#module-CommandScripts.AutoHelp">CommandScripts.AutoHelp module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="CommandScripts.html#CommandScripts.AutoHelp.AutoHelp"><code class="docutils literal notranslate"><span class="pre">AutoHelp</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.AutoHelp.AutoHelp.get_bearing"><code class="docutils literal notranslate"><span class="pre">AutoHelp.get_bearing()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.AutoHelp.AutoHelp.get_distance"><code class="docutils literal notranslate"><span class="pre">AutoHelp.get_distance()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.AutoHelp.AutoHelp.get_spin_angle"><code class="docutils literal notranslate"><span class="pre">AutoHelp.get_spin_angle()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.AutoHelp.AutoHelp.jsonify_commands"><code class="docutils literal notranslate"><span class="pre">AutoHelp.jsonify_commands()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#module-CommandScripts.GPS_NAV">CommandScripts.GPS_NAV module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.GPS_Nav"><code class="docutils literal notranslate"><span class="pre">GPS_Nav</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.GPS_Nav.PID_steer"><code class="docutils literal notranslate"><span class="pre">GPS_Nav.PID_steer()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.GPS_Nav.change_modes"><code class="docutils literal notranslate"><span class="pre">GPS_Nav.change_modes()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.GPS_Nav.forward_drive"><code class="docutils literal notranslate"><span class="pre">GPS_Nav.forward_drive()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.GPS_Nav.get_steering"><code class="docutils literal notranslate"><span class="pre">GPS_Nav.get_steering()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.GPS_Nav.goto_next_coordinate"><code class="docutils literal notranslate"><span class="pre">GPS_Nav.goto_next_coordinate()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.GPS_Nav.spin"><code class="docutils literal notranslate"><span class="pre">GPS_Nav.spin()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.GPS_Nav.stop_rover"><code class="docutils literal notranslate"><span class="pre">GPS_Nav.stop_rover()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.VFH_obstacle_avoidance"><code class="docutils literal notranslate"><span class="pre">VFH_obstacle_avoidance</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.VFH_obstacle_avoidance.get_bearing"><code class="docutils literal notranslate"><span class="pre">VFH_obstacle_avoidance.get_bearing()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.GPS_NAV.VFH_obstacle_avoidance.get_target_angle"><code class="docutils literal notranslate"><span class="pre">VFH_obstacle_avoidance.get_target_angle()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#module-CommandScripts.MMT_drive_command">CommandScripts.MMT_drive_command module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#module-CommandScripts.Trajectory">CommandScripts.Trajectory module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="CommandScripts.html#CommandScripts.Trajectory.Trajectory"><code class="docutils literal notranslate"><span class="pre">Trajectory</span></code></a><ul>
@@ -92,15 +118,23 @@ Hello There</p>
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#commandscripts-autonomy-module">CommandScripts.autonomy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#module-CommandScripts.autonomy">CommandScripts.autonomy module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="CommandScripts.html#CommandScripts.autonomy.Autonomy"><code class="docutils literal notranslate"><span class="pre">Autonomy</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.autonomy.Autonomy.get_rover_status"><code class="docutils literal notranslate"><span class="pre">Autonomy.get_rover_status()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.autonomy.Autonomy.start_mission"><code class="docutils literal notranslate"><span class="pre">Autonomy.start_mission()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="CommandScripts.html#CommandScripts.autonomy.Autonomy.update_gps"><code class="docutils literal notranslate"><span class="pre">Autonomy.update_gps()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#module-CommandScripts.drive_command">CommandScripts.drive_command module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="CommandScripts.html#module-CommandScripts">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Missions.html">Missions package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="Missions.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Missions.html#missions-mmt-testing-module">Missions.MMT_testing module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Missions.html#missions-drive-module">Missions.drive module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Missions.html#module-Missions.MMT_testing">Missions.MMT_testing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Missions.html#module-Missions.drive">Missions.drive module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Missions.html#module-Missions">Module contents</a></li>
 </ul>
 </li>
@@ -130,8 +164,35 @@ Hello There</p>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="proj_modules.html#proj-modules-ir-sensor-module">proj_modules.IR_Sensor module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="proj_modules.html#proj-modules-lsm303-module">proj_modules.LSM303 module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="proj_modules.html#proj-modules-mpu6050-module">proj_modules.MPU6050 module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="proj_modules.html#module-proj_modules.LSM303">proj_modules.LSM303 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass"><code class="docutils literal notranslate"><span class="pre">Compass</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.get_heading"><code class="docutils literal notranslate"><span class="pre">Compass.get_heading()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.get_raw"><code class="docutils literal notranslate"><span class="pre">Compass.get_raw()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.hard_iron_bias_x"><code class="docutils literal notranslate"><span class="pre">Compass.hard_iron_bias_x</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.hard_iron_bias_y"><code class="docutils literal notranslate"><span class="pre">Compass.hard_iron_bias_y</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.hard_iron_bias_z"><code class="docutils literal notranslate"><span class="pre">Compass.hard_iron_bias_z</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.soft_iron_bias_xx"><code class="docutils literal notranslate"><span class="pre">Compass.soft_iron_bias_xx</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.soft_iron_bias_xy"><code class="docutils literal notranslate"><span class="pre">Compass.soft_iron_bias_xy</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.soft_iron_bias_xz"><code class="docutils literal notranslate"><span class="pre">Compass.soft_iron_bias_xz</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.soft_iron_bias_yx"><code class="docutils literal notranslate"><span class="pre">Compass.soft_iron_bias_yx</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.soft_iron_bias_yy"><code class="docutils literal notranslate"><span class="pre">Compass.soft_iron_bias_yy</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.soft_iron_bias_yz"><code class="docutils literal notranslate"><span class="pre">Compass.soft_iron_bias_yz</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.soft_iron_bias_zx"><code class="docutils literal notranslate"><span class="pre">Compass.soft_iron_bias_zx</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.soft_iron_bias_zy"><code class="docutils literal notranslate"><span class="pre">Compass.soft_iron_bias_zy</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.LSM303.Compass.soft_iron_bias_zz"><code class="docutils literal notranslate"><span class="pre">Compass.soft_iron_bias_zz</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="proj_modules.html#module-proj_modules.MPU6050">proj_modules.MPU6050 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="proj_modules.html#proj_modules.MPU6050.MPU6050"><code class="docutils literal notranslate"><span class="pre">MPU6050</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.MPU6050.MPU6050.MPU_Init"><code class="docutils literal notranslate"><span class="pre">MPU6050.MPU_Init()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.MPU6050.MPU6050.read_data"><code class="docutils literal notranslate"><span class="pre">MPU6050.read_data()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.MPU6050.MPU6050.read_raw_data"><code class="docutils literal notranslate"><span class="pre">MPU6050.read_raw_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="proj_modules.html#module-proj_modules.Serial">proj_modules.Serial module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="proj_modules.html#proj_modules.Serial.SerialSystem"><code class="docutils literal notranslate"><span class="pre">SerialSystem</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="proj_modules.html#proj_modules.Serial.SerialSystem.close_serial"><code class="docutils literal notranslate"><span class="pre">SerialSystem.close_serial()</span></code></a></li>
@@ -206,7 +267,14 @@ Hello There</p>
 <li class="toctree-l5"><a class="reference internal" href="unified_frameworks.sensor_array.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html">unified_frameworks.sensor_array.gps_compass package</a><ul>
 <li class="toctree-l7"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#submodules">Submodules</a></li>
-<li class="toctree-l7"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified-frameworks-sensor-array-gps-compass-actual-gps-compass-module">unified_frameworks.sensor_array.gps_compass.actual_gps_compass module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#module-unified_frameworks.sensor_array.gps_compass.actual_gps_compass">unified_frameworks.sensor_array.gps_compass.actual_gps_compass module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass"><code class="docutils literal notranslate"><span class="pre">ActualGPSCompass</span></code></a><ul>
+<li class="toctree-l9"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass.get_cur_angle"><code class="docutils literal notranslate"><span class="pre">ActualGPSCompass.get_cur_angle()</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass.get_cur_gps"><code class="docutils literal notranslate"><span class="pre">ActualGPSCompass.get_cur_gps()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l7"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#module-unified_frameworks.sensor_array.gps_compass.fake_gps_compass">unified_frameworks.sensor_array.gps_compass.fake_gps_compass module</a><ul>
 <li class="toctree-l8"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified_frameworks.sensor_array.gps_compass.fake_gps_compass.FakeGPSCompass"><code class="docutils literal notranslate"><span class="pre">FakeGPSCompass</span></code></a><ul>
 <li class="toctree-l9"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified_frameworks.sensor_array.gps_compass.fake_gps_compass.FakeGPSCompass.geographic_coordinates_to_relative_coordinates"><code class="docutils literal notranslate"><span class="pre">FakeGPSCompass.geographic_coordinates_to_relative_coordinates()</span></code></a></li>
@@ -264,7 +332,7 @@ Hello There</p>
 <li class="toctree-l6"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.LidarDisconnectException"><code class="docutils literal notranslate"><span class="pre">LidarDisconnectException</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l5"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-actual-gps-test-module">unified_frameworks.sensor_array.actual_gps_test module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="unified_frameworks.sensor_array.html#module-unified_frameworks.sensor_array.actual_gps_test">unified_frameworks.sensor_array.actual_gps_test module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="unified_frameworks.sensor_array.html#module-unified_frameworks.sensor_array.actual_lidar">unified_frameworks.sensor_array.actual_lidar module</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.actual_lidar.ActualLidar"><code class="docutils literal notranslate"><span class="pre">ActualLidar</span></code></a><ul>
 <li class="toctree-l7"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.actual_lidar.ActualLidar.connect"><code class="docutils literal notranslate"><span class="pre">ActualLidar.connect()</span></code></a></li>
@@ -330,7 +398,11 @@ Hello There</p>
 </ul>
 </li>
 <li class="toctree-l5"><a class="reference internal" href="unified_frameworks.sensor_array.html#module-unified_frameworks.sensor_array.lidar_visualizer">unified_frameworks.sensor_array.lidar_visualizer module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified-frameworks-sensor-array-server-gps-module">unified_frameworks.sensor_array.server_gps module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="unified_frameworks.sensor_array.html#module-unified_frameworks.sensor_array.server_gps">unified_frameworks.sensor_array.server_gps module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.server_gps.sendServerDataToClient"><code class="docutils literal notranslate"><span class="pre">sendServerDataToClient()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.server_gps.startServer"><code class="docutils literal notranslate"><span class="pre">startServer()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l5"><a class="reference internal" href="unified_frameworks.sensor_array.html#module-unified_frameworks.sensor_array.server_lidar">unified_frameworks.sensor_array.server_lidar module</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.server_lidar.NumpyEncoder"><code class="docutils literal notranslate"><span class="pre">NumpyEncoder</span></code></a><ul>
 <li class="toctree-l7"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.server_lidar.NumpyEncoder.default"><code class="docutils literal notranslate"><span class="pre">NumpyEncoder.default()</span></code></a></li>

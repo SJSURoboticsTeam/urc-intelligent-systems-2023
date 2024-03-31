@@ -57,8 +57,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#proj-modules-ir-sensor-module">proj_modules.IR_Sensor module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#proj-modules-lsm303-module">proj_modules.LSM303 module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#proj-modules-mpu6050-module">proj_modules.MPU6050 module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-proj_modules.LSM303">proj_modules.LSM303 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#proj_modules.LSM303.Compass"><code class="docutils literal notranslate"><span class="pre">Compass</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-proj_modules.MPU6050">proj_modules.MPU6050 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#proj_modules.MPU6050.MPU6050"><code class="docutils literal notranslate"><span class="pre">MPU6050</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-proj_modules.Serial">proj_modules.Serial module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#proj_modules.Serial.SerialSystem"><code class="docutils literal notranslate"><span class="pre">SerialSystem</span></code></a></li>
 </ul>
@@ -133,11 +139,108 @@
 <section id="proj-modules-ir-sensor-module">
 <h2>proj_modules.IR_Sensor module<a class="headerlink" href="#proj-modules-ir-sensor-module" title="Link to this heading"></a></h2>
 </section>
-<section id="proj-modules-lsm303-module">
-<h2>proj_modules.LSM303 module<a class="headerlink" href="#proj-modules-lsm303-module" title="Link to this heading"></a></h2>
+<section id="module-proj_modules.LSM303">
+<span id="proj-modules-lsm303-module"></span><h2>proj_modules.LSM303 module<a class="headerlink" href="#module-proj_modules.LSM303" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">proj_modules.LSM303.</span></span><span class="sig-name descname"><span class="pre">Compass</span></span><a class="headerlink" href="#proj_modules.LSM303.Compass" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.get_heading">
+<span class="sig-name descname"><span class="pre">get_heading</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.LSM303.Compass.get_heading" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.get_raw">
+<span class="sig-name descname"><span class="pre">get_raw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.LSM303.Compass.get_raw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.hard_iron_bias_x">
+<span class="sig-name descname"><span class="pre">hard_iron_bias_x</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8.33426572</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.hard_iron_bias_x" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.hard_iron_bias_y">
+<span class="sig-name descname"><span class="pre">hard_iron_bias_y</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">38.4854981</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.hard_iron_bias_y" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.hard_iron_bias_z">
+<span class="sig-name descname"><span class="pre">hard_iron_bias_z</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.51834922</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.hard_iron_bias_z" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.soft_iron_bias_xx">
+<span class="sig-name descname"><span class="pre">soft_iron_bias_xx</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20.097355661177684</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.soft_iron_bias_xx" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.soft_iron_bias_xy">
+<span class="sig-name descname"><span class="pre">soft_iron_bias_xy</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.20530722218264985</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.soft_iron_bias_xy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.soft_iron_bias_xz">
+<span class="sig-name descname"><span class="pre">soft_iron_bias_xz</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.544377527437325</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.soft_iron_bias_xz" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.soft_iron_bias_yx">
+<span class="sig-name descname"><span class="pre">soft_iron_bias_yx</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.20530722218265313</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.soft_iron_bias_yx" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.soft_iron_bias_yy">
+<span class="sig-name descname"><span class="pre">soft_iron_bias_yy</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20.0365536823096</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.soft_iron_bias_yy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.soft_iron_bias_yz">
+<span class="sig-name descname"><span class="pre">soft_iron_bias_yz</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.1208798385500047</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.soft_iron_bias_yz" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.soft_iron_bias_zx">
+<span class="sig-name descname"><span class="pre">soft_iron_bias_zx</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.5443775274373277</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.soft_iron_bias_zx" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.soft_iron_bias_zy">
+<span class="sig-name descname"><span class="pre">soft_iron_bias_zy</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.12087983855</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.soft_iron_bias_zy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="proj_modules.LSM303.Compass.soft_iron_bias_zz">
+<span class="sig-name descname"><span class="pre">soft_iron_bias_zz</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">19.24727698802664</span></em><a class="headerlink" href="#proj_modules.LSM303.Compass.soft_iron_bias_zz" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="proj-modules-mpu6050-module">
-<h2>proj_modules.MPU6050 module<a class="headerlink" href="#proj-modules-mpu6050-module" title="Link to this heading"></a></h2>
+<section id="module-proj_modules.MPU6050">
+<span id="proj-modules-mpu6050-module"></span><h2>proj_modules.MPU6050 module<a class="headerlink" href="#module-proj_modules.MPU6050" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="proj_modules.MPU6050.MPU6050">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">proj_modules.MPU6050.</span></span><span class="sig-name descname"><span class="pre">MPU6050</span></span><a class="headerlink" href="#proj_modules.MPU6050.MPU6050" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.MPU6050.MPU6050.MPU_Init">
+<span class="sig-name descname"><span class="pre">MPU_Init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.MPU6050.MPU6050.MPU_Init" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.MPU6050.MPU6050.read_data">
+<span class="sig-name descname"><span class="pre">read_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.MPU6050.MPU6050.read_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="proj_modules.MPU6050.MPU6050.read_raw_data">
+<span class="sig-name descname"><span class="pre">read_raw_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#proj_modules.MPU6050.MPU6050.read_raw_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-proj_modules.Serial">
 <span id="proj-modules-serial-module"></span><h2>proj_modules.Serial module<a class="headerlink" href="#module-proj_modules.Serial" title="Link to this heading"></a></h2>

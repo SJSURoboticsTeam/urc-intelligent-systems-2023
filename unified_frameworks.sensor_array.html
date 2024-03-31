@@ -109,7 +109,14 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html">unified_frameworks.sensor_array.gps_compass package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified-frameworks-sensor-array-gps-compass-actual-gps-compass-module">unified_frameworks.sensor_array.gps_compass.actual_gps_compass module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#module-unified_frameworks.sensor_array.gps_compass.actual_gps_compass">unified_frameworks.sensor_array.gps_compass.actual_gps_compass module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass"><code class="docutils literal notranslate"><span class="pre">ActualGPSCompass</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass.get_cur_angle"><code class="docutils literal notranslate"><span class="pre">ActualGPSCompass.get_cur_angle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass.get_cur_gps"><code class="docutils literal notranslate"><span class="pre">ActualGPSCompass.get_cur_gps()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#module-unified_frameworks.sensor_array.gps_compass.fake_gps_compass">unified_frameworks.sensor_array.gps_compass.fake_gps_compass module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified_frameworks.sensor_array.gps_compass.fake_gps_compass.FakeGPSCompass"><code class="docutils literal notranslate"><span class="pre">FakeGPSCompass</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.gps_compass.html#unified_frameworks.sensor_array.gps_compass.fake_gps_compass.FakeGPSCompass.geographic_coordinates_to_relative_coordinates"><code class="docutils literal notranslate"><span class="pre">FakeGPSCompass.geographic_coordinates_to_relative_coordinates()</span></code></a></li>
@@ -206,8 +213,8 @@ wait_seconds: Seconds to wait between each attempt</p>
 </dd></dl>
 
 </section>
-<section id="unified-frameworks-sensor-array-actual-gps-test-module">
-<h2>unified_frameworks.sensor_array.actual_gps_test module<a class="headerlink" href="#unified-frameworks-sensor-array-actual-gps-test-module" title="Link to this heading"></a></h2>
+<section id="module-unified_frameworks.sensor_array.actual_gps_test">
+<span id="unified-frameworks-sensor-array-actual-gps-test-module"></span><h2>unified_frameworks.sensor_array.actual_gps_test module<a class="headerlink" href="#module-unified_frameworks.sensor_array.actual_gps_test" title="Link to this heading"></a></h2>
 </section>
 <section id="module-unified_frameworks.sensor_array.actual_lidar">
 <span id="unified-frameworks-sensor-array-actual-lidar-module"></span><h2>unified_frameworks.sensor_array.actual_lidar module<a class="headerlink" href="#module-unified_frameworks.sensor_array.actual_lidar" title="Link to this heading"></a></h2>
@@ -460,8 +467,18 @@ The history is returned most recent first</p>
 <section id="module-unified_frameworks.sensor_array.lidar_visualizer">
 <span id="unified-frameworks-sensor-array-lidar-visualizer-module"></span><h2>unified_frameworks.sensor_array.lidar_visualizer module<a class="headerlink" href="#module-unified_frameworks.sensor_array.lidar_visualizer" title="Link to this heading"></a></h2>
 </section>
-<section id="unified-frameworks-sensor-array-server-gps-module">
-<h2>unified_frameworks.sensor_array.server_gps module<a class="headerlink" href="#unified-frameworks-sensor-array-server-gps-module" title="Link to this heading"></a></h2>
+<section id="module-unified_frameworks.sensor_array.server_gps">
+<span id="unified-frameworks-sensor-array-server-gps-module"></span><h2>unified_frameworks.sensor_array.server_gps module<a class="headerlink" href="#module-unified_frameworks.sensor_array.server_gps" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.sensor_array.server_gps.sendServerDataToClient">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.server_gps.</span></span><span class="sig-name descname"><span class="pre">sendServerDataToClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">websocket</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.server_gps.sendServerDataToClient" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unified_frameworks.sensor_array.server_gps.startServer">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.server_gps.</span></span><span class="sig-name descname"><span class="pre">startServer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.server_gps.startServer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-unified_frameworks.sensor_array.server_lidar">
 <span id="unified-frameworks-sensor-array-server-lidar-module"></span><h2>unified_frameworks.sensor_array.server_lidar module<a class="headerlink" href="#module-unified_frameworks.sensor_array.server_lidar" title="Link to this heading"></a></h2>
