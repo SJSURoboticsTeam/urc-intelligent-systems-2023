@@ -1,5 +1,5 @@
-autonomy_setup_test
-===================
+urc-intelligent-systems-2023
+============================
 
 .. toctree::
    :maxdepth: 4
