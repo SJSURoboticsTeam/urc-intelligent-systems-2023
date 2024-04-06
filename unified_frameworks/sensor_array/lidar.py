@@ -3,7 +3,6 @@ import re
 root = (next(re.finditer(".*unified_frameworks", __file__)).group())
 sys.path.append(root) if root not in sys.path else None
 from sensor_array.actual_lidar import ActualLidar
-from sensor_array.client_lidar import WirelessLidar
 from sensor_array.bridge_lidar import BridgeLidar
 import importlib
 from sensor_array.fake_lidar import FakeLidar
@@ -16,8 +15,6 @@ import json
 import serial.tools.list_ports
 import serial
 
-import sensor_array.client_lidar
-importlib.reload(sensor_array.client_lidar)
 
 config = {
     "lidar_preference": [ActualLidar, BridgeLidar, FakeLidar],
