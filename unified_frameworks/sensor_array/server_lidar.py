@@ -39,7 +39,6 @@ if port is None:
 else:
     print(f"[SERVER] Device port {port} found!")
     lidar = ActualLidar()
-lidar.connect()
 
 clients = []  # @note List of clients connected in the server
 buffer = None
@@ -96,6 +95,7 @@ async def startServer():
 if __name__ == "__main__":
     try:
         print("[SERVER] Server ON")
+        lidar.connect()
         asyncio.run(startServer())
     except KeyboardInterrupt:
         print("[SERVER] Keyboard Interrupt occurred!")
