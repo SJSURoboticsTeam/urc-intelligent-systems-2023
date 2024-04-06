@@ -2,17 +2,22 @@ from typing import Tuple
 from gps_compass.gps_compass_class import GPSCompass
 import sys
 import serial.tools.list_ports as port_list
+import re
+import os
 
-root = __file__[: __file__.index("\\unified_frameworks")]
-sys.path.append(root + "\\modules")
+root = (next(re.finditer(".*unified_frameworks", __file__)).group())
+sys.path.append(root) if root not in sys.path else None
+root = os.path.realpath(os.path.join(root, '..'))
+sys.path.append(root) if root not in sys.path else None
 
 # import from modules
-import GPS
-import LSM303
+from proj_modules import GPS
+from proj_modules import LSM303
 from threading import Thread
 
 class ActualGPSCompass(GPSCompass):
     def __init__(self) -> None:
+        self.gpsState = True # Keeps track of the reading state of the GPS
         self.cur_gps = None
         port_number = 0
         ports = list(
@@ -40,12 +45,6 @@ class ActualGPSCompass(GPSCompass):
         self.gpsThreadCall.start()
 
 
-    def isGPSStateValid(self) -> bool:
-        """
-        Returns our GPS's current state.
-        """
-        return self.gpsState
-
     def get_cur_angle(self) -> float:
         return self.compass.get_heading()
 
@@ -54,9 +53,10 @@ class ActualGPSCompass(GPSCompass):
         On thread for reading gps coordinates
         This way we can continously retrieve the latest data
         """
-        temp = self.gps.get_position()
-        if temp is not None:
-            self.cur_gps = temp
+        while self.gpsState:
+            temp = self.gps.get_position()
+            if temp is not None:
+                self.cur_gps = temp
 
     def get_cur_gps(self) -> Tuple[int, int]:
         """
@@ -68,6 +68,7 @@ class ActualGPSCompass(GPSCompass):
         """
         Should be called when we disconnect
         """
+        self.gpsState = False
         self.gpsThreadCall.join()
 
 if __name__ == "__main__":
