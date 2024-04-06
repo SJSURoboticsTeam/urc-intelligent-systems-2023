@@ -3,7 +3,8 @@ and determining a command to send to the rover"""
 
 import sys
 import re
-root = (next(re.finditer(".*unified_frameworks", __file__)).group())
+
+root = next(re.finditer(".*unified_frameworks", __file__)).group()
 sys.path.append(root) if root not in sys.path else None
 from math import pi
 from unified_utils import Service
@@ -23,6 +24,7 @@ from rapid_random_tree import RRT_Navigator
 import worldview
 import pathfinder as _pathfinder
 import importlib
+from typing import Tuple
 
 importlib.reload(worldview)
 importlib.reload(_pathfinder)
@@ -33,20 +35,30 @@ importlib.reload(straight_shot)
 # importlib.reload(rapid_random_tree)
 # pathfinder = RRT_Navigator(worldview)
 # pathfinder = StraightShot(worldview)
-pathfinder = _pathfinder.get_pathfinder()
 
 
+# parameters that control how the pathfinder service works
 config = {
     "command_frequency": 10,  # Hz
     "verbose_service_events": True,
     "send_commands_to_rover": False,
     "verbose_rover_commands": True,
+    "distance_threshold": 3,  # how close, in meters, till "at a destination"
 }
 
+# globals used for captain service
+pathfinder = _pathfinder.get_pathfinder()
 _command_printer = print
 rover = WiFi("http://192.168.0.211:5000")
 cur_rad = 0
 rad_lag = 0.9
+_get_target_speed = lambda: 0
+_gps_coordinates = [  # lat, long pairs
+    (-121.8818545, 37.3370768),
+    (-121.8818535, 37.3370083),
+    (-121.8817744, 37.3369864),
+]
+_cur_gps_coordinate: Tuple[int, int] = None
 
 
 def captain_act(get_target_speed):
@@ -89,26 +101,43 @@ def captain_stop():
         print(command)
 
 
-def set_goal_coordinates(*args):
+def set_goal_coordinates(coordinate: Tuple[int, int]):
     """Set the latitude, longitude for the goal"""
-    pass
+    global _cur_gps_coordinate
+    _cur_gps_coordinate = coordinate
 
 
-_get_target_speed = lambda: 0
+def at_coordinate_function():
+    """
+    Function to run when at a GPS coordinate. Currently a stub, but should eventually
+    be a function that navigates to the aruco tag at a GPS coordinate.
+    """
+    print("At GPS coordinate")
+    captain_act(lambda: 0)
+    time.sleep(5)
 
 
 def run_captain(is_captain_running):
     pathfinder.start_pathfinder_service()
-    while is_captain_running():
+    coordinate_iterable = iter(_gps_coordinates)
+    set_goal_coordinates(next(coordinate_iterable))
+    while is_captain_running() and _cur_gps_coordinate is not None:
         print("Running")
-        # arbitrary location, should be replaced by real locations in a mission
+
         pathfinder.set_goal(
             gps_compass.geographic_coordinates_to_relative_coordinates(
-                -121.8818545, 37.3370768
+                *_cur_gps_coordinate
             )
         )
         captain_act(_get_target_speed)
         time.sleep(1 / config["command_frequency"])
+
+        # go to next point if "at goal"
+        # if r < distance threshold
+        if pathfinder.distance_to_target() < config["distance_threshold"]:
+            at_coordinate_function()
+            set_goal_coordinates(next(coordinate_iterable, None))
+
     captain_stop()
     pathfinder.stop_pathfinder_service()
     gps_compass.disconnect()

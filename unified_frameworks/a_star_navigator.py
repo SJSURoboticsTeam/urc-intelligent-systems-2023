@@ -40,7 +40,7 @@ class A_Star_Navigator(Navigator):
         self._path = []
         self._backlinks = { (0,0): None }
         self._arrival_costs = { None: 0 }
-        self._goal = np.array((pi/2, 1))
+        self._goal = (pi/2, 1)
         self.count=0
         print("Created")
     def get_path(self) -> ndarray:
@@ -51,6 +51,8 @@ class A_Star_Navigator(Navigator):
         self._goal=polar_point
     def get_goal(self):
         return self._goal
+    def distance_to_target(self) -> float:
+        return self._goal[1]
     def start_pathfinder_service(self, service_name="A* path finding service"):
         def service_func(is_running):
             while is_running():
