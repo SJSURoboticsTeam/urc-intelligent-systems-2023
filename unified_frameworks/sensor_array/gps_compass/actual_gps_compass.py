@@ -13,10 +13,11 @@ sys.path.append(root) if root not in sys.path else None
 # import from modules
 from proj_modules import GPS
 from proj_modules import LSM303
-
+from threading import Thread
 
 class ActualGPSCompass(GPSCompass):
     def __init__(self) -> None:
+        self.gpsState = True # Keeps track of the reading state of the GPS
         self.cur_gps = None
         port_number = 0
         ports = list(
@@ -40,22 +41,44 @@ class ActualGPSCompass(GPSCompass):
 
         self.compass = LSM303.Compass()
 
+        self.gpsThreadCall = Thread(target=self.read)
+        self.gpsThreadCall.start()
+
+
     def get_cur_angle(self) -> float:
         return self.compass.get_heading()
 
-    def get_cur_gps(self) -> Tuple[int, int]:
-        temp = self.gps.get_position()
-        if temp is not None:
-            self.cur_gps = temp
-        return self.cur_gps
+    def read(self) -> None:
+        """
+        On thread for reading gps coordinates
+        This way we can continously retrieve the latest data
+        """
+        while self.gpsState:
+            temp = self.gps.get_position()
+            if temp is not None:
+                self.cur_gps = temp
 
+    def get_cur_gps(self) -> Tuple[int, int]:
+        """
+        Returns latest GPS coordinates
+        """
+        return self.cur_gps
+    
+    def join(self):
+        """
+        Should be called when we disconnect
+        """
+        self.gpsState = False
+        self.gpsThreadCall.join()
 
 if __name__ == "__main__":
     import time
     gps = ActualGPSCompass()
     try:
-        while 1:
+        while True:
             print(gps.gps, gps.angle)
             time.sleep(1)
     except KeyboardInterrupt:
         gps.disconnect()
+        gps.join()
+
