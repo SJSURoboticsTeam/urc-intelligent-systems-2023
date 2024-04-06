@@ -8,13 +8,13 @@ import time
 import sys
 import re
 sys.path.append((next(re.finditer(".*unified_frameworks", __file__)).group()))
-from sensor_array.LidarClass import Lidar
+from sensor_array.LidarClass import _Lidar
 from unified_utils import Service, polar_sum
 
 config = {
     "verbose":False
 }
-class FakeLidar(Lidar):
+class FakeLidar(_Lidar):
     def __init__(self, points=100, angular_rate=1, translational_rate=1, jitter=0, noise=0, empty_scans=False) -> None:
         self.n = points
         angles = np.linspace(0, 360, self.n)

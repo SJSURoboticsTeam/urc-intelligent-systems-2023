@@ -4,12 +4,14 @@ import matplotlib.animation as anim
 import json
 import sys
 # print(sys.path)
-import lidar
+import lidar as L
 import time
+import traceback
 
 # lidar.config['']
 if __name__=='__main__':
-    lidar.start_lidar_service()
+    lidar = L.Lidar()
+    lidar.start_service()
     # time.sleep(20)
     try:
         fig = plt.figure()
@@ -40,7 +42,8 @@ if __name__=='__main__':
         anime = anim.FuncAnimation(fig, update_plot, 1, interval=50, blit=True)
 
         plt.show()
-    except:
-        pass
-    lidar.stop_lidar_service()
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+    lidar.stop_service()
 
