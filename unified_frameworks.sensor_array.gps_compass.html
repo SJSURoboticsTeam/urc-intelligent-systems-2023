@@ -121,7 +121,20 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass.get_cur_gps">
 <span class="sig-name descname"><span class="pre">get_cur_gps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass.get_cur_gps" title="Link to this definition"></a></dt>
-<dd><p>Returns the current GPS position in the form (latitude, longitude)</p>
+<dd><p>Returns latest GPS coordinates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass.join">
+<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass.join" title="Link to this definition"></a></dt>
+<dd><p>Should be called when we disconnect</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#unified_frameworks.sensor_array.gps_compass.actual_gps_compass.ActualGPSCompass.read" title="Link to this definition"></a></dt>
+<dd><p>On thread for reading gps coordinates
+This way we can continously retrieve the latest data</p>
 </dd></dl>
 
 </dd></dl>
