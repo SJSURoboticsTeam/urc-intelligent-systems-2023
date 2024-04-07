@@ -18,7 +18,7 @@ lidar = sensor_array.lidar
 config = {
     "update_frequency": 20, #Hz
     "service_event_verbose": True,
-    "rover_body": [(-pi/2, 0.5), (pi, 0.25), (0, 0.25)],
+    "rover_body": [(-pi/2, 1), (pi, 0.5), (0, 0.5)],
     "verbose": True
 }
 
@@ -35,11 +35,13 @@ class Worldview(_Abstract_Service):
         """Start sensors and start unifying data from all sensors
         
         """
+        if config['verbose']: print("Starting worldview service")
         self._lidar.start_service()
     def stop_service(self):
         """Stop unifying data and stop all sensors
         
         """
+        if config['verbose']: print("Stopping worldview service")
         self._lidar.stop_service()
     
     def get_obstacles(self):
@@ -56,7 +58,7 @@ class Worldview(_Abstract_Service):
         """
         return sum(self._lidar.get_point_clouds(), [])
     
-    def get_rover_body():
+    def get_rover_body(self):
         """Get the coordinates of the rovers body
         
         """

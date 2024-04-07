@@ -60,12 +60,15 @@ class Lidar(_Abstract_Service):
             raise NoLidarException(f"Failed to connect on the following lidars {preference}")
         self._lidar: _Lidar = lidar
         self._lidar.disconnect()
+        if config['verbose']: print(f"Using {type(self._lidar)}")
     
     def start_service(self):
         """Connect to the Lidar and start scanning"""
+        if config['verbose']: print("Connecting to Lidar")
         self._lidar.connect()
     def stop_service(self):
         """Stop scanning and disconnect from the lidar"""
+        if config['verbose']: print("Disconnecting from Lidar")
         self._lidar.disconnect()
 
     def get_point_clouds(self):

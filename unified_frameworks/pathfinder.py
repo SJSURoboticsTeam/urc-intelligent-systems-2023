@@ -42,7 +42,7 @@ config = {
 
 import a_star_navigator # Import any other navigator you like
 importlib.reload(a_star_navigator) # Ensures you have instance with latest code reloaded from changes made on the fly
-pf = a_star_navigator.A_Star_Navigator(worldview)
+pf = a_star_navigator.A_Star_Navigator(worldview.Worldview())
 # pf = Pf(worldview)
 def get_pathfinder():
     return pf
