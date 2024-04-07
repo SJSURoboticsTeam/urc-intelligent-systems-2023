@@ -47,7 +47,7 @@ class Lidar(_Abstract_Service):
         if config["verbose"]: print("Initializing Lidar")
         lidar = None
         for _lidar in preference:
-            print(f"Trying to use {_lidar}")
+            if config['verbose']: print(f"Trying to use {_lidar}")
             try:
                 L:_Lidar = _lidar()
                 if L.connect(verbose_attempts=True):
