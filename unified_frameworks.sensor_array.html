@@ -170,44 +170,6 @@
 </section>
 <section id="module-unified_frameworks.sensor_array.LidarClass">
 <span id="unified-frameworks-sensor-array-lidarclass-module"></span><h2>unified_frameworks.sensor_array.LidarClass module<a class="headerlink" href="#module-unified_frameworks.sensor_array.LidarClass" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.LidarClass.Lidar">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.LidarClass.</span></span><span class="sig-name descname"><span class="pre">Lidar</span></span><a class="headerlink" href="#unified_frameworks.sensor_array.LidarClass.Lidar" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.LidarClass.Lidar.connect">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#unified_frameworks.sensor_array.LidarClass.Lidar.connect" title="Link to this definition"></a></dt>
-<dd><p>Make attempts to connect to the Lidar</p>
-<section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
-<p>max_attempts: Number of attempts to make
-wait_seconds: Seconds to wait between each attempt</p>
-<section id="returns">
-<h4>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h4>
-<p>True if connection is made</p>
-</section>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.LidarClass.Lidar.disconnect">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.LidarClass.Lidar.disconnect" title="Link to this definition"></a></dt>
-<dd><p>Disconnect from the Lidar</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.LidarClass.Lidar.get_measures">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_measures</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.LidarClass.Lidar.get_measures" title="Link to this definition"></a></dt>
-<dd><p>Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance meter)</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.LidarClass.Lidar.test_Lidar">
-<span class="sig-name descname"><span class="pre">test_Lidar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.LidarClass.Lidar.test_Lidar" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 <dl class="py exception">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.LidarClass.LidarDisconnectException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.LidarClass.</span></span><span class="sig-name descname"><span class="pre">LidarDisconnectException</span></span><a class="headerlink" href="#unified_frameworks.sensor_array.LidarClass.LidarDisconnectException" title="Link to this definition"></a></dt>
@@ -223,17 +185,17 @@ wait_seconds: Seconds to wait between each attempt</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.actual_lidar.ActualLidar">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.actual_lidar.</span></span><span class="sig-name descname"><span class="pre">ActualLidar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.actual_lidar.ActualLidar" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Lidar</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Lidar</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.actual_lidar.ActualLidar.connect">
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#unified_frameworks.sensor_array.actual_lidar.ActualLidar.connect" title="Link to this definition"></a></dt>
 <dd><p>Make attempts to connect to the Lidar</p>
-<section id="id1">
-<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
 <p>max_attempts: Number of attempts to make
 wait_seconds: Seconds to wait between each attempt</p>
-<section id="id2">
-<h4>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h4>
 <p>True if connection is made</p>
 </section>
 </section>
@@ -253,7 +215,7 @@ wait_seconds: Seconds to wait between each attempt</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.actual_lidar.ActualLidar.get_measures">
 <span class="sig-name descname"><span class="pre">get_measures</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.actual_lidar.ActualLidar.get_measures" title="Link to this definition"></a></dt>
-<dd><p>Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance meter)</p>
+<dd><p>Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance millimeter)</p>
 </dd></dl>
 
 </dd></dl>
@@ -298,7 +260,7 @@ wait_seconds: Seconds to wait between each attempt</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.bridge_lidar.BridgeLidar">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.bridge_lidar.</span></span><span class="sig-name descname"><span class="pre">BridgeLidar</span></span><a class="headerlink" href="#unified_frameworks.sensor_array.bridge_lidar.BridgeLidar" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Lidar</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Lidar</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.bridge_lidar.BridgeLidar.PATH">
 <span class="sig-name descname"><span class="pre">PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/lidar'</span></em><a class="headerlink" href="#unified_frameworks.sensor_array.bridge_lidar.BridgeLidar.PATH" title="Link to this definition"></a></dt>
@@ -308,12 +270,12 @@ wait_seconds: Seconds to wait between each attempt</p>
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.bridge_lidar.BridgeLidar.connect">
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#unified_frameworks.sensor_array.bridge_lidar.BridgeLidar.connect" title="Link to this definition"></a></dt>
 <dd><p>Make attempts to connect to the Lidar</p>
-<section id="id3">
-<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <p>max_attempts: Number of attempts to make
 wait_seconds: Seconds to wait between each attempt</p>
-<section id="id4">
-<h4>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<section id="id2">
+<h4>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
 <p>True if connection is made</p>
 </section>
 </section>
@@ -328,7 +290,7 @@ wait_seconds: Seconds to wait between each attempt</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.bridge_lidar.BridgeLidar.get_measures">
 <span class="sig-name descname"><span class="pre">get_measures</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.bridge_lidar.BridgeLidar.get_measures" title="Link to this definition"></a></dt>
-<dd><p>Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance meter)</p>
+<dd><p>Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance millimeter)</p>
 </dd></dl>
 
 </dd></dl>
@@ -348,17 +310,17 @@ I think making this will help in testing an optimizing the lidar scripts</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.fake_lidar.FakeLidar">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.fake_lidar.</span></span><span class="sig-name descname"><span class="pre">FakeLidar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angular_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translational_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jitter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_scans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.fake_lidar.FakeLidar" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Lidar</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Lidar</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.fake_lidar.FakeLidar.connect">
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#unified_frameworks.sensor_array.fake_lidar.FakeLidar.connect" title="Link to this definition"></a></dt>
 <dd><p>Make attempts to connect to the Lidar</p>
-<section id="id5">
-<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <p>max_attempts: Number of attempts to make
 wait_seconds: Seconds to wait between each attempt</p>
-<section id="id6">
-<h4>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
+<section id="id4">
+<h4>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
 <p>True if connection is made</p>
 </section>
 </section>
@@ -373,7 +335,7 @@ wait_seconds: Seconds to wait between each attempt</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.sensor_array.fake_lidar.FakeLidar.get_measures">
 <span class="sig-name descname"><span class="pre">get_measures</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.fake_lidar.FakeLidar.get_measures" title="Link to this definition"></a></dt>
-<dd><p>Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance meter)</p>
+<dd><p>Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance millimeter)</p>
 </dd></dl>
 
 </dd></dl>
@@ -381,40 +343,49 @@ wait_seconds: Seconds to wait between each attempt</p>
 </section>
 <section id="module-unified_frameworks.sensor_array.lidar">
 <span id="unified-frameworks-sensor-array-lidar-module"></span><h2>unified_frameworks.sensor_array.lidar module<a class="headerlink" href="#module-unified_frameworks.sensor_array.lidar" title="Link to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.get_obstacles">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.lidar.</span></span><span class="sig-name descname"><span class="pre">get_obstacles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.get_obstacles" title="Link to this definition"></a></dt>
-<dd><p>Get None or a list of obstacles recognized by the lidar. 
-Obstacles will be a list of (radian, meter) points.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.Lidar">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.lidar.</span></span><span class="sig-name descname"><span class="pre">Lidar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">preference=[&lt;class</span> <span class="pre">'sensor_array.actual_lidar.ActualLidar'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'sensor_array.bridge_lidar.BridgeLidar'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'sensor_array.fake_lidar.FakeLidar'&gt;]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.Lidar" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Abstract_Service</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.Lidar.get_obstacles">
+<span class="sig-name descname"><span class="pre">get_obstacles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.Lidar.get_obstacles" title="Link to this definition"></a></dt>
+<dd><p>Get a list of obstacles where each obstacle is a point cloud of the 
+obstacle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>thresh</strong> – Points closer than the threshold distance are grouped in 
+the same obstacle</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.get_point_clouds">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.lidar.</span></span><span class="sig-name descname"><span class="pre">get_point_clouds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.get_point_clouds" title="Link to this definition"></a></dt>
-<dd><p>Get None or the past history_size number of point clouds measured by the lidar 
-where each point is represented by (radians, meter)
-The history is returned most recent first</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.Lidar.get_point_clouds">
+<span class="sig-name descname"><span class="pre">get_point_clouds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.Lidar.get_point_clouds" title="Link to this definition"></a></dt>
+<dd><p>Get a list of point Clouds of from the previous few Lidar scans. Each 
+point cloud is a list of <code class="docutils literal notranslate"><span class="pre">(radians,</span> <span class="pre">meters)</span></code></p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.lidar_service_is_running">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.lidar.</span></span><span class="sig-name descname"><span class="pre">lidar_service_is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.lidar_service_is_running" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.Lidar.start_service">
+<span class="sig-name descname"><span class="pre">start_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.Lidar.start_service" title="Link to this definition"></a></dt>
+<dd><p>Connect to the Lidar and start scanning</p>
+</dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.run_lidar">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.lidar.</span></span><span class="sig-name descname"><span class="pre">run_lidar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_is_active</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.run_lidar" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.Lidar.stop_service">
+<span class="sig-name descname"><span class="pre">stop_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.Lidar.stop_service" title="Link to this definition"></a></dt>
+<dd><p>Stop scanning and disconnect from the lidar</p>
+</dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.start_lidar_service">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.lidar.</span></span><span class="sig-name descname"><span class="pre">start_lidar_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.start_lidar_service" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+</dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.stop_lidar_service">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.lidar.</span></span><span class="sig-name descname"><span class="pre">stop_lidar_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.stop_lidar_service" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="unified_frameworks.sensor_array.lidar.NoLidarException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.sensor_array.lidar.</span></span><span class="sig-name descname"><span class="pre">NoLidarException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.sensor_array.lidar.NoLidarException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
 
 </section>
 <section id="module-unified_frameworks.sensor_array.lidar_visualizer">

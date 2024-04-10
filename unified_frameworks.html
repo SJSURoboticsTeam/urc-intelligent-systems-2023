@@ -110,13 +110,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-unified_frameworks.worldview">unified_frameworks.worldview module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.worldview.get_obstacles"><code class="docutils literal notranslate"><span class="pre">get_obstacles()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.worldview.get_points"><code class="docutils literal notranslate"><span class="pre">get_points()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.worldview.get_rover_body"><code class="docutils literal notranslate"><span class="pre">get_rover_body()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.worldview.run_worldview"><code class="docutils literal notranslate"><span class="pre">run_worldview()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.worldview.start_worldview_service"><code class="docutils literal notranslate"><span class="pre">start_worldview_service()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.worldview.stop_worldview_service"><code class="docutils literal notranslate"><span class="pre">stop_worldview_service()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.worldview.worldview_service_is_running"><code class="docutils literal notranslate"><span class="pre">worldview_service_is_running()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unified_frameworks.worldview.Worldview"><code class="docutils literal notranslate"><span class="pre">Worldview</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-unified_frameworks.worldview_visualizer">unified_frameworks.worldview_visualizer module</a></li>
@@ -201,13 +195,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#module-unified_frameworks.sensor_array.LidarClass">unified_frameworks.sensor_array.LidarClass module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.Lidar"><code class="docutils literal notranslate"><span class="pre">Lidar</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.Lidar.connect"><code class="docutils literal notranslate"><span class="pre">Lidar.connect()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.Lidar.disconnect"><code class="docutils literal notranslate"><span class="pre">Lidar.disconnect()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.Lidar.get_measures"><code class="docutils literal notranslate"><span class="pre">Lidar.get_measures()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.Lidar.test_Lidar"><code class="docutils literal notranslate"><span class="pre">Lidar.test_Lidar()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.LidarClass.LidarDisconnectException"><code class="docutils literal notranslate"><span class="pre">LidarDisconnectException</span></code></a></li>
 </ul>
 </li>
@@ -255,12 +242,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#module-unified_frameworks.sensor_array.lidar">unified_frameworks.sensor_array.lidar module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.get_obstacles"><code class="docutils literal notranslate"><span class="pre">get_obstacles()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.get_point_clouds"><code class="docutils literal notranslate"><span class="pre">get_point_clouds()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.lidar_service_is_running"><code class="docutils literal notranslate"><span class="pre">lidar_service_is_running()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.run_lidar"><code class="docutils literal notranslate"><span class="pre">run_lidar()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.start_lidar_service"><code class="docutils literal notranslate"><span class="pre">start_lidar_service()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.stop_lidar_service"><code class="docutils literal notranslate"><span class="pre">stop_lidar_service()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.Lidar"><code class="docutils literal notranslate"><span class="pre">Lidar</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.Lidar.get_obstacles"><code class="docutils literal notranslate"><span class="pre">Lidar.get_obstacles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.Lidar.get_point_clouds"><code class="docutils literal notranslate"><span class="pre">Lidar.get_point_clouds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.Lidar.start_service"><code class="docutils literal notranslate"><span class="pre">Lidar.start_service()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.Lidar.stop_service"><code class="docutils literal notranslate"><span class="pre">Lidar.stop_service()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="unified_frameworks.sensor_array.html#unified_frameworks.sensor_array.lidar.NoLidarException"><code class="docutils literal notranslate"><span class="pre">NoLidarException</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="unified_frameworks.sensor_array.html#module-unified_frameworks.sensor_array.lidar_visualizer">unified_frameworks.sensor_array.lidar_visualizer module</a></li>
@@ -533,8 +522,8 @@ It will do all its calculations in cartesian coordinates but it will</p>
 <p>File to hold helpful util functions/classes</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.Service">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">Service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.unified_utils.</span></span><span class="sig-name descname"><span class="pre">Service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Abstract_Service</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unified_frameworks.unified_utils.Service.is_running">
 <span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.unified_utils.Service.is_running" title="Link to this definition"></a></dt>
@@ -603,40 +592,43 @@ It will do all its calculations in cartesian coordinates but it will</p>
 <p>This code is responsible for reading in all sensory inputs 
 and unifying them into a single worldview for everything else
 to access</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.worldview.get_obstacles">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">get_obstacles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.get_obstacles" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="unified_frameworks.worldview.Worldview">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">Worldview</span></span><a class="headerlink" href="#unified_frameworks.worldview.Worldview" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Abstract_Service</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.worldview.Worldview.get_obstacles">
+<span class="sig-name descname"><span class="pre">get_obstacles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.Worldview.get_obstacles" title="Link to this definition"></a></dt>
+<dd><p>Get a list of obstacles where each obstacle is a point cloud of the 
+obstacle</p>
+</dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.worldview.get_points">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">get_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.get_points" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.worldview.Worldview.get_points">
+<span class="sig-name descname"><span class="pre">get_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.Worldview.get_points" title="Link to this definition"></a></dt>
+<dd><p>Get a point cloud of the environment. The point cloud is a list of 
+<code class="docutils literal notranslate"><span class="pre">(radians,</span> <span class="pre">meters)</span></code></p>
+</dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.worldview.get_rover_body">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">get_rover_body</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.get_rover_body" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.worldview.Worldview.get_rover_body">
+<span class="sig-name descname"><span class="pre">get_rover_body</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.Worldview.get_rover_body" title="Link to this definition"></a></dt>
+<dd><p>Get the coordinates of the rovers body</p>
+</dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.worldview.run_worldview">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">run_worldview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_is_active</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.run_worldview" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.worldview.Worldview.start_service">
+<span class="sig-name descname"><span class="pre">start_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.Worldview.start_service" title="Link to this definition"></a></dt>
+<dd><p>Start sensors and start unifying data from all sensors</p>
+</dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.worldview.start_worldview_service">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">start_worldview_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.start_worldview_service" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="unified_frameworks.worldview.Worldview.stop_service">
+<span class="sig-name descname"><span class="pre">stop_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.Worldview.stop_service" title="Link to this definition"></a></dt>
+<dd><p>Stop unifying data and stop all sensors</p>
+</dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.worldview.stop_worldview_service">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">stop_worldview_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.stop_worldview_service" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unified_frameworks.worldview.worldview_service_is_running">
-<span class="sig-prename descclassname"><span class="pre">unified_frameworks.worldview.</span></span><span class="sig-name descname"><span class="pre">worldview_service_is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unified_frameworks.worldview.worldview_service_is_running" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+</dd></dl>
 
 </section>
 <section id="module-unified_frameworks.worldview_visualizer">
