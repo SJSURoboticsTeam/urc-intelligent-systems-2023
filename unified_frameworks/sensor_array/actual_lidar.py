@@ -3,13 +3,13 @@ import time
 import traceback
 
 try:
-    from sensor_array.LidarClass import Lidar
+    from sensor_array.LidarClass import _Lidar
 except ModuleNotFoundError:
     import sys
     import re
 
     sys.path.append((next(re.finditer(".*unified_frameworks", __file__)).group()))
-    from sensor_array.LidarClass import Lidar
+    from sensor_array.LidarClass import _Lidar
 from rplidar import RPLidar, RPLidarException
 import serial.tools.list_ports
 from serial.serialutil import PortNotOpenError
@@ -29,7 +29,7 @@ def getDevicePort():
     return None
 
 
-class ActualLidar(Lidar):
+class ActualLidar(_Lidar):
     def __init__(self, port=getDevicePort()) -> None:
         self.serial_port = port
         self.measures = []

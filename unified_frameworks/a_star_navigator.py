@@ -66,12 +66,12 @@ class A_Star_Navigator(Navigator):
                     sleep(1/config['grow_frequency'])
                 self._update_path()
         self._service = Service(service_func, service_name)
-        self.worldview.start_worldview_service()
+        self.worldview.start_service()
         self._service.start_service()
         pass
     def stop_pathfinder_service(self):
         self._service.stop_service()
-        self.worldview.stop_worldview_service()
+        self.worldview.stop_service()
         pass
     def _is_colision(self,cart1, cart2, cart_obstacles: list[Geometry]):
         if cart1 is None or cart2 is None: return False

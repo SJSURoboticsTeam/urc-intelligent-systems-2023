@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 class LidarDisconnectException(Exception):
     pass
-class Lidar(ABC):
+class _Lidar(ABC):
     @abstractmethod
     def connect(self, max_attempts=3, wait_seconds=1, verbose_attempts=False) -> bool:
         """Make attempts to connect to the Lidar
@@ -22,7 +22,7 @@ class Lidar(ABC):
         pass
     @abstractmethod
     def get_measures(self):
-        """Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance meter)"""
+        """Get measures from the lidar as a list of 3-tuples (quality, angle degrees, distance millimeter)"""
         pass
     def test_Lidar(lidar, connection_attempts=3):
         import sys, time

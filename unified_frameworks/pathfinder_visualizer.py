@@ -110,9 +110,6 @@ def show_visual(get_pathfinder):
 
 if __name__=='__main__':
     import pathfinder
-    # import worldview # At least for when this comment is written path finder has its own worldview
-    # pathfinder = StraightShot(worldview)
-    # import pathfinder
     import matplotlib
     from unified_utils import time_tracking_service
     time_tracking_service.start_service()

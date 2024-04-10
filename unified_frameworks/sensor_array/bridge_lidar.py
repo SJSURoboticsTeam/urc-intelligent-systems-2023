@@ -3,7 +3,7 @@ import re
 root = (next(re.finditer(".*unified_frameworks", __file__)).group())
 sys.path.append(root) if root not in sys.path else None
 from sensor_array.actual_lidar import ActualLidar
-from sensor_array.LidarClass import Lidar
+from sensor_array.LidarClass import _Lidar
 from bridge import rover_side, client_side
 from bridge.exceptions import NoOpenBridgeException
 from unified_utils import Service
@@ -13,7 +13,7 @@ import time
 config = {
     "update_frequency": 20, #Hz
 }
-class BridgeLidar(Lidar):
+class BridgeLidar(_Lidar):
     PATH = '/lidar'
     def __init__(self) -> None:
         if rover_side.bridge_is_up():
