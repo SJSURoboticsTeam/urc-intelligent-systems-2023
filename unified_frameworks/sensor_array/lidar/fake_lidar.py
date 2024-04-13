@@ -8,7 +8,7 @@ import time
 import sys
 import re
 sys.path.append((next(re.finditer(".*unified_frameworks", __file__)).group()))
-from sensor_array.LidarClass import _Lidar
+from unified_frameworks.sensor_array.lidar.LidarClass import _Lidar
 from unified_utils import Service, polar_sum
 
 config = {

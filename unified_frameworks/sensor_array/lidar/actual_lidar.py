@@ -3,13 +3,13 @@ import time
 import traceback
 
 try:
-    from sensor_array.LidarClass import _Lidar
+    from unified_frameworks.sensor_array.lidar.LidarClass import _Lidar
 except ModuleNotFoundError:
     import sys
     import re
 
     sys.path.append((next(re.finditer(".*unified_frameworks", __file__)).group()))
-    from sensor_array.LidarClass import _Lidar
+    from unified_frameworks.sensor_array.lidar.LidarClass import _Lidar
 from rplidar import RPLidar, RPLidarException
 import serial.tools.list_ports
 from serial.serialutil import PortNotOpenError

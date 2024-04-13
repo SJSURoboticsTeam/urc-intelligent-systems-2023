@@ -4,7 +4,7 @@ import matplotlib.animation as anim
 import json
 import sys
 # print(sys.path)
-import lidar as L
+import unified_frameworks.sensor_array.lidar.lidar as L
 import time
 import traceback
 

@@ -2,8 +2,8 @@ import sys
 import re
 root = (next(re.finditer(".*unified_frameworks", __file__)).group())
 sys.path.append(root) if root not in sys.path else None
-from sensor_array.actual_lidar import ActualLidar
-from sensor_array.LidarClass import _Lidar
+from unified_frameworks.sensor_array.lidar.actual_lidar import ActualLidar
+from unified_frameworks.sensor_array.lidar.LidarClass import _Lidar
 from bridge import rover_side, client_side
 from bridge.exceptions import NoOpenBridgeException
 from unified_utils import Service
