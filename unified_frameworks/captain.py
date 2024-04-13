@@ -15,7 +15,6 @@ try:
 except:
     sys.path.append(os.path.realpath(__file__ + os.sep + ".." + os.sep + ".."))
     from proj_modules.WiFi import WiFi, make_drive_command, Modes
-from unified_frameworks.sensor_array.gps_compass import gps_compass
 import pathfinder_visualizer
 import time
 import unified_frameworks.pathfinders.pathfinder as _pathfinder
@@ -113,11 +112,7 @@ class Captain(Service):
         while is_captain_running() and self._cur_gps_coordinate is not None:
             print("Running")
 
-            self.pathfinder.set_goal(
-                gps_compass.geographic_coordinates_to_relative_coordinates(
-                    *self._cur_gps_coordinate
-                )
-            )
+            self.pathfinder.set_gps_goal(*self._cur_gps_coordinate)
             self.captain_act()
             time.sleep(1 / config["command_frequency"])
 
@@ -129,7 +124,6 @@ class Captain(Service):
 
         self.captain_stop()
         self.pathfinder.stop_pathfinder_service()
-        gps_compass.disconnect()
         self.finished = True
 
 
