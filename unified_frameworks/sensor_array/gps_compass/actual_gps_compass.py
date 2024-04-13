@@ -1,5 +1,5 @@
 from typing import Tuple
-from .gps_compass_class import _GPSCompass
+from sensor_array.gps_compass.gps_compass_class import _GPSCompass
 import sys
 import serial.tools.list_ports as port_list
 import re
@@ -30,10 +30,9 @@ class ActualGPSCompass(_GPSCompass):
             print("====> No port specified. Using Port:", ports[port_number].device)
             port = ports[port_number].device
             self.gps = GPS.gpsRead(port, 57600)
-            while (
-                self.gps.get_position() == ["error"] * 2
-                or self.gps.get_position() is None
-            ):
+            while self.gps.get_position() == [
+                "error"
+            ] * 2 or self.gps.get_position() == ["None", "None"]:
                 print(f"Port {port} not working, going to next port...")
                 port_number += 1
                 port = ports[port_number].device
@@ -43,6 +42,8 @@ class ActualGPSCompass(_GPSCompass):
                 except:
                     continue
         self.cur_gps = self.gps.get_position()
+        if self.cur_gps is None:
+            raise Exception("Unable to get proper GPS lock.")
 
         self.compass = LSM303.Compass()
 

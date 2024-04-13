@@ -1,5 +1,4 @@
 from typing import Tuple
-from gps_compass.actual_gps_compass import ActualGPSCompass
 import time
 import sys
 import re
@@ -9,7 +8,13 @@ sys.path.append(root) if root not in sys.path else None
 from bridge import rover_side, client_side
 from bridge.exceptions import NoOpenBridgeException
 from unified_utils import Service
-from .gps_compass_class import _GPSCompass
+
+try:
+    from sensor_array.gps_compass.actual_gps_compass import ActualGPSCompass
+except ImportError as e:
+    print(e.msg)
+    print("Assuming this means on client side.")
+from sensor_array.gps_compass.gps_compass_class import _GPSCompass
 
 import json
 
@@ -83,9 +88,9 @@ if __name__ == "__main__":
         rover_side.service.start_service()
         gps = BridgeGPS()
         gps.connect()
+        time.sleep(3)  # give time for threads to start
         while True:
             try:
-                # time.sleep(2)
                 print(f"GPS: {gps.get_cur_gps()}, Heading: {gps.get_cur_angle()}")
                 time.sleep(1)
             except KeyboardInterrupt:

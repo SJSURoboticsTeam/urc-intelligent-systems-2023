@@ -3,7 +3,7 @@ import sys
 
 root = __file__[: __file__.index("/unified_frameworks")]
 sys.path.append(root + "/unified_frameworks")
-from .gps_compass_class import _GPSCompass
+from sensor_array.gps_compass.gps_compass_class import _GPSCompass
 import math
 
 
