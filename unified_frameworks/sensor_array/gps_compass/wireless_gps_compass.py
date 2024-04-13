@@ -66,7 +66,7 @@ class WirelessGPSCompass(GPSCompass):
                 print("Trying again")
 
     def start_connection(self):
-        # asyncio.set_event_loop(asyncio.new_event_loop())
+        asyncio.set_event_loop(asyncio.new_event_loop())
         asyncio.get_event_loop().run_until_complete(self.receive_data())
         # asyncio.ru)
 

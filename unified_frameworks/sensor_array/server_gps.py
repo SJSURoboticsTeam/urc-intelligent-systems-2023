@@ -49,6 +49,7 @@ async def startServer():
 
 
 if __name__ == "__main__":
+    gps = ActualGPSCompass()
     try:
         print("[SERVER] Server ON")
         asyncio.run(startServer())

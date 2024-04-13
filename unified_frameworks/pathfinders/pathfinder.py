@@ -23,10 +23,10 @@ importlib.reload(worldview)
 import numpy as np
 from typing import Literal
 
-from unified_frameworks.pathfinders import a_star_navigator
-from unified_frameworks.pathfinders import straight_shot
-from unified_frameworks.pathfinders import rapid_random_tree
-from unified_frameworks.pathfinders.NavigatorClass import Navigator
+from pathfinders import a_star_navigator
+from pathfinders import straight_shot
+from pathfinders import rapid_random_tree
+from pathfinders.NavigatorClass import Navigator
 
 # Ensures you have instance with latest code reloaded from changes made on the fly
 importlib.reload(a_star_navigator)
@@ -67,3 +67,6 @@ class Pathfinder(Navigator):
 
     def get_goal(self):
         return self.pathfinder.get_goal()
+
+    def distance_to_target(self):
+        return self.pathfinder.distance_to_target()

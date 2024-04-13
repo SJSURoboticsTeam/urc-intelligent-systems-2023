@@ -3,19 +3,20 @@ import time
 import traceback
 
 try:
-    from unified_frameworks.sensor_array.lidar.LidarClass import _Lidar
+    from sensor_array.lidar.LidarClass import _Lidar
 except ModuleNotFoundError:
     import sys
     import re
 
     sys.path.append((next(re.finditer(".*unified_frameworks", __file__)).group()))
-    from unified_frameworks.sensor_array.lidar.LidarClass import _Lidar
+    from sensor_array.lidar.LidarClass import _Lidar
 from rplidar import RPLidar, RPLidarException
 import serial.tools.list_ports
 from serial.serialutil import PortNotOpenError
 from threading import Thread
 
 import platform
+
 
 def getDevicePort():
     ports = serial.tools.list_ports.comports()
@@ -60,7 +61,8 @@ class ActualLidar(_Lidar):
         return False
 
     def connect(self, max_attempts=3, wait_seconds=1, verbose_attempts=False) -> bool:
-        if self.serial_port is None: return False
+        if self.serial_port is None:
+            return False
         if not self.connect_to_RPLidar(max_attempts, wait_seconds, verbose_attempts):
             return False
         self.stay_connected = True
