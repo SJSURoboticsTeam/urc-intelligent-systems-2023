@@ -102,7 +102,7 @@ class Captain(Service):
         be a function that navigates to the aruco tag at a GPS coordinate.
         """
         print("At GPS coordinate")
-        self.captain_act(lambda: 0)
+        self.captain_stop()
         time.sleep(5)
 
     def run_captain(self, is_captain_running: Callable[[], bool]):

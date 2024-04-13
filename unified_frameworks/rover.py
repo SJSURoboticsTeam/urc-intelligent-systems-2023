@@ -1,6 +1,6 @@
 import time
 from bridge import rover_side
-from sensor_array.bridge_lidar import BridgeLidar
+from sensor_array.lidar.bridge_lidar import BridgeLidar
 from sensor_array.gps_compass.bridge_gps import BridgeGPS
 
 if __name__ == "__main__":
