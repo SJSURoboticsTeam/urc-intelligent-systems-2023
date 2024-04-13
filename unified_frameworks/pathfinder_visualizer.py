@@ -109,7 +109,7 @@ def show_visual(get_pathfinder):
     return anime
 
 if __name__=='__main__':
-    import pathfinder
+    import unified_frameworks.pathfinders.pathfinder as pathfinder
     import matplotlib
     from unified_utils import time_tracking_service
     time_tracking_service.start_service()
