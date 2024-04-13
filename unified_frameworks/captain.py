@@ -124,11 +124,7 @@ def run_captain(is_captain_running):
     while is_captain_running() and _cur_gps_coordinate is not None:
         print("Running")
 
-        pathfinder.set_goal(
-            gps_compass.geographic_coordinates_to_relative_coordinates(
-                *_cur_gps_coordinate
-            )
-        )
+        pathfinder.set_gps_goal(*_cur_gps_coordinate)
         captain_act(_get_target_speed)
         time.sleep(1 / config["command_frequency"])
 

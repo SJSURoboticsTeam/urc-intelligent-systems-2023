@@ -4,7 +4,7 @@ from typing import Tuple
 
 root = next(re.finditer(".*unified_frameworks", __file__)).group()
 sys.path.append(root) if root not in sys.path else None
-from sensor_array.gps_compass.gps_compass_class import GPSCompass
+from sensor_array.gps_compass.gps_compass_class import _GPSCompass
 import asyncio
 import websockets
 from threading import Thread
@@ -17,7 +17,7 @@ wifi_address = {
 }
 
 
-class WirelessGPSCompass(GPSCompass):
+class WirelessGPSCompass(_GPSCompass):
     def __init__(self, uri=wifi_address["robotics_wifi"]):
         self.uri = uri
         self.gps = None
