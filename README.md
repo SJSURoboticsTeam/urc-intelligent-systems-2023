@@ -20,3 +20,11 @@ pip install -r env_files/rover_requirements.txt
 ```
 
 ![classes](https://github.com/SJSURoboticsTeam/urc-intelligent-systems-2023/assets/50222631/3d47c3d4-b21a-463e-9739-bc99b61f450f)
+
+## Running
+
+To get the mission started, first run `python3 rover.py` from within the `unified_frameworks` directory on the Raspberry Pi. This
+starts up the bridge on the rover side and gets all necessary sensors running.
+
+From there, you can run `python3 captain.py` from within the `unified_frameworks` directory on your local machine
+to begin the pathfinding and visualization.

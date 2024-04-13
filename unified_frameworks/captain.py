@@ -15,7 +15,6 @@ try:
 except:
     sys.path.append(os.path.realpath(__file__ + os.sep + ".." + os.sep + ".."))
     from proj_modules.WiFi import WiFi, make_drive_command, Modes
-from unified_frameworks.sensor_array.gps_compass import gps_compass
 import pathfinder_visualizer
 import time
 from straight_shot import StraightShot
@@ -97,8 +96,7 @@ def captain_act(get_target_speed):
 def captain_stop():
     command = make_drive_command(speed_percent=0)
     rover.send_command(command) if config["send_commands_to_rover"] else None
-    with _command_printer:
-        print(command)
+    print(command)
 
 
 def set_goal_coordinates(coordinate: Tuple[int, int]):
@@ -136,7 +134,6 @@ def run_captain(is_captain_running):
 
     captain_stop()
     pathfinder.stop_pathfinder_service()
-    gps_compass.disconnect()
 
 
 _service = Service(run_captain, "Captain Service")

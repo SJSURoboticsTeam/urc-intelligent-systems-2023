@@ -13,6 +13,7 @@ import bridge.client_side
 import importlib
 from sensor_array.gps_compass.bridge_gps import BridgeGPS
 from typing import Tuple
+from bridge import client_side
 
 importlib.reload(bridge.client_side)
 importlib.reload(sensor_array.lidar)
@@ -31,6 +32,8 @@ class Worldview(_Abstract_Service):
     def __init__(self) -> None:
         """Set up all the sensors to feed their data into this worldview."""
         super().__init__()
+        client_side.service.start_service()
+        time.sleep(3)
         if config["verbose"]:
             print("Initializing Worldview")
         self._lidar = lidar.Lidar()
@@ -47,6 +50,8 @@ class Worldview(_Abstract_Service):
         if config["verbose"]:
             print("Stopping worldview service")
         self._lidar.stop_service()
+        self._gps.disconnect()
+        client_side.service.stop_service()
 
     def get_obstacles(self):
         """Get a list of obstacles where each obstacle is a point cloud of the
