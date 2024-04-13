@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, Union
 import math
+from unified_utils import _Abstract_Service
 
 
 class Util:
@@ -43,13 +44,13 @@ class Util:
 
     def get_bearing(current_GPS, target_GPS):
         """Returns the angle between two GPS coordinates
-        
+
         PARAMS:
             current_GPS (tuple): (latitude, longitude)
             target_GPS (tuple):  (latitude, longitude)
         RETURNS:
             float. angle between the two coordinates
-            
+
         """
         try:
             current_latitude = math.radians(current_GPS[1])
@@ -72,7 +73,7 @@ class Util:
             print("No GPS Data")
 
 
-class GPSCompass(ABC):
+class _GPSCompass(_Abstract_Service):
     @abstractmethod
     def get_cur_angle(self) -> int:
         """
