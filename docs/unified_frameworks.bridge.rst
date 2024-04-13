@@ -4,14 +4,6 @@ unified\_frameworks.bridge package
 Submodules
 ----------
 
-unified\_frameworks.bridge.acync\_demos module
-----------------------------------------------
-
-.. automodule:: unified_frameworks.bridge.acync_demos
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 unified\_frameworks.bridge.client\_side module
 ----------------------------------------------
 

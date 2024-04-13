@@ -8,7 +8,7 @@ import time
 from threading import Thread
 from math import pi
 from unified_utils import polar_sum, _Abstract_Service
-import sensor_array.lidar
+import unified_frameworks.sensor_array.lidar.lidar
 import bridge.client_side
 import importlib
 from sensor_array.gps_compass.bridge_gps import BridgeGPS
@@ -16,8 +16,8 @@ from typing import Tuple
 from bridge import client_side
 
 importlib.reload(bridge.client_side)
-importlib.reload(sensor_array.lidar)
-lidar = sensor_array.lidar
+importlib.reload(unified_frameworks.sensor_array.lidar.lidar)
+lidar = unified_frameworks.sensor_array.lidar.lidar
 
 
 config = {

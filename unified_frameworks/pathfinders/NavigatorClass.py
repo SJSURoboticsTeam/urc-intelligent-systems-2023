@@ -1,11 +1,14 @@
 from abc import ABC, abstractmethod
 import numpy as np
+from typing import Tuple
+import math
 from worldview import Worldview
 
 
 class Navigator(ABC):
     def __init__(self, worldview: Worldview) -> None:
         self.worldview = worldview
+        self.goal: Tuple[float, float] = (math.pi / 2, 1)  # theta, r
 
     @abstractmethod
     def get_path(self) -> np.ndarray:
@@ -23,13 +26,14 @@ class Navigator(ABC):
     def stop_pathfinder_service(self):
         pass
 
-    @abstractmethod
     def set_goal(self, polar_point):
-        pass
+        self.goal = polar_point
 
-    @abstractmethod
     def get_goal(self):
-        pass
+        return self.goal
+
+    def distance_to_target(self):
+        return self.goal[1]
 
     def set_gps_goal(self, target_latitude: float, target_longitude: float) -> None:
         """
