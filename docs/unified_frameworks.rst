@@ -8,26 +8,11 @@ Subpackages
    :maxdepth: 4
 
    unified_frameworks.bridge
+   unified_frameworks.pathfinders
    unified_frameworks.sensor_array
 
 Submodules
 ----------
-
-unified\_frameworks.NavigatorClass module
------------------------------------------
-
-.. automodule:: unified_frameworks.NavigatorClass
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-unified\_frameworks.a\_star\_navigator module
----------------------------------------------
-
-.. automodule:: unified_frameworks.a_star_navigator
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 unified\_frameworks.captain module
 ----------------------------------
@@ -37,34 +22,10 @@ unified\_frameworks.captain module
    :undoc-members:
    :show-inheritance:
 
-unified\_frameworks.pathfinder module
--------------------------------------
-
-.. automodule:: unified_frameworks.pathfinder
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 unified\_frameworks.pathfinder\_visualizer module
 -------------------------------------------------
 
 .. automodule:: unified_frameworks.pathfinder_visualizer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-unified\_frameworks.rapid\_random\_tree module
-----------------------------------------------
-
-.. automodule:: unified_frameworks.rapid_random_tree
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-unified\_frameworks.straight\_shot module
------------------------------------------
-
-.. automodule:: unified_frameworks.straight_shot
    :members:
    :undoc-members:
    :show-inheritance:

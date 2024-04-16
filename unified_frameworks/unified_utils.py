@@ -3,27 +3,38 @@ from threading import Thread
 import time, json
 from math import sqrt, cos, atan2, sin, pi
 import numpy as np
+from abc import ABC, abstractmethod
 
 config = {
     'time_analysis': True,
     'decimal_precision': 5,
 }
 
-class Service():
-    def __init__(self, service_func, name, *args, **kwargs) -> None:
+class _Abstract_Service(ABC):
+    @abstractmethod
+    def start_service(self):
+        pass
+    @abstractmethod
+    def stop_service(self):
+        pass
+
+class Service(_Abstract_Service):
+    def __init__(self, service_func, name) -> None:
         """
         Create an easy to start/stop service from a function. 
         The function must accept a callable which returns if the service is still running. 
         That callable must be respected to prevent the service from running amok.
         """
         self._running = False
-        self._thread = Thread(target=service_func, args=(lambda: self._running, *args), kwargs=kwargs, name=name)
+        self._service_func = service_func
+        self._thread = Thread(target=service_func, args=(lambda: self._running,), name=name)
     def start_service(self):
         self._running=True
         self._thread.start()
     def stop_service(self):
         self._running=False
         self._thread.join()
+        self._thread = Thread(target=self._service_func, args=(lambda: self._running,), name=self._thread.name)
     def is_running(self):
         return self._running
 

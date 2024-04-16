@@ -9,7 +9,7 @@ import re
 root = (next(re.finditer(".*unified_frameworks", __file__)).group())
 sys.path.append(root) if root not in sys.path else None
 from numpy import ndarray
-from NavigatorClass import Navigator
+from unified_frameworks.pathfinders.NavigatorClass import Navigator
 from math import pi
 from shapely import Geometry, intersects, LineString, Point
 from heapq import heappop, heappush
@@ -20,7 +20,6 @@ importlib.reload(unified_utils)
 import numpy as np
 from unified_utils import Service, track_time
 from time import sleep, time
-print("Reloaded")
 name="module2"
 
 config = {
@@ -31,7 +30,6 @@ config = {
     "neighbor_sector": [-pi/4, pi/4],
     "obstacle_buffer":0.45
 }
-_goal = (pi/4, 1)
 class A_Star_Navigator(Navigator):
     name="class2"
     def __init__(self, worldview) -> None:
@@ -40,17 +38,13 @@ class A_Star_Navigator(Navigator):
         self._path = []
         self._backlinks = { (0,0): None }
         self._arrival_costs = { None: 0 }
-        self._goal = np.array((pi/2, 1))
+        self.goal = (pi/2, 1)
         self.count=0
         print("Created")
     def get_path(self) -> ndarray:
         return self._path
     def get_tree_links(self) -> ndarray:
         return [[self._backlinks[k], k] for k in self._backlinks if self._backlinks[k] is not None]
-    def set_goal(self, polar_point):
-        self._goal=polar_point
-    def get_goal(self):
-        return self._goal
     def start_pathfinder_service(self, service_name="A* path finding service"):
         def service_func(is_running):
             while is_running():
@@ -64,12 +58,12 @@ class A_Star_Navigator(Navigator):
                     sleep(1/config['grow_frequency'])
                 self._update_path()
         self._service = Service(service_func, service_name)
-        self.worldview.start_worldview_service()
+        self.worldview.start_service()
         self._service.start_service()
         pass
     def stop_pathfinder_service(self):
         self._service.stop_service()
-        self.worldview.stop_worldview_service()
+        self.worldview.stop_service()
         pass
     def _is_colision(self,cart1, cart2, cart_obstacles: list[Geometry]):
         if cart1 is None or cart2 is None: return False
@@ -83,7 +77,7 @@ class A_Star_Navigator(Navigator):
         return [polar_sum(polar_point, n) for n in neighbors]
         pass
     def _update_path(self):
-        near_point = min(self._backlinks, key=lambda p: polar_dis(p, self._goal))
+        near_point = min(self._backlinks, key=lambda p: polar_dis(p, self.goal))
         path = [near_point]
         while path[-1] is not None:
             path.append(self._backlinks[path[-1]])
@@ -106,7 +100,7 @@ class A_Star_Navigator(Navigator):
         neighbors = self._get_neighbors(current_node)
         for n in neighbors:
             ac = self._arrival_costs[current_node] + polar_dis(current_node, n)
-            hc = polar_dis(n, self._goal)
+            hc = polar_dis(n, self.goal)
             tc = abs(three_point_deviation(previous_node, current_node, n))
             cost = ac+3*hc+3*(tc/0.5)**2
             # cost = ac+3*hc
