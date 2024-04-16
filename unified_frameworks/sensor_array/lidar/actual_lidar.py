@@ -69,7 +69,7 @@ class ActualLidar(_Lidar):
 
         def look():
             while self.stay_connected:
-                self.measures = next(self.lidar_iter)
+                self.measures = [(q, -a % 360, d) for q, a, d in next(self.lidar_iter)]
 
         self.thread = Thread(target=look)
         self.thread.start()

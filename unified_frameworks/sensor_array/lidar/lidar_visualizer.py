@@ -5,13 +5,16 @@ import json
 import sys
 
 # print(sys.path)
-import sensor_array.lidar.lidar as L
+import lidar as L
 import time
 import traceback
+import bridge.client_side as client_side
 
 # lidar.config['']
 if __name__ == "__main__":
+    client_side.service.start_service()
     lidar = L.Lidar()
+
     lidar.start_service()
     # time.sleep(20)
     try:
@@ -48,3 +51,4 @@ if __name__ == "__main__":
         print(e)
         traceback.print_exc()
     lidar.stop_service()
+    client_side.service.stop_service()
